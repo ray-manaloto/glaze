@@ -452,7 +452,6 @@ namespace
    {
       glz::fix_opts o{};
       o.soh = '|';
-      o.error_on_unknown_keys = false;
       return o;
    }
 }
