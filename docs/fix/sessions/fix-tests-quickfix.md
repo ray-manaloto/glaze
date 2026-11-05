@@ -6,10 +6,11 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
 
 ## State at the end of the session
 
-* `fix/core` was merged at `e5babf6e`. Its `include/glaze/fix/fix.hpp` replaced my local stub.
+* `fix/core` was merged at `e5babf6e`, and again at `5d289570` (v2: raw-data fields, `utc_timestamp`, `decimal`).
+  Its `include/glaze/fix/fix.hpp` replaced my local stub.
 * `tests/fix_quickfix_test/` is registered in `tests/CMakeLists.txt`. Against `fix/core`, built with GCC 13
-  under the `gcc-debug` preset (`-fno-exceptions -fno-rtti -Werror`), it gives **163 tests and 662 asserts,
-  all passing, with 20 groups skipped** (final run, 07:37 UTC). Build and run it with
+  under the `gcc-debug` preset (`-fno-exceptions -fno-rtti -Werror`), it gives **174 tests and 729 asserts,
+  all passing, with 15 groups skipped** (final run, 07:40 UTC, against fix/core `5d289570`). Build and run it with
   `cmake --build build/debug-gcc --target fix_quickfix_test && build/debug-gcc/tests/fix_quickfix_test/fix_quickfix_test`.
   * `fix_quickfix_test.cpp` covers `validate`, `checksum`, `frame` and `parse_fields`, plus the
     QuickFIX/J and QuickFIX/n vectors.
@@ -20,6 +21,14 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
     (ExecutionReport, DontKnowTrade, OrderCancelReplaceRequest, OrderCancelRequest, NewOrderList,
     NewOrderCross, AllocationInstruction). Writes are compared **byte for byte** with QuickFIX's
     expected strings, using `meta<T>::fix_begin_string`.
+  * `fix_quickfix_v2_tests.inl` holds cases that use fix/core v2. Raw data: QuickFIX `massQuoteSetString`
+    and `massQuoteParseGetString` (365 holds SOH; the write is exact and 364 is filled in
+    automatically), QuickFIX/J `testMessageBytesField` with SOH and `=` inside 96, QuickFIX/n
+    `ReadXmlDataTest` (213 holds a whole FIX message), and `setStringWithDataFieldAndGarbageAsDataLength`.
+    UTCTimestamp: `utcTimeStampConvertFrom*` and `utcTimeStampConvertTo*`, plus bad dates and times
+    taken from `utcDateConvertFrom`. Decimal: the `doubleConvertFrom`/`doubleConvertTo` vectors run
+    through `glz::fix::decimal`, which rejects exponents and keeps the scale. That gives the QuickFIX
+    behaviour on a type the core does support; divergence 2 remains for `double`.
   * `fix_quickfix_struct_tests.inl` covers field conversion, typed messages, repeating groups and the
     `fix_opts` switches. The test file now defines `GLZ_FIX_STRUCT_MAPPING` itself, because the core
     always provides struct mapping. The time-type tests are still behind `GLZ_FIX_TIME_TYPES`; the core
@@ -36,8 +45,10 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
   4. An empty input is an error in `parse_fields` (`no_read_input`). My stub had allowed it.
 
   These are recorded too, but are not counted among the four:
-  * Skipped because the contract has no length-prefixed data fields yet: RawData 96 with SOH inside,
-    MassQuote 364/365, and XmlData 212/213 (`ReadXmlDataTest`).
+  * Data fields used to be skipped. fix/core v2 supports them, and those tests now pass (see above).
+  * Observation, not a skip: `glz::fix::decimal::to_double()` of `0.00340244000` (340244000e-11) is
+    not equal to the literal `0.00340244`, because the conversion is not correctly rounded. The test
+    checks the exact mantissa and exponent instead.
   * Skipped because fix/core lets a repeated top-level tag overwrite instead of reporting it
     (QuickFIX/n `RepeatedTagDetection`).
   * Skipped because a data dictionary is needed: rejecting header tags that come after the body
@@ -141,8 +152,8 @@ validation up to the *first* `10=` gives a correct 9 and 10, so a parser that st
   check.
 * `GroupTestCase.cpp` and `FieldMapTestCase.cpp` test QuickFIX's container API, not the wire format,
   so they were not ported.
-* `UtcTimeStampTestCase.cpp` / `UtcTimeOnlyTestCase.cpp` (comparison and arithmetic) depend on the
-  time type that is chosen, so they were not ported.
+* `UtcTimeStampTestCase.cpp` / `UtcTimeOnlyTestCase.cpp` (comparison and arithmetic on QuickFIX's own time
+  objects) and UTCTimeOnly/UTCDateOnly conversion: the contract has no types for these, so they stay skipped.
 * Not ported from `MessagesTestCase.cpp`: `XMLNonFIXSetString`, `getXML`, `reverseRoute`, `addRemoveGroup`, `replaceGroup`,
   `copy`, `identifyType`, `isAdmin`/`isApp`. They test QuickFIX's API rather than the wire format.
 * `DoubleConvertor` precision/padding variants such as `convert(1.5, 3) == "1.500"` were not ported,
@@ -154,7 +165,11 @@ validation up to the *first* `10=` gives a correct 9 and 10, so a parser that st
 1. Have `fix/core` decide on the four differences listed above. Either fix the core, for example by
    writing doubles in fixed notation, or record the behaviour in `docs/fix/api.md` and delete the
    matching skips.
-2. Once the contract has time types, turn on `GLZ_FIX_TIME_TYPES` (the proposed `std::chrono` mapping is
-   at the bottom of the `.inl`).
+2. If the contract gains UTCTimeOnly and UTCDateOnly types, port the remaining conversion vectors. The old
+   `GLZ_FIX_TIME_TYPES` block in `fix_quickfix_struct_tests.inl` (a raw `std::chrono` mapping) can then
+   be deleted, since `utc_timestamp` covers timestamps.
 3. Check the assumptions listed in `docs/fix/quickfix-tests.md` against `docs/fix/api.md` whenever the core changes.
 4. Add the dictionary-dependent tests once the contract has a dictionary or header/trailer tag sets.
+5. Still to port: the remaining `FIXMessageDecoderTest` stream cases (resync after garbage, which is the
+   caller's job here), QuickFIX/n `MessageTests.cs` cases that need a dictionary, and the FIX44/FIX50 spec
+   XML from QuickFIX (no dictionary support yet).
