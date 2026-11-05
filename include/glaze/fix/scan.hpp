@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <limits>
 #include <string_view>
+#include <type_traits>
 #include <vector>
 
 #include "glaze/core/context.hpp"
@@ -153,6 +154,64 @@ namespace glz::fix
          scan_state st{};
          return next_field(msg, pos, soh, f, st);
       }
+   }
+
+   // Zero-allocation forward scanner over one message. Raw-data fields are handled as in parse_fields.
+   //   glz::fix::field_cursor c{msg, '|'};
+   //   for (glz::fix::field f; c.next(f);) { ... }
+   //   if (c.error()) { ... }
+   class field_cursor
+   {
+     public:
+      constexpr field_cursor() = default;
+      constexpr explicit field_cursor(std::string_view msg, char soh = '\x01') noexcept : msg_(msg), soh_(soh) {}
+
+      // Reads the next field into f. Returns false at the end of the message or on a malformed field.
+      constexpr bool next(field& f) noexcept
+      {
+         if (ec_ != error_code::none || pos_ >= msg_.size()) return false;
+         const size_t start = pos_;
+         ec_ = detail::next_field(msg_, pos_, soh_, f, st_);
+         if (ec_ != error_code::none) {
+            pos_ = start;
+            return false;
+         }
+         return true;
+      }
+
+      // none, or why scanning stopped early. `count` is the byte offset of the bad field.
+      constexpr error_ctx error() const noexcept
+      {
+         if (ec_ == error_code::none) return {pos_, ec_, {}};
+         return {pos_, ec_, "fix: malformed field"};
+      }
+
+      constexpr size_t position() const noexcept { return pos_; } // byte offset of the next field
+      constexpr bool done() const noexcept { return pos_ >= msg_.size() || ec_ != error_code::none; }
+
+     private:
+      std::string_view msg_{};
+      size_t pos_{};
+      char soh_{'\x01'};
+      error_code ec_{error_code::none};
+      detail::scan_state st_{};
+   };
+
+   // Calls fn(const field&) for every field without allocating. If fn returns bool, false stops early.
+   // Returns the scanner's error, if any.
+   template <class Fn>
+   constexpr error_ctx for_each_field(std::string_view msg, char soh, Fn&& fn)
+   {
+      field_cursor c{msg, soh};
+      for (field f; c.next(f);) {
+         if constexpr (std::is_same_v<decltype(fn(f)), bool>) {
+            if (!fn(f)) break;
+         }
+         else {
+            fn(f);
+         }
+      }
+      return c.error();
    }
 
    // Splits one message into its fields. Every field must be "tag=value<soh>", including the last one.

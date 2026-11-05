@@ -419,10 +419,15 @@ suite struct_mapping = [] {
       expect(glz::fix::frame(m + "8=FIX", '|') == m.size());
    };
    "raw_data_roundtrip"_test = [] {
-      RawNote n{"News", std::string("bin\x01ary|with=delims\0end", 26), {{"P", 'D', 1}}};
+      std::string raw = "bin";
+      raw += '\x01';
+      raw += "ary|with=delims";
+      raw += '\0';
+      raw += "end"; // 23 bytes holding SOH, '|', '=' and NUL
+      RawNote n{"News", raw, {{"P", 'D', 1}}};
       std::string buf;
       expect(!glz::write<pipe>(n, buf));
-      expect(buf.find("|95=26|96=bin") != std::string::npos) << buf;
+      expect(buf.find("|95=23|96=bin") != std::string::npos) << buf;
       expect(!glz::fix::validate(buf, '|'));
       RawNote r{};
       auto ec = glz::read<pipe>(r, buf);
@@ -517,6 +522,50 @@ suite struct_mapping = [] {
       expect(r.offer_px && r.offer_px->mantissa == 10 && r.offer_px->exponent == -1);
       expect(glz::read<pipe>(r, std::string_view{"132=1,5|"}) == glz::error_code::parse_number_failure);
       expect(glz::read<pipe>(r, std::string_view{"52=2026-11-05|"}) == glz::error_code::syntax_error);
+   };
+   "field_cursor"_test = [] {
+      constexpr std::string_view msg = "8=FIX.4.4|9=5|35=0|95=3|96=a|b|10=000|";
+      glz::fix::field_cursor c{msg, '|'};
+      std::vector<uint32_t> tags;
+      for (glz::fix::field f; c.next(f);) tags.push_back(f.tag);
+      expect(!c.error());
+      expect(c.done());
+      expect(tags == std::vector<uint32_t>{8, 9, 35, 95, 96, 10});
+      // usable in constant expressions, so it cannot allocate
+      static_assert([] {
+         glz::fix::field_cursor k{"35=D|55=IBM|", '|'};
+         glz::fix::field f{};
+         return k.next(f) && f.tag == 35 && k.next(f) && f.value == "IBM" && !k.next(f);
+      }());
+      glz::fix::field_cursor bad{"35=D|5x=1|55=A|", '|'};
+      glz::fix::field f{};
+      expect(bad.next(f));
+      expect(!bad.next(f));
+      expect(bad.error() == glz::error_code::syntax_error);
+      expect(bad.error().count == 5u); // offset of the bad field
+      expect(!bad.next(f)); // stays stopped
+   };
+   "for_each_field"_test = [] {
+      size_t n = 0;
+      std::string_view sym{};
+      auto e = glz::fix::for_each_field("35=D|55=IBM|54=1|", '|', [&](const glz::fix::field& f) {
+         ++n;
+         if (f.tag == 55) sym = f.value;
+      });
+      expect(!e && n == 3u && sym == "IBM");
+      n = 0;
+      e = glz::fix::for_each_field("35=D|55=IBM|54=1|", '|', [&](const glz::fix::field& f) {
+         ++n;
+         return f.tag != 55; // stop at 55
+      });
+      expect(!e && n == 2u);
+      e = glz::fix::for_each_field("35=D|55=IBM", '|', [](const glz::fix::field&) {});
+      expect(e == glz::error_code::unexpected_end);
+   };
+   "huge_group_count_rejected"_test = [] {
+      Multileg r{};
+      expect(glz::read<pipe>(r, std::string_view{"555=4000000000|600=A|"}) == glz::error_code::parse_number_failure);
+      expect(glz::read<pipe>(r, std::string_view{"555=99999999|600=A|"}) == glz::error_code::syntax_error);
    };
    "value_errors"_test = [] {
       NewOrderSingle r{};
