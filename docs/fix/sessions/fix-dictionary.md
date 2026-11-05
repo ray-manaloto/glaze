@@ -25,17 +25,31 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
   (`-std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -Werror`). A 5.0 SP2 NewOrderSingle with
   a Parties group was read, written and read back, and compared equal (scratch program, not
   committed; result below under "Verification").
+* **Header fields and the session layer** (second pass, 07:31–07:57 UTC). The generator
+  flattens the StandardHeader (all but 8/9/35) into every message, so sender/target/seq
+  num/sending time read and write through the generated structs. The session messages were
+  already in the Orchestra 4.2/4.4 files and are now tested. `--no-header` restores the old
+  output.
+* **FIXT.1.1 for FIX 5.x.** For FIX.5.x and FIX.Latest dictionaries, `fix_begin_string` is
+  `FIXT.1.1`. For 5.0 / SP1 / SP2, the namespace constants and message metas also carry the
+  ApplVerID value (`fix_appl_ver_id`, `"9"` for SP2), and the namespace has
+  `dictionary_version`. What `fix/core` would need for full FIXT support is recorded in
+  `docs/fix/dictionary.md` ("Needed from `fix/core` for FIXT"). `fix/core` itself is unchanged.
 * **Merged `fix/core`** (07:17 UTC). The local contract stub this branch used until then was
   replaced by `fix/core`'s `include/glaze/fix/fix.hpp`. To fit `fix/core`'s enum handling
   (underlying value), the generator now emits `bool` for Boolean code sets and `std::string` for
   String code sets. Only char and int code sets are enum members.
 * **Test** `tests/fix_dictionary_test/` (registered in `tests/CMakeLists.txt`, boost-ext ut via
-  `ut/ut.hpp`), 13 tests and 69 asserts, all passing against `fix/core`'s codec with the `gcc-debug` preset (GCC 13,
+  `ut/ut.hpp`), 23 tests and 145 asserts, all passing against `fix/core`'s codec with the `gcc-debug` preset (GCC 13,
   `-Werror`, ASan/UBSan on):
   * generated metadata: tags, enum wire values, enum names through glaze JSON, msg types;
   * FIX 4.4 round trips: NewOrderSingle with a Parties group, ExecutionReport,
     MarketDataSnapshotFullRefresh (byte-exact), Logon (byte-exact), a message built from scratch;
-  * FIX 4.2 NewOrderSingle;
+  * FIX 4.2 NewOrderSingle and Logon;
+  * session layer (FIX 4.4): Logon, Heartbeat, TestRequest, ResendRequest, Reject,
+    SequenceReset and Logout, each read, checked (header 49/56/34/52 plus body fields) and
+    written back byte for byte; a Heartbeat built from scratch; PossDupFlag/OrigSendingTime
+    round trip;
   * errors: bad checksum, wrong MsgType, stream framing.
   * Before the merge, two more tests checked enum code-set validation in the stub. They were
     removed because `fix/core` does not validate enums (see `docs/fix/dictionary.md`).
@@ -45,10 +59,13 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
 * Enum code-set validation in the codec (proposal: `meta<E>::fix_values`). Doubles are written
   as `1e+06` by `fix/core` (exponent); this is reported in `docs/fix/dictionary.md`, and the MD
   byte-exact sample uses 1500/2500 for now.
-* FIXT.1.1 session layer (`FIXTSession.xml`, `FIX44Session.xml`) and ApplVerID(1128). The writer
-  for 5.0 SP2 emits `8=FIX.5.0SP2`, not `8=FIXT.1.1`.
+* The FIXT.1.1 session dictionary (`FIXTSession.xml`: Logon with DefaultApplVerID(1137) and so
+  on) has not been generated or tested yet. The FIX 4.4 session messages are tested.
+* The codec does not fill ApplVerID(1128) or check tag 8 on read (needs `fix/core`; see
+  `docs/fix/dictionary.md`).
+* Required-field presence is not checked on read. A message without 49/56 reads as empty
+  strings.
 * `data` fields containing SOH (length-prefixed via the paired Length field).
-* A StandardHeader member in messages (49/56/34/52 are skipped on read and not written).
 * clang build: the system clang here (with libstdc++ 13) fails inside glaze's own headers
   (`std::expected`, `[[assume]]`). These errors do not come from the FIX code. Not investigated.
 * Pushing was refused by the git proxy at first. It worked once the repository was attached to
@@ -80,8 +97,8 @@ validates. Field values (order IDs, symbols, prices) are made up.
 
 1. Keep merging `fix/core`. Ask it to adopt `fix_values` (enum validation, String code-set
    enums) and fixed-notation float writing. Then restore the 1000000-sized MD sample.
-2. Generate the session layers (`FIX44Session.xml`, `FIXTSession.xml`) and add a
-   StandardHeader member, or header handling, to messages.
+2. Generate `FIXTSession.xml` as `glz::fix::fixt11` and test a FIXT Logon (1137=9). Ask
+   `fix/core` for the three FIXT items in `docs/fix/dictionary.md`.
 3. Decide whether to commit `fix50sp2.hpp` (5.6 MB), or to generate it at build time from a
    fetched XML through a CMake option (`glaze_FIX_DICTIONARIES`).
 4. Make generation lazier for compile time: a FIX Latest TU takes about 2.5 min at -O0. One

@@ -130,8 +130,24 @@ template <> struct glz::meta<glz::fix::fix44::NewOrderSingle> {
   first member is its delimiter field. The codec writes the count and then each instance's fields
   in declaration order. On read, an instance ends at the first tag that the group does not own,
   or at a tag that repeats.
-* **Messages.** StandardHeader and StandardTrailer are left out. The writer fills 8, 9, 35 and
-  10, and the reader skips header tags it does not map (49, 56, 34, 52, ...).
+* **Messages.** The StandardHeader fields other than 8, 9 and 35 are flattened into every
+  message, ahead of the body fields, in the dictionary's header order: SenderCompID(49),
+  TargetCompID(56), MsgSeqNum(34), SendingTime(52), PossDupFlag(43), OrigSendingTime(122) and the
+  rest, and ApplVerID(1128) for FIX 5.x. They read and write like any other member, and the
+  required ones (49, 56, 34, 52) are plain members. The codec fills 8, 9, 35 and 10. The
+  StandardTrailer (93/89 signature) is left out. `--no-header` turns the flattening off.
+* **Session layer.** Logon, Heartbeat, TestRequest, ResendRequest, Reject, SequenceReset and
+  Logout come from the same Orchestra files (`OrchestraFIX42.xml`, `OrchestraFIX44.xml`, which
+  include the Session category), so they are ordinary generated messages. Boolean code sets such
+  as GapFillFlag(123), ResetSeqNumFlag(141) and PossDupFlag(43) are `bool`.
+* **FIX 5.x / FIXT.1.1.** For a dictionary whose version is FIX.5.x or FIX.Latest, the generator
+  sets `fix_begin_string = "FIXT.1.1"` (tag 8 on the wire). The namespace gets
+  `begin_string = "FIXT.1.1"`, `dictionary_version = "FIX.5.0SP2"` and `appl_ver_id = "9"`, and
+  message metas get `fix_appl_ver_id = "9"` (from the ApplVerID code set: 7 = 5.0, 8 = 5.0 SP1,
+  9 = 5.0 SP2). FIX.Latest has no fixed ApplVerID, so none is emitted for it. The ApplVerID(1128)
+  member is `std::optional<std::string>`. The application sets it (e.g. to
+  `std::string(fix50sp2::appl_ver_id)`) or leaves it absent when the session's
+  DefaultApplVerID applies.
 * **Name clashes** between structs and enums are resolved by appending `2`, `3`, ....
 
 ## Relation to the `fix/core` contract
@@ -141,17 +157,22 @@ template <> struct glz::meta<glz::fix::fix44::NewOrderSingle> {
   the delimiter.
 * Proposed, not in the contract: `glz::meta<Enum>::fix_values`, which lets the codec reject a
   value outside its code set on read and write. It would also let String code sets be enums.
+* Needed from `fix/core` for FIXT (not changed here):
+  1. On read, compare tag 8 with `meta<T>::fix_begin_string` (opt-in, like `validate_msg_type`).
+     Today any BeginString is accepted.
+  2. On write, emit `1128=<meta<T>::fix_appl_ver_id>` after 35 when the message has no
+     ApplVerID member set. Today the application must set the member, or the field is absent.
+  3. A per-call or per-session BeginString override, for counterparties that send FIX 5.0 SP2
+     application messages with a FIX 4.x-style 8.
 * Reported to `fix/core`: doubles are written with shortest `std::to_chars`, which gives an
   exponent for values like 1000000 (`1e+06`). FIX float fields have no exponent, so
   `std::chars_format::fixed` is needed. The byte-exact test here avoids such values for now.
 
 ## Limitations
 
-* FIX 5.0 SP2 runs over FIXT.1.1: on the wire, 8 is `FIXT.1.1`, and ApplVerID(1128) may be
-  present. `fix50sp2`'s `fix_begin_string` is `FIX.5.0SP2`, the dictionary version. The `fix/core` writer
-  emits that as 8, so a FIXT session needs `fix/core` to take BeginString from a session option
-  (open question for `fix/core`). The 5.0 SP2 file holds the application layer only. FIXT session
-  messages come from `FIXTSession.xml` in orchestrations, which is not generated yet.
+* The 5.0 SP2 file holds the application layer only. FIXT.1.1 session messages (Logon with
+  DefaultApplVerID(1137), etc.) come from `FIXTSession.xml` in orchestrations, which has not been
+  generated or tested yet. The generator accepts it like any other Orchestra file.
 * The 2010 Unified file is EP247, so it lacks extension packs after EP247.
 * Enum values are not checked against their code set (the codec reads and writes the
   underlying value). A required enum left default-constructed is written as a NUL byte.
