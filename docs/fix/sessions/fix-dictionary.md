@@ -71,7 +71,7 @@ validates. Field values (order IDs, symbols, prices) are made up.
 * `cmake --preset gcc-debug && cmake --build build/debug-gcc --target fix_dictionary_test`
   (needs CMake ≥ 3.31; `pip install --user cmake` was used here), then run
   `build/debug-gcc/tests/fix_dictionary_test/fix_dictionary_test`.
-* FIX 5.0 SP2 scratch check: passed (GCC 13, `-Werror`, about 2m20s to compile).
+* FIX 5.0 SP2 scratch check: passed, both with the stub and again after merging `fix/core` (GCC 13, `-Werror`, about 2m20s to compile).
   Input `8=FIXT.1.1|...|35=D|11=SP2-1|453=1|448=DESK|447=D|452=3|55=VOD.L|54=2|...` was read,
   written and read back, and compared equal. The output begins `8=FIX.5.0SP2`. See "Not done"
   about FIXT.
