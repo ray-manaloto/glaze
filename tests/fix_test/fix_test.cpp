@@ -96,7 +96,25 @@ struct glz::meta<Heartbeat>
    static constexpr auto value = glz::object("112", &T::test_req_id);
 };
 
-static constexpr glz::fix_opts pipe{{}, glz::FIX, '|'};
+enum class ExecType : char { new_ = '0', trade = 'F' };
+
+// Read-only view type: string_view members point into the input buffer.
+struct ExecView
+{
+   std::string_view order_id{};
+   char ord_status{};
+   ExecType exec_type{};
+};
+
+template <>
+struct glz::meta<ExecView>
+{
+   using T = ExecView;
+   static constexpr auto fix_msg_type = "8";
+   static constexpr auto value = glz::object("37", &T::order_id, "39", &T::ord_status, "150", &T::exec_type);
+};
+
+static constexpr glz::fix_opts pipe = glz::fix::pipe_opts;
 
 // Builds a pipe-delimited message with correct 9 and 10 around "35=...|body".
 static std::string make_msg(std::string_view begin, std::string_view body)
@@ -303,6 +321,29 @@ suite struct_mapping = [] {
       Multileg r{};
       expect(!glz::read<pipe>(r, std::string_view{"11=Q|38=7|"}));
       expect(r.cl_ord_id == "Q" && r.qty == 7u);
+   };
+   "write_rejects_delimiter_in_value"_test = [] {
+      Multileg m{"A|B", {}, 1};
+      std::string buf;
+      auto ec = glz::write<pipe>(m, buf);
+      expect(ec == glz::error_code::syntax_error);
+      expect(ec.custom_error_message == "fix: value contains the field delimiter");
+   };
+   "empty_values_not_written"_test = [] {
+      Multileg m{"", {}, 3};
+      std::string buf;
+      expect(!glz::write<pipe>(m, buf));
+      expect(buf.find("|11=") == std::string::npos);
+      expect(buf.find("|38=3|") != std::string::npos);
+   };
+   "string_view_members_are_views"_test = [] {
+      const auto m = make_msg("FIX.4.4", "35=8|37=EX-9|39=2|150=F|");
+      ExecView v{};
+      expect(!glz::read<pipe>(v, m));
+      expect(v.order_id == "EX-9");
+      expect(v.order_id.data() >= m.data() && v.order_id.data() < m.data() + m.size()); // zero copy
+      expect(v.ord_status == '2');
+      expect(v.exec_type == ExecType::trade);
    };
    "value_errors"_test = [] {
       NewOrderSingle r{};

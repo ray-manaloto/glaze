@@ -288,6 +288,23 @@ namespace glz::fix::detail
       else return false;
    }
 
+   // Encodes one value plus its delimiter. A value may not contain the delimiter (or be an empty char).
+   template <auto Opts, class V>
+   void encode_checked(std::string& out, const V& v, context& ctx)
+   {
+      const size_t start = out.size();
+      if (!encode_scalar(out, v)) {
+         ctx.error = error_code::dump_int_error;
+         return;
+      }
+      if (std::string_view{out}.substr(start).find(Opts.soh) != std::string_view::npos) {
+         ctx.error = error_code::syntax_error;
+         ctx.custom_error_message = "fix: value contains the field delimiter";
+         return;
+      }
+      out.push_back(Opts.soh);
+   }
+
    template <auto Opts, class T>
    void encode_struct(std::string& out, const T& value, context& ctx)
    {
@@ -309,15 +326,13 @@ namespace glz::fix::detail
          else if constexpr (is_std_optional<M>::value) {
             if (!member || value_is_empty(*member)) return;
             put_tag<Opts>(out, tag);
-            if (!encode_scalar(out, *member)) ctx.error = error_code::dump_int_error;
-            out.push_back(Opts.soh);
+            encode_checked<Opts>(out, *member, ctx);
          }
          else {
             // FIX forbids empty values, so an empty string is treated as "not present"
             if (value_is_empty(member)) return;
             put_tag<Opts>(out, tag);
-            if (!encode_scalar(out, member)) ctx.error = error_code::dump_int_error;
-            out.push_back(Opts.soh);
+            encode_checked<Opts>(out, member, ctx);
          }
       });
    }
@@ -416,6 +431,7 @@ namespace glz
          fix::detail::encode_struct<Opts>(body, value, c);
          if (bool(c.error)) {
             ctx.error = c.error;
+            ctx.custom_error_message = c.custom_error_message;
             return;
          }
          std::string msg;

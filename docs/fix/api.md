@@ -25,7 +25,7 @@ namespace glz {
 ```
 
 `fix_opts` is an aggregate whose first base is `glz::opts`, so positional initialisation is
-`glz::fix_opts{{}, glz::FIX, '|'}`; designated initialisers also work for the FIX members.
+`glz::fix_opts{{}, glz::FIX, '|'}`. `glz::fix::pipe_opts` is a ready-made `fix_opts` with `soh = '|'` (GCC warns on `fix_opts{.soh = '|'}` under `-Wextra` because the base cannot be designated).
 
 ## Scanner (`glaze/fix/scan.hpp`)
 
@@ -84,7 +84,7 @@ supported (pure reflection would give member names, not tags). Member types:
 | `bool` | Boolean | `Y` / `N` | `Y` / `N` only |
 | `std::string` | String, UTCTimestamp, etc. as text | verbatim, empty = not written | copied |
 | `std::string_view` | as above | verbatim | **view into the input buffer** |
-| enums | underlying integer | integer | integer |
+| enums | per underlying type (`char` enum = 1-char code, integer enum = number) | underlying value | underlying value |
 | `std::optional<X>` | optional field | absent if `nullopt` | emplaced when present |
 | `std::vector<G>` with `G` FIX-mapped | repeating group | key = NoXXX count; entries follow | see below |
 
@@ -111,6 +111,7 @@ the exact problem.
 | Condition | `error_code` | message |
 |---|---|---|
 | malformed field (no `=`, bad tag, empty value) | `syntax_error` | `fix: malformed field` |
+| value to write contains the delimiter | `syntax_error` | `fix: value contains the field delimiter` |
 | last field has no delimiter | `unexpected_end` (scanner) / `syntax_error` (validate) | `fix: malformed field` |
 | empty input | `no_read_input` | `fix: empty message` |
 | 8/9/35 not first/second/third, 9 not a number | `invalid_header` | names the tag |
@@ -126,5 +127,5 @@ the exact problem.
 
 ## Changelog
 
-* v1 (initial): contract as given, plus the extensions marked above: `error_on_unknown_tags`,
+* v1 (initial): contract as given, plus the extensions marked above: `glz::fix::pipe_opts`, `error_on_unknown_tags`,
   `validate_msg_type`, `frame_error`, the two defaulted flags on `validate`, `meta<T>::fix_begin_string`.

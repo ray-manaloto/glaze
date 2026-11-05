@@ -23,3 +23,14 @@ namespace glz
       bool validate_msg_type = true; // on read, tag 35 must equal glz::meta<T>::fix_msg_type when it is declared
    };
 }
+
+namespace glz::fix
+{
+   // fix_opts with '|' as the delimiter, for readable tests. GCC warns (-Wmissing-field-initializers)
+   // on glz::fix_opts{.soh = '|'} because the glz::opts base cannot be designated.
+   inline constexpr fix_opts pipe_opts = [] {
+      fix_opts o{};
+      o.soh = '|';
+      return o;
+   }();
+}
