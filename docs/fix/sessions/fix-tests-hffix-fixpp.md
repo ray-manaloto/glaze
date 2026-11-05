@@ -48,9 +48,8 @@
 - The configure step needs CMake 3.31 or newer. The container has 3.28, so a pip-installed CMake 4.4
   was used: `cmake --preset gcc-debug`, then `cmake --build build/debug-gcc --target fix_hffix_test fix_fixpp_test`,
   then `ctest -R fix_`. Both targets pass.
-- **Pushing failed.** The git proxy returned 403 because `ray-manaloto/glaze` was not among this
-  session's authorised repositories. The commits exist only in the session container unless a push
-  later succeeded.
+- Pushing was blocked at first: the git proxy returned 403 until `ray-manaloto/glaze` was added to
+  the session's sources. After that the branch was pushed.
 
 ## Provenance of every ported test
 
@@ -74,11 +73,10 @@ The reference repositories were cloned with `git clone --depth 1` into `/tmp/ref
 
 ## Next steps
 
-1. Push this branch from a session or machine that has write access.
-2. Merge `fix/core`, delete the stub `include/glaze/fix/fix.hpp` in favour of core's header, and
+1. Merge `fix/core`, delete the stub `include/glaze/fix/fix.hpp` in favour of core's header, and
    rebuild both targets. Then define `GLZ_FIX_HAS_STRUCT_MAPPING` and fix the struct tests to
    match core's real API: how `fix_opts` is constructed, whether header tags 49/56/34/52 need
    members, and how optional group fields work.
-3. Get core's answers to the open questions in `docs/fix/ported-tests-hffix-fixpp.md` and turn
+2. Get core's answers to the open questions in `docs/fix/ported-tests-hffix-fixpp.md` and turn
    the matching SKIPs into tests.
-4. Optionally add `fix.5.0.set.1` (2 MB) through a fetch step instead of committing it.
+3. Optionally add `fix.5.0.set.1` (2 MB) through a fetch step instead of committing it.
