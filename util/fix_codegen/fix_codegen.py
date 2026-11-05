@@ -28,6 +28,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -110,9 +111,69 @@ class Repo:
             self.messages.append((m.get("name"), m.get("msgType"), m.find(F + "structure")))
 
 
+class Repo2010(Repo):
+    """Adapter for the FIX Repository 2010 Edition "Unified" format (e.g. FIX.5.0SP2_EP247).
+
+    It is rewritten into the same in-memory model as an Orchestra file: enums inline in a
+    <field> become a code set named after the field; a BlockRepeating component and an
+    inline <repeatingGroup> become groups; required="1" becomes presence="required".
+    """
+
+    def __init__(self, path: str):
+        root = ET.parse(path).getroot()
+        fix = root.find("fix")
+        self.name = fix.get("version", "").split("_")[0]
+        self.version = fix.get("version", "")
+        self.codesets, self.fields, self.components, self.groups, self.messages = {}, {}, {}, {}, []
+        for f in fix.find("fields"):
+            name, ftype = f.get("name"), f.get("type")
+            enums = f.findall("enum")
+            if enums:
+                cs = name + "CodeSet"
+                self.codesets[cs] = (ftype, [(e.get("symbolicName"), e.get("value")) for e in enums])
+                ftype = cs
+            self.fields[int(f.get("id"))] = (name, ftype)
+        self.raw = {int(c.get("id")): c for c in fix.find("components")}
+        self.repeating = {cid for cid, c in self.raw.items() if c.get("type") == "BlockRepeating"}
+        self.next_gid = 900000
+        for cid, c in self.raw.items():
+            if cid in self.repeating:
+                rg = c.find("repeatingGroup")
+                self.groups[cid] = (c.get("name"), int(rg.get("id")), self.convert(rg))
+            else:
+                self.components[cid] = (c.get("name"), self.convert(c))
+        for m in fix.find("messages"):
+            self.messages.append((m.get("name"), m.get("msgType"), self.convert(m)))
+
+    def convert(self, elem):
+        out = ET.Element(F + "structure")
+        for child in elem:
+            req = {"presence": "required"} if child.get("required") == "1" else {}
+            if child.tag == "fieldRef":
+                ET.SubElement(out, F + "fieldRef", id=child.get("id"), **req)
+            elif child.tag == "componentRef":
+                kind = "groupRef" if int(child.get("id")) in self.repeating else "componentRef"
+                ET.SubElement(out, F + kind, id=child.get("id"), **req)
+            elif child.tag == "repeatingGroup":
+                nig = int(child.get("id"))
+                gid = self.next_gid
+                self.next_gid += 1
+                base = self.fields[nig][0]
+                base = base[2:] if base.startswith("No") else base
+                self.groups[gid] = (base, nig, self.convert(child))
+                ET.SubElement(out, F + "groupRef", id=str(gid), **req)
+        return out
+
+
+def load(path: str) -> Repo:
+    root = ET.parse(path).getroot()
+    return Repo2010(path) if root.tag == "fixRepository" else Repo(path)
+
+
 class Gen:
-    def __init__(self, repo: Repo, ns: str):
+    def __init__(self, repo: Repo, ns: str, source: str = ""):
         self.r = repo
+        self.source = source
         self.ns = ns
         self.used_names: set[str] = set()
         self.enum_names: dict[str, str] = {}  # codeset name -> C++ enum name
@@ -307,7 +368,7 @@ class Gen:
         o.append("//")
         o.append("// GENERATED FILE - do not edit. Produced by util/fix_codegen/fix_codegen.py from the")
         o.append(f"// FIX Orchestra repository file for {self.r.name} (version {self.r.version}).")
-        o.append("// Source data: https://github.com/FIXTradingCommunity/orchestrations")
+        o.append(f"// Source data file: {self.source} (https://github.com/FIXTradingCommunity)")
         o.append("// Copyright (c) FIX Protocol Ltd., licensed under the Apache License, Version 2.0;")
         o.append("// see LICENSE-FIX-ORCHESTRA beside this file.")
         o.append("")
@@ -359,11 +420,11 @@ class Gen:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--xml", required=True, help="Orchestra repository XML file")
+    ap.add_argument("--xml", required=True, help="Orchestra repository XML, or a Repository 2010 Unified XML")
     ap.add_argument("--namespace", required=True, help="C++ namespace under glz::fix, e.g. fix44")
     ap.add_argument("--out", required=True, help="output header path")
     a = ap.parse_args(argv)
-    text = Gen(Repo(a.xml), a.namespace).run()
+    text = Gen(load(a.xml), a.namespace, os.path.basename(a.xml)).run()
     with open(a.out, "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
     return 0

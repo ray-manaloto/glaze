@@ -3,7 +3,7 @@
 //
 // GENERATED FILE - do not edit. Produced by util/fix_codegen/fix_codegen.py from the
 // FIX Orchestra repository file for FIX.4.4 (version FIX.4.4_EP311).
-// Source data: https://github.com/FIXTradingCommunity/orchestrations
+// Source data file: OrchestraFIX44.xml (https://github.com/FIXTradingCommunity)
 // Copyright (c) FIX Protocol Ltd., licensed under the Apache License, Version 2.0;
 // see LICENSE-FIX-ORCHESTRA beside this file.
 
