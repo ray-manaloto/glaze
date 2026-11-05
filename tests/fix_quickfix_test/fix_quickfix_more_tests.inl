@@ -752,3 +752,155 @@ suite quickfix_more_groups = [] {
            "fix/core does not support length-prefixed data fields yet (docs/fix/api.md)");
    };
 };
+
+// MessagesTestCase.cpp / MessageTests / newOrderCross*, allocationInstruction* (FIX 4.4, nested and header groups)
+namespace qf_more
+{
+   struct CrossParty
+   {
+      std::string party_id; // 448
+      char party_id_source{}; // 447
+      int32_t party_role{}; // 452
+   };
+   struct CrossSide
+   {
+      char side{}; // 54
+      std::vector<CrossParty> parties; // 453
+      double order_qty{}; // 38
+   };
+   struct NewOrderCross44
+   {
+      std::vector<CrossSide> sides; // 552
+   };
+   struct AllocHop
+   {
+      std::string hop_comp_id; // 628
+      std::string hop_sending_time; // 629
+      int32_t hop_ref_id{}; // 630
+   };
+   struct AllocationInstruction44
+   {
+      int32_t msg_seq_num{}; // 34
+      std::string sender_comp_id; // 49
+      std::string sending_time; // 52
+      std::string target_comp_id; // 56
+      std::vector<AllocHop> hops; // 627
+      double avg_px{}; // 6
+      double quantity{}; // 53
+      std::string alloc_id; // 70
+      char alloc_trans_type{}; // 71
+      std::string trade_date; // 75
+      int32_t alloc_type{}; // 626
+      int32_t alloc_no_orders_type{-1}; // 857
+   };
+}
+template <>
+struct glz::meta<qf_more::CrossParty>
+{
+   using T = qf_more::CrossParty;
+   static constexpr auto value = glz::object("448", &T::party_id, "447", &T::party_id_source, "452", &T::party_role);
+};
+template <>
+struct glz::meta<qf_more::CrossSide>
+{
+   using T = qf_more::CrossSide;
+   static constexpr auto value = glz::object("54", &T::side, "453", &T::parties, "38", &T::order_qty);
+};
+template <>
+struct glz::meta<qf_more::NewOrderCross44>
+{
+   using T = qf_more::NewOrderCross44;
+   static constexpr auto fix_msg_type = "s";
+   static constexpr auto fix_begin_string = "FIX.4.4";
+   static constexpr auto value = glz::object("552", &T::sides);
+};
+template <>
+struct glz::meta<qf_more::AllocHop>
+{
+   using T = qf_more::AllocHop;
+   static constexpr auto value =
+      glz::object("628", &T::hop_comp_id, "629", &T::hop_sending_time, "630", &T::hop_ref_id);
+};
+template <>
+struct glz::meta<qf_more::AllocationInstruction44>
+{
+   using T = qf_more::AllocationInstruction44;
+   static constexpr auto fix_msg_type = "J";
+   static constexpr auto fix_begin_string = "FIX.4.4";
+   static constexpr auto value = glz::object(
+      "34", &T::msg_seq_num, "49", &T::sender_comp_id, "52", &T::sending_time, "56", &T::target_comp_id, "627",
+      &T::hops, "6", &T::avg_px, "53", &T::quantity, "70", &T::alloc_id, "71", &T::alloc_trans_type, "75",
+      &T::trade_date, "626", &T::alloc_type, "857", &T::alloc_no_orders_type);
+};
+
+suite quickfix_more_nested = [] {
+   using namespace qf_more;
+   constexpr std::string_view cross = "8=FIX.4.4\0019=75\00135=s\001552=1\00154=1\001453=2\001448=PARTY1\001"
+                                      "447=D\001452=3\001448=PARTY2\001447=D\001452=3\00138=100\00110=223\001";
+
+   "MessagesTestCase.cpp / MessageTests / newOrderCrossGetString"_test = [&] {
+      NewOrderCross44 m{{{'1', {{"PARTY1", 'D', 3}, {"PARTY2", 'D', 3}}, 100}}};
+      std::string buf;
+      expect(not glz::write<glz::fix_opts{}>(m, buf));
+      expect(buf == cross) << buf;
+   };
+   "MessagesTestCase.cpp / MessageTests / newOrderCrossSetString"_test = [&] {
+      NewOrderCross44 m{};
+      expect(not glz::read<glz::fix_opts{}>(m, cross));
+      expect(m.sides.size() == 1u);
+      if (m.sides.size() != 1u) return;
+      const auto& s = m.sides[0];
+      expect(s.side == '1');
+      expect(s.order_qty == 100.0); // 38 follows the nested 453 group, still in the 552 entry
+      expect(s.parties.size() == 2u);
+      if (s.parties.size() == 2u) {
+         expect(s.parties[0].party_id == "PARTY1" and s.parties[0].party_id_source == 'D' and
+                s.parties[0].party_role == 3);
+         expect(s.parties[1].party_id == "PARTY2" and s.parties[1].party_id_source == 'D' and
+                s.parties[1].party_role == 3);
+      }
+   };
+
+   "MessagesTestCase.cpp / MessageTests / allocationInstructionParseGetString"_test = [] {
+      constexpr std::string_view expected =
+         "8=FIX.4.4\0019=121\00135=J\00134=1\00149=SENDER\00156=TARGET\001627=2\001"
+         "628=HOP1\001630=1\001628=HOP2\001630=2\0016=23.1\00153=100\00170=Alloc001\001"
+         "71=0\00175=20170317\001626=1\001857=0\00110=159\001";
+      AllocationInstruction44 m{};
+      m.msg_seq_num = 1;
+      m.sender_comp_id = "SENDER";
+      m.target_comp_id = "TARGET";
+      m.hops = {{"HOP1", "", 1}, {"HOP2", "", 2}}; // empty strings are not written
+      m.avg_px = 23.1;
+      m.quantity = 100;
+      m.alloc_id = "Alloc001";
+      m.alloc_trans_type = '0';
+      m.trade_date = "20170317";
+      m.alloc_type = 1;
+      m.alloc_no_orders_type = 0;
+      std::string buf;
+      expect(not glz::write<glz::fix_opts{}>(m, buf));
+      expect(buf == expected) << buf;
+   };
+   "MessagesTestCase.cpp / MessageTests / allocationInstructionString"_test = [] {
+      constexpr std::string_view msg =
+         "8=FIX.4.4\0019=198\00135=J\00134=1\00149=SENDER\00152=20170317-15:55:23.685\001"
+         "56=TARGET\001627=2\001628=HOP1\001629=20170317-15:55:23.685\001630=1\001"
+         "628=HOP2\001629=20170317-15:55:23.685\001630=2\0016=23.1\00153=100\001"
+         "70=Alloc001\00171=0\00175=20170317\001626=1\001857=0\00110=196\001";
+      expect(is_valid(msg));
+      AllocationInstruction44 m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.sender_comp_id == "SENDER" and m.target_comp_id == "TARGET" and m.msg_seq_num == 1);
+      expect(m.sending_time == "20170317-15:55:23.685");
+      expect(m.hops.size() == 2u);
+      if (m.hops.size() == 2u) {
+         expect(m.hops[0].hop_comp_id == "HOP1" and m.hops[0].hop_ref_id == 1);
+         expect(m.hops[1].hop_comp_id == "HOP2" and m.hops[1].hop_sending_time == "20170317-15:55:23.685" and
+                m.hops[1].hop_ref_id == 2);
+      }
+      expect(m.alloc_id == "Alloc001" and m.alloc_trans_type == '0' and m.alloc_type == 1);
+      expect(m.alloc_no_orders_type == 0 and m.quantity == 100.0 and m.avg_px == 23.1);
+      expect(m.trade_date == "20170317");
+   };
+};
