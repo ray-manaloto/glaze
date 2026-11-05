@@ -38,13 +38,13 @@ FIX libraries. The cases are rewritten for the shared contract in `include/glaze
 
 ## Open questions for `fix/core`
 
-1. Length-prefixed data fields (95/96, 40980/40981) containing SOH: core says this is not supported yet.
+1. Length-prefixed data fields containing SOH: supported since core v2 and tested (`data_with_embedded_soh`, `raw_data_roundtrip`).
 2. Should `parse_fields` and `validate` accept a final `10=NNN` with no SOH after it? The tests
    assume they should not: the message counts as incomplete.
 3. Empty values (`37=`): settled by core. They are rejected with `syntax_error`, and the test now
    expects that.
 4. Does `glz::read` check BeginString (8)? fixpp rejects `FIX.5.1`.
-5. Will FIX UTCTimestamp, UTCDate and UTCTimeOnly map to `std::chrono` types?
+5. Typed times: core v2 has `utc_timestamp` (tested). UTCDateOnly and UTCTimeOnly are still text (skipped).
 
 ## Known core gaps (guarded by `GLZ_FIX_KNOWN_FAILURES`)
 

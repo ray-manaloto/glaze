@@ -214,9 +214,7 @@ suite hffix_basic = [] {
    };
 
    // unit_tests.cpp: data_length - hffix uses the length field so binary data may contain SOH.
-   skip("data_with_embedded_soh",
-        "the contract does not yet say whether parse_fields honours length-prefixed data fields (95/96) "
-        "containing SOH; expected: 95=3|96=a\\x01b| yields 96 = \"a\\x01b\"");
+   // ported in fix_hffix_more.cpp as data_with_embedded_soh (fix/core v2 raw-data fields)
 
    // unit_tests.cpp: iterating - ten messages back to back, each with exactly one body field
    "iterating"_test = [] {
@@ -266,8 +264,9 @@ suite hffix_basic = [] {
       expect(nf.has_value() && find(*nf, 52)->value == "20170809-12:34:56.123456789");
       expect(nf.has_value() && find(*nf, 273)->value == "12:34:00.789456123");
    };
-   skip("chrono_typed", "the contract defines no mapping of FIX UTCTimestamp/UTCTimeOnly to std::chrono types; "
-                        "hffix expects 1502282096123 ms <-> 20170809-12:34:56.123 and 12:34:00.789 <-> 45240789 ms");
+   // UTCTimestamp part ported in fix_hffix_more.cpp (chrono_timestamp, chrono_nano_timestamp)
+   skip("chrono_typed (UTCTimeOnly)", "fix/core v2 has a typed UTCTimestamp but no UTCTimeOnly; hffix expects "
+                                      "12:34:00.789 <-> 45240789 ms and 12:34:00.789456123 <-> ns");
 
    // unit_tests.cpp: message_writer_bounds - hffix writes into fixed buffers and throws on overflow.
    skip("message_writer_bounds", "glz::write targets a growable buffer; fixed-size buffer overflow behaviour of the "

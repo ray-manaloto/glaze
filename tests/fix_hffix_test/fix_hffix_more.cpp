@@ -508,3 +508,102 @@ suite hffix_more_fixt = [] {
       expect(n == 1u);
    };
 };
+
+// ---- fix/core v2: raw-data fields and typed timestamps ----
+struct hffix_raw_msg
+{
+   std::string raw{};
+   std::string text{};
+};
+template <>
+struct glz::meta<hffix_raw_msg>
+{
+   using T = hffix_raw_msg;
+   static constexpr auto fix_msg_type = "A";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value = glz::object("96", &T::raw, "58", &T::text);
+};
+
+struct hffix_timed
+{
+   glz::fix::utc_timestamp sending_time{};
+};
+template <>
+struct glz::meta<hffix_timed>
+{
+   using T = hffix_timed;
+   static constexpr auto fix_msg_type = "A";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value = glz::object("52", &T::sending_time);
+};
+
+suite hffix_more_v2 = [] {
+   // unit_tests.cpp: data_length - the data value is taken by byte count, so it may contain SOH
+   "data_with_embedded_soh"_test = [] {
+      std::string body = std::string("35=A\x01" "95=3\x01" "96=a\x01" "b\x01" "58=t\x01");
+      std::string msg = "8=FIX.4.2\x01" "9=" + std::to_string(body.size()) + "\x01" + body;
+      std::string cs = std::to_string(glz::fix::checksum(msg));
+      while (cs.size() < 3) cs.insert(cs.begin(), '0');
+      msg += "10=" + cs + "\x01";
+      expect(!glz::fix::validate(msg));
+      auto f = glz::fix::parse_fields(msg);
+      expect(f.has_value());
+      if (f) {
+         bool found = false;
+         for (auto& x : *f)
+            if (x.tag == 96) found = x.value == std::string_view("a\x01" "b", 3);
+         expect(found);
+      }
+      hffix_raw_msg m{};
+      expect(!glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.raw == std::string("a\x01" "b", 3) && m.text == "t");
+   };
+
+   "raw_data_roundtrip"_test = [] {
+      hffix_raw_msg in{std::string("bin\x01=\0data", 10), "x"};
+      std::string buf;
+      expect(!glz::write<glz::fix_opts{}>(in, buf));
+      expect(buf.find("\x01" "95=10\x01" "96=") != std::string::npos);
+      expect(!glz::fix::validate(buf));
+      hffix_raw_msg out{};
+      expect(!glz::read<glz::fix_opts{}>(out, buf));
+      expect(out.raw == in.raw && out.text == "x");
+   };
+
+   "raw_data_length_past_end"_test = [] {
+      auto f = glz::fix::parse_fields("95=50|96=abc|", '|');
+      expect(!f.has_value());
+   };
+
+   // unit_tests.cpp: chrono - 1502282096123 ms <-> 20170809-12:34:56.123
+   "chrono_timestamp"_test = [] {
+      using namespace std::chrono;
+      hffix_timed in{};
+      in.sending_time.time = sys_time<nanoseconds>(milliseconds(1502282096123ULL));
+      in.sending_time.precision = 3;
+      std::string buf;
+      expect(!glz::write<glz::fix_opts{}>(in, buf));
+      expect(buf.find("\x01" "52=20170809-12:34:56.123\x01") != std::string::npos);
+      hffix_timed out{};
+      expect(!glz::read<glz::fix_opts{}>(out, buf));
+      expect(out.sending_time == in.sending_time);
+   };
+
+   // unit_tests.cpp: chrono_nano - 1502282096123456789 ns <-> 20170809-12:34:56.123456789
+   "chrono_nano_timestamp"_test = [] {
+      using namespace std::chrono;
+      glz::fix::utc_timestamp t{};
+      expect(glz::fix::parse_utc_timestamp("20170809-12:34:56.123456789", t));
+      expect(t.time == sys_time<nanoseconds>(nanoseconds(1502282096123456789ULL)) && t.precision == 9);
+      std::string out;
+      glz::fix::append_utc_timestamp(out, t);
+      expect(out == "20170809-12:34:56.123456789");
+   };
+
+   "chrono_bad_timestamp"_test = [] {
+      glz::fix::utc_timestamp t{};
+      expect(!glz::fix::parse_utc_timestamp("20170230-12:34:56", t)); // no 30 February
+      expect(!glz::fix::parse_utc_timestamp("20170809-24:00:00", t));
+      expect(!glz::fix::parse_utc_timestamp("20170809 12:34:56", t));
+   };
+};

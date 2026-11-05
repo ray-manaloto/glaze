@@ -285,9 +285,9 @@ suite fixpp_visitor = [] {
    };
 
    // visitor_test.cc: should_parse_utc_date / _time / _timestamp (+ milli/microseconds)
-   skip("should_parse_utc_date/time/timestamp",
-        "the contract defines no typed FIX UTCDate/UTCTimeOnly/UTCTimestamp; vectors: 20171105, 14:09:30, "
-        "14:09:30.123, 14:09:30.123456, 20171105-14:09:30 (.123, .123456)");
+   // should_parse_utc_timestamp* ported in fix_fixpp_more.cpp (fix/core v2 utc_timestamp)
+   skip("should_parse_utc_date/time",
+        "fix/core v2 has no typed UTCDateOnly/UTCTimeOnly; vectors: 20171105, 14:09:30, 14:09:30.123, 14:09:30.123456");
 };
 
 suite fixpp_writer = [] {
