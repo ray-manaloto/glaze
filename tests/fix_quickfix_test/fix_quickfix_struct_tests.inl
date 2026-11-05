@@ -615,13 +615,13 @@ suite quickfix_groups = [] {
       expect(not glz::read<glz::fix_opts{}>(m, withHeaderGroup44));
       expect(m.hops.size() == 2u);
    };
-   "GroupTestCase.cpp (derived): NoXXX count larger than entries present is rejected"_test = [] {
+   "glaze-original (not from QuickFIX): NoXXX count larger than entries present is rejected"_test = [] {
       const auto msg = make_msg("FIX.4.3", "35=A|34=125|49=BUYSIDE|52=20040916-16:19:18.328|56=SELLSIDE|"
                                            "627=3|628=HOP1|629=20040916-16:19:18.328|630=ID1|");
       LogonWithHops m{};
       expect(bool(glz::read<glz::fix_opts{}>(m, msg)));
    };
-   "GroupTestCase.cpp (derived): zero-count group reads as empty"_test = [] {
+   "glaze-original (not from QuickFIX): zero-count group reads as empty"_test = [] {
       const auto msg = make_msg("FIX.4.3", "35=A|34=125|49=BUYSIDE|52=20040916-16:19:18.328|56=SELLSIDE|627=0|");
       LogonWithHops m{};
       m.hops.resize(5);

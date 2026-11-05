@@ -451,6 +451,18 @@ suite quickfix_struct_mapping_skipped = [] {
 };
 #endif
 
+// Tests that need a data dictionary (which tags belong to the header/trailer, group layouts
+// unknown to the struct) are outside the contract.
+suite quickfix_dictionary_skipped = [] {
+   constexpr const char* why = "needs a data dictionary of header/trailer tags; the contract checks only 8, 9, 35 and 10";
+   skip("MessagesTestCase.cpp / MessageTests / headerFieldsFirst (52 after body field 55)", why);
+   skip("MessagesTestCase.cpp / MessageTests / setString / strBodyFields with DataDictionary header 11, trailer 60", why);
+   skip("MessagesTestCase.cpp / MessageTests / outOfOrder (re-sorting header/body/trailer on write)", why);
+   skip("MessagesTestCase.cpp / MessageTests / setStringWithDataFieldWithoutDataLength / ...GarbageAsDataLength", why);
+   skip("MessagesTestCase.cpp / MessageTests / setString_SignatureInTrailerWithoutSignatureLength", why);
+   skip("GroupTestCase.cpp / FieldMapTestCase.cpp (QuickFIX FieldMap/Group container API, no wire format)", "not applicable: API of QuickFIX's own containers");
+};
+
 // Contract does not define UTCTimestamp / UTCDateOnly / UTCTimeOnly types yet.
 suite quickfix_time_skipped = [] {
    constexpr const char* why = "contract defines no UTCTimestamp/UTCDateOnly/UTCTimeOnly C++ type; see docs/fix/sessions/fix-tests-quickfix.md";
