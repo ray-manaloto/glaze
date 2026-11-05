@@ -114,7 +114,8 @@ namespace
             expect(res->size() == to_size(v.get("count"))) << id << ": field count " << res->size();
          }
          if (v.has("fields")) {
-            const auto want_text = to_soh(v.get("fields")); // the views in `want` point into this
+            auto want_text = to_soh(v.get("fields")); // the views in `want` point into this
+            if (!want_text.empty() && want_text.back() != '\x01') want_text.push_back('\x01'); // trailing | optional
             const auto want = glz::fix::parse_fields(want_text, '\x01');
             expect(want.has_value()) << id << ": malformed 'fields' in vector";
             if (!want) return;

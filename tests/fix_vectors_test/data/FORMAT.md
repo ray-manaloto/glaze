@@ -19,7 +19,7 @@ Keys:
 | `stream`   | frame    | bytes possibly holding 0, 1 or more messages |
 | `bytes`    | checksum | bytes the checksum is computed over |
 | `expect`   | parse/validate | `ok` or `error` |
-| `fields`   | optional (parse, expect=ok) | expected `tag=value` list, `|`-separated, in order |
+| `fields`   | optional (parse, expect=ok) | expected `tag=value` list, `|`-separated, in order (a trailing `|` is optional) |
 | `count`    | optional (parse, expect=ok) | expected number of fields |
 | `frame_len`| frame    | length of the first complete message, `0` if incomplete |
 | `value`    | checksum | expected checksum, decimal 0..255 |
