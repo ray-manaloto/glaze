@@ -13,7 +13,8 @@
    A third round at about 07:36 UTC (core: `field_cursor`/`for_each_field`; dictionary: FIXT.1.1 and
    flattened StandardHeader; more quickfix, hffix/fixpp, vectors and fuzz updates) conflicted only in
    `tests/fix_test/fix_test.cpp`, where `fix/core` had fixed the same `raw_data_roundtrip` literal bug
-   (below) its own way; `fix/core`'s version was taken.
+   (below) its own way; `fix/core`'s version was taken. A fourth round at about 07:38 UTC (dictionary,
+   quickfix, hffix/fixpp, more-parsers) merged without conflicts.
 4. Configured once per compiler (Ninja, Debug, `-Dglaze_DEVELOPER_MODE=ON`) and built only the
    seven FIX test targets. GCC builds with `-fno-exceptions -fno-rtti -Werror -std=gnu++23`.
 
@@ -52,7 +53,7 @@ Workaround used: `apt-get install clang-19` (19.1.1 from Ubuntu noble), configur
 `clang-scan-deps-19`, so CMake's module scanning fails without that option). The Clang build uses
 the test project's `-fno-exceptions -fno-rtti -Werror` and ASan/UBSan.
 
-## Results (after the third merge round)
+## Results (after the fourth merge round, 07:38 UTC)
 
 `ctest -R '^fix_'`: GCC 7/7 pass, Clang 19 7/7 pass.
 
@@ -65,8 +66,8 @@ gaps (not run, not counted in "run").
 | fix_test             | 32  | 32  | 0 | 0  | 32  | 32  | 0 | 0  |
 | fix_dictionary_test  | 24  | 24  | 0 | 0  | 24  | 24  | 0 | 0  |
 | fix_hffix_test       | 44  | 44  | 0 | 6  | 44  | 44  | 0 | 6  |
-| fix_fixpp_test       | 43  | 43  | 0 | 4  | 43  | 43  | 0 | 4  |
-| fix_quickfix_test    | 159 | 159 | 0 | 19 | 159 | 159 | 0 | 19 |
+| fix_fixpp_test       | 47  | 47  | 0 | 6  | 47  | 47  | 0 | 6  |
+| fix_quickfix_test    | 163 | 163 | 0 | 20 | 163 | 163 | 0 | 20 |
 | fix_vectors_test     | 373 | 373 | 0 | 0  | 373 | 373 | 0 | 0  |
 | fix_property_test    | 35  | 35  | 0 | 0  | 35  | 35  | 0 | 0  |
 | Clang 18.1.3         | —   | —   | — | —  | does not compile (see above) | | | |
