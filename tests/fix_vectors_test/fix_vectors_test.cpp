@@ -139,7 +139,8 @@ namespace
       else if (kind == "frame") {
          const auto stream = to_soh(v.get("stream"));
          const auto n = glz::fix::frame(stream, '\x01');
-         expect(n == to_size(v.get("frame_len"))) << id << ": frame returned " << n;
+         const auto want = v.get("frame_len") == "error" ? glz::fix::frame_error : to_size(v.get("frame_len"));
+         expect(n == want) << id << ": frame returned " << n;
       }
       else if (kind == "checksum") {
          const auto bytes = to_soh(v.get("bytes"));

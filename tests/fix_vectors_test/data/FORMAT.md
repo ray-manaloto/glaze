@@ -21,7 +21,7 @@ Keys:
 | `expect`   | parse/validate | `ok` or `error` |
 | `fields`   | optional (parse, expect=ok) | expected `tag=value` list, `|`-separated, in order (a trailing `|` is optional) |
 | `count`    | optional (parse, expect=ok) | expected number of fields |
-| `frame_len`| frame    | length of the first complete message, `0` if incomplete |
+| `frame_len`| frame    | length of the first complete message, `0` if incomplete, `error` for `glz::fix::frame_error` |
 | `value`    | checksum | expected checksum, decimal 0..255 |
 | `note`     | optional | what the vector checks |
 | `pending`  | optional | the expected outcome depends on an open API-contract question (text says which); the runner lists the vector but does not assert it |

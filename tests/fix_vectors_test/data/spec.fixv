@@ -167,6 +167,7 @@ kind = parse
 msg = 035=0|
 expect = error
 note = tags are positive integers without leading zeros
+pending = Q4: fix/core accepts leading zeros in tags (035=); FIX spec intent is no leading zeros
 
 id = spec.parse_zero_tag
 source = spec

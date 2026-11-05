@@ -121,8 +121,8 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `philadelphia.partial_check_sum_tag_frame` | frame | len 0 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialCheckSumTag` | truncated input: parser returns false and consumes nothing |
 | `philadelphia.partial_check_sum_value_missing_frame` | frame | len 0 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialCheckSumValueMissing` | truncated input: parser returns false and consumes nothing |
 | `philadelphia.partial_check_sum_value_frame` | frame | len 0 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialCheckSumValue` | truncated input: parser returns false and consumes nothing |
-| `philadelphia.garbled_begin_string_frame` | frame | len 0 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBeginString` | 9= before 8=: no message produced |
-| `philadelphia.garbled_body_length_frame` | frame | len 0 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBodyLength` | second field is 8= instead of 9=: no message produced |
+| `philadelphia.garbled_begin_string_frame` | frame | len error | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBeginString` | 9= before 8=: no message produced; glz::fix::frame reports frame_error for a front that cannot start a message (docs/fix/api.md) |
+| `philadelphia.garbled_body_length_frame` | frame | len error | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBodyLength` | second field is 8= instead of 9=: no message produced; glz::fix::frame reports frame_error for a front that cannot start a message (docs/fix/api.md) |
 | `philadelphia.heartbeat_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::heartbeat` | Heartbeat sent by initiator; exact wire bytes asserted by the test |
 | `philadelphia.test_request_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest` | TestRequest sent by initiator; exact wire bytes asserted by the test |
 | `philadelphia.receive_message_without_msg_seq_num_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveMessageWithoutMsgSeqNum` | Logout with Text containing spaces and parentheses; exact wire bytes asserted by the test |
@@ -162,8 +162,8 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `simplefix.partial_string_reassembled` | frame | len 26 | `da4089/simplefix:test/test_parser.py::test_parse_partial_string` | both fragments appended form one complete message |
 | `simplefix.get_buffer_after_message` | frame | len 26 | `da4089/simplefix:test/test_parser.py::test_get_buffer` | whole buffer consumed by the message (get_buffer() returns empty afterwards) |
 | `simplefix.empty_value_frame` | frame | len 30 | `da4089/simplefix:test/test_parser.py::test_empty_value` | message with empty value 29= frames normally; original 9=9 and 10=098 verified correct |
-| `simplefix.leading_junk_pairs` | frame | len 26 (pending) | `da4089/simplefix:test/test_parser.py::test_leading_junk_pairs` | junk fields before 8= are skipped; frame_len is the length of the message itself |
-| `simplefix.junk_pairs_only` | frame | len 0 | `da4089/simplefix:test/test_parser.py::test_junk_pairs` | stream of junk fields with no 8= gives no message |
+| `simplefix.leading_junk_pairs` | frame | len error | `da4089/simplefix:test/test_parser.py::test_leading_junk_pairs` | junk fields before 8= are skipped; frame_len is the length of the message itself; simplefix skips junk before 8=; glz::fix::frame does not skip and reports frame_error (docs/fix/api.md, Q1 settled by fix/core) |
+| `simplefix.junk_pairs_only` | frame | len error | `da4089/simplefix:test/test_parser.py::test_junk_pairs` | stream of junk fields with no 8= gives no message; simplefix skips junk and waits; glz::fix::frame reports frame_error instead (docs/fix/api.md) |
 | `simplefix.raw_data_packet_boundary_first` | frame | len 0 | `da4089/simplefix:test/test_parser.py::test_raw_data_ending_on_packet_boundary` | first packet ends right after raw data 96 (before its SOH): incomplete; 9 fixed from loose 169 to 84 |
 | `simplefix.raw_data_packet_boundary_full` | frame | len 106 | `da4089/simplefix:test/test_parser.py::test_raw_data_ending_on_packet_boundary` | both packets: complete message with 95=6/96=ABC=DE; loose 9=169/10=166 fixed to 9=84/10=217 |
 | `simplefix.checksum_heartbeat_44` | checksum | 163 | `da4089/simplefix:test/test_message.py::test_set_session_version` | expected 10=163 from encode() |
@@ -196,7 +196,7 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `spec.parse_empty_tag` | parse | error | `spec` | field with empty tag |
 | `spec.parse_alpha_tag` | parse | error | `spec` | non-numeric tag |
 | `spec.parse_negative_tag` | parse | error | `spec` | sign is not part of a tag |
-| `spec.parse_leading_zero_tag` | parse | error | `spec` | tags are positive integers without leading zeros |
+| `spec.parse_leading_zero_tag` | parse | error (pending) | `spec` | tags are positive integers without leading zeros |
 | `spec.parse_zero_tag` | parse | error | `spec` | tag 0 is not a valid tag |
 | `spec.parse_unterminated` | parse | error | `spec` | last field missing SOH |
 | `spec.frame_one` | frame | len 63 | `spec` | one complete message |

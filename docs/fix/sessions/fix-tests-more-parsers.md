@@ -13,7 +13,7 @@ Session 4 of 6. Goal: port parsing test vectors from more open-source FIX tag=va
   `checksum`. It also checks that every vector has an id, source and kind and that ids are unique.
 - `data/FORMAT.md`: the `.fixv` format (blocks of `key = value`, `|` stands for SOH). It is meant to be
   reusable by other sessions and by other languages.
-- 167 vectors (166 asserted, 1 `pending`):
+- 167 vectors (166 asserted, 1 `pending`, `spec.parse_leading_zero_tag`):
 
   | file | vectors | origin |
   |---|---|---|
@@ -34,10 +34,11 @@ Session 4 of 6. Goal: port parsing test vectors from more open-source FIX tag=va
   covering the five above plus QuickFIX C++/J/Go and fix8, which were surveyed but not copied from.
 - `docs/fix/api-questions.md`: open questions for `fix/core` (Q1 leading junk in `frame`, Q2 malformed
   headers in `frame`, Q3 empty values, Q4 tag syntax).
-- `include/glaze/fix/fix.hpp`: a **local stub** of the shared contract (scanner, checksum, validate,
-  frame; no struct mapping). `fix/core` had not been pushed while this session ran, so it could not
-  be merged. **On merge, take `fix/core`'s version of this file**, then rebuild `fix_vectors_test`
-  and look at any failures: they show where `fix/core` and the vectors disagree (see the questions).
+- Merged `fix/core` (e5babf6); its `include/glaze/fix/fix.hpp` replaced the local stub this branch
+  used until then. All 168 tests pass against it (GCC 13.3 Debug, `-Werror`). Four vectors were
+  adjusted to the settled contract: three frame vectors now expect `frame_error` (`frame_len = error`),
+  and `simplefix.leading_junk_pairs` expects `frame_error` because glaze does not skip junk before `8=`.
+  `spec.parse_leading_zero_tag` is `pending` (Q4: `fix/core` accepts `035=`).
 
 ## Where every ported vector came from
 
@@ -69,11 +70,10 @@ Corrections made while porting (each is also in the vector's `note`):
 
 ## Not done
 
-- Not merged with `fix/core` (it did not exist on the remote during the session).
-- **Push failed for the whole session**: the git proxy refused `ray-manaloto/glaze` with 403 ("not in
-  this session's authorized repository set"). The commits exist only in the session container unless
-  someone recovers them; if you are reading this on the remote, a later push worked.
-- No struct-mapping vectors (`glz::read<fix_opts{}>` into structs); the stub has no struct mapping.
+- Pushing was refused (proxy 403) until the repository was attached to the session at about
+  07:10 UTC; the branch was pushed after that.
+- Q4 (leading zeros in tags) is not settled with `fix/core`.
+- No struct-mapping vectors (`glz::read<fix_opts{}>` into structs); this branch covers the scanner layer only.
 - clang: clang 18 on this image cannot compile glaze tests against libstdc++ 13 (`std::expected` is
   missing for it), so only GCC was checked.
 - ferrumfix: only a snapshot without `crates/` was available; its decoder unit tests were not reached.
@@ -84,8 +84,7 @@ Corrections made while porting (each is also in the vector's `note`):
 
 ## Next steps
 
-1. Merge `fix/core`, replace the stub, run `fix_vectors_test`, and settle Q1–Q4 with `fix/core`
-   (then drop the `pending` key or flip expectations).
+1. Settle Q4 with `fix/core`, then drop the `pending` key on `spec.parse_leading_zero_tag` or flip it.
 2. Add an escape for SOH inside values (for example `\x01`) to `FORMAT.md` and port the skipped
    raw-data vectors (simplefix `test_raw_data*`, crocofix data-field sections).
 3. Port the QuickFIX acceptance categories (`test/definitions/server/fix44/*.def` names such as

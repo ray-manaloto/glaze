@@ -1,5 +1,10 @@
 # Open questions on the FIX API contract (from branch fix/tests-more-parsers)
 
+**Status after merging fix/core (e5babf6):** Q1 and Q2 are settled by `glz::fix::frame_error` (no
+skipping; a front that cannot start a message is an error), and Q3 is settled (empty values are a
+`syntax_error`). Q4 is still open: `fix/core` accepts leading zeros in tags, and `spec.parse_leading_zero_tag`
+is `pending` until that is decided. The text below is the original wording.
+
 The FIX vector tests in `tests/fix_vectors_test/` run against the shared contract in
 `include/glaze/fix/fix.hpp`. Some vectors from other parsers need a decision that the contract does
 not make yet. Branch `fix/core` owns the contract; these are suggestions for it to settle and record in

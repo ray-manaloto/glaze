@@ -136,15 +136,15 @@ id = philadelphia.garbled_begin_string_frame
 source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBeginString
 kind = frame
 stream = 9=30|8=FIX.4.2|
-frame_len = 0
-note = 9= before 8=: no message produced
+frame_len = error
+note = 9= before 8=: no message produced; glz::fix::frame reports frame_error for a front that cannot start a message (docs/fix/api.md)
 
 id = philadelphia.garbled_body_length_frame
 source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBodyLength
 kind = frame
 stream = 8=FIX.4.2|8=FIX.4.2|
-frame_len = 0
-note = second field is 8= instead of 9=: no message produced
+frame_len = error
+note = second field is 8= instead of 9=: no message produced; glz::fix::frame reports frame_error for a front that cannot start a message (docs/fix/api.md)
 
 id = philadelphia.heartbeat_validate
 source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::heartbeat

@@ -204,16 +204,15 @@ id = simplefix.leading_junk_pairs
 source = da4089/simplefix:test/test_parser.py::test_leading_junk_pairs
 kind = frame
 stream = 1=2|3=4|8=FIX.4.2|9=5|35=0|10=161|
-frame_len = 26
-note = junk fields before 8= are skipped; frame_len is the length of the message itself
-pending = Q1: does frame() skip leading bytes before 8=, and does its result count them? (stub returns 0)
+frame_len = error
+note = junk fields before 8= are skipped; frame_len is the length of the message itself; simplefix skips junk before 8=; glz::fix::frame does not skip and reports frame_error (docs/fix/api.md, Q1 settled by fix/core)
 
 id = simplefix.junk_pairs_only
 source = da4089/simplefix:test/test_parser.py::test_junk_pairs
 kind = frame
 stream = 1=2|3=4|5=6|
-frame_len = 0
-note = stream of junk fields with no 8= gives no message
+frame_len = error
+note = stream of junk fields with no 8= gives no message; simplefix skips junk and waits; glz::fix::frame reports frame_error instead (docs/fix/api.md)
 
 id = simplefix.raw_data_packet_boundary_first
 source = da4089/simplefix:test/test_parser.py::test_raw_data_ending_on_packet_boundary

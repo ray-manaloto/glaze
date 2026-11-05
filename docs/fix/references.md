@@ -24,8 +24,8 @@ messages carry wrong 9 and 10 values by accident.
 **Ported:** 31 vectors in `simplefix.fixv` (15 parse, 5 validate, 8 frame, 3 checksum). Where a
 sample's 9 or 10 was accidentally wrong, the validate and frame vectors use corrected values and say
 so in `note`. Raw-data tests (SOH inside a value) and option-dependent tests (stop bytes, empty-value
-switch) were skipped; the file header lists them. `simplefix.leading_junk_pairs` is `pending` on
-API question Q1 (`docs/fix/api-questions.md`).
+switch) were skipped; the file header lists them. simplefix skips junk before `8=`; glaze's `frame()` reports `frame_error`
+instead, so `simplefix.leading_junk_pairs` and `simplefix.junk_pairs_only` expect that.
 
 ## crocofix (C++), GaryHughes/crocofix — MIT
 
