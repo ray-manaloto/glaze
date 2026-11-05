@@ -6,8 +6,10 @@
 // Low-level FIX tag=value scanning: field splitting, checksum, structural validation and framing.
 // None of these allocate except parse_fields, which returns a vector of views into the input.
 
+#include <bit>
 #include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <limits>
 #include <string_view>
 #include <type_traits>
@@ -91,6 +93,67 @@ namespace glz::fix
          return true;
       }
 
+      // 8-byte SWAR helpers. Both fall back to byte loops at compile time and on big-endian targets.
+      inline constexpr bool swar_enabled = std::endian::native == std::endian::little;
+
+      // Position of the first `c` in s at or after `from`, or npos. Branch-light: one 64-bit compare per 8 bytes.
+      constexpr size_t find_byte(std::string_view s, size_t from, char c) noexcept
+      {
+         const size_t n = s.size();
+         if (from >= n) return std::string_view::npos;
+         if (std::is_constant_evaluated() || !swar_enabled) {
+            for (size_t i = from; i < n; ++i) {
+               if (s[i] == c) return i;
+            }
+            return std::string_view::npos;
+         }
+         const char* p = s.data();
+         constexpr uint64_t lo = 0x0101010101010101ULL;
+         constexpr uint64_t hi = 0x8080808080808080ULL;
+         const uint64_t pat = lo * uint8_t(c);
+         size_t i = from;
+         for (; i + 8 <= n; i += 8) {
+            uint64_t x;
+            std::memcpy(&x, p + i, 8);
+            x ^= pat;
+            const uint64_t z = (x - lo) & ~x & hi; // high bit set in every zero byte
+            if (z) return i + size_t(std::countr_zero(z) >> 3);
+         }
+         for (; i < n; ++i) {
+            if (p[i] == c) return i;
+         }
+         return std::string_view::npos;
+      }
+
+      // Sum of all bytes (no modulo). Eight bytes at a time: lanes are split into even/odd bytes so each
+      // 16-bit lane sums without carry into its neighbour; the lanes are folded at the end.
+      constexpr uint32_t byte_sum(std::string_view s) noexcept
+      {
+         uint32_t sum = 0;
+         size_t i = 0;
+         const size_t n = s.size();
+         if (!std::is_constant_evaluated() && swar_enabled) {
+            const char* p = s.data();
+            constexpr uint64_t even = 0x00FF00FF00FF00FFULL;
+            constexpr size_t block = 8 * 128; // 128 adds of two 0xFF bytes (65280) fit a 16-bit lane
+            while (i + 8 <= n) {
+               const size_t stop = (n - i >= block) ? i + block : i + ((n - i) & ~size_t(7));
+               uint64_t acc = 0;
+               for (; i < stop; i += 8) {
+                  uint64_t x;
+                  std::memcpy(&x, p + i, 8);
+                  acc += (x & even) + ((x >> 8) & even);
+               }
+               acc = (acc & 0x0000FFFF0000FFFFULL) + ((acc >> 16) & 0x0000FFFF0000FFFFULL);
+               sum += uint32_t(acc & 0xFFFFFFFFULL) + uint32_t(acc >> 32);
+            }
+         }
+         for (; i < n; ++i) {
+            sum += uint8_t(s[i]);
+         }
+         return sum;
+      }
+
       // Carries a pending raw-data length from a length field (e.g. 95) to its data field (e.g. 96).
       struct scan_state
       {
@@ -103,7 +166,7 @@ namespace glz::fix
       constexpr error_code next_field(std::string_view msg, size_t& pos, char soh, field& f,
                                       scan_state& st) noexcept
       {
-         const size_t eq = msg.find('=', pos);
+         const size_t eq = find_byte(msg, pos, '=');
          if (eq == std::string_view::npos) {
             return error_code::syntax_error;
          }
@@ -125,7 +188,7 @@ namespace glz::fix
                return error_code::none;
             }
          }
-         const size_t end = msg.find(soh, eq + 1);
+         const size_t end = find_byte(msg, eq + 1, soh);
          if (end == std::string_view::npos) {
             return error_code::unexpected_end;
          }
@@ -237,11 +300,7 @@ namespace glz::fix
    // Sum of all bytes modulo 256 (the value of tag 10 for the bytes before "10=").
    constexpr uint8_t checksum(std::string_view bytes_before_tag10) noexcept
    {
-      uint32_t sum = 0;
-      for (const char c : bytes_before_tag10) {
-         sum += uint8_t(c);
-      }
-      return uint8_t(sum & 0xFF);
+      return uint8_t(detail::byte_sum(bytes_before_tag10) & 0xFF);
    }
 
    // Structural validation of one complete message:
@@ -322,7 +381,7 @@ namespace glz::fix
       if (stream[0] != '8' || stream[1] != '=') {
          return frame_error;
       }
-      const size_t s1 = stream.find(soh);
+      const size_t s1 = detail::find_byte(stream, 0, soh);
       if (s1 == std::string_view::npos) {
          return 0;
       }
@@ -333,7 +392,7 @@ namespace glz::fix
       if (rest[0] != '9' || rest[1] != '=') {
          return frame_error;
       }
-      const size_t s2 = stream.find(soh, s1 + 1);
+      const size_t s2 = detail::find_byte(stream, s1 + 1, soh);
       if (s2 == std::string_view::npos) {
          return (stream.size() - (s1 + 3) > 9) ? frame_error : 0;
       }
