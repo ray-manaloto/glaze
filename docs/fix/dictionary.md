@@ -72,7 +72,7 @@ namespace glz::fix::fix44 {
 
   enum class Side : char { Buy = '1', Sell = '2', /* ... */ };          // char code sets
   enum class PartyRole : int32_t { ExecutingFirm = 1, /* ... */ };      // int code sets
-  enum class ResetSeqNumFlag : uint16_t { Yes = 0, No = 1 };            // other code sets: ordinal
+  enum class ResetSeqNumFlag : uint16_t { Yes = 0, No = 1 };            // other code sets: ordinal (reference only)
 
   struct PartiesGrp {                                                    // repeating group
     std::optional<std::string> party_id{};
@@ -107,8 +107,9 @@ template <> struct glz::meta<glz::fix::fix44::NewOrderSingle> {
 
 * **Fields.** Orchestra type to C++ type: `int`, `Length`, `SeqNum`, `TagNum`, `DayOfMonth` → `int64_t`;
   `float`, `Price`, `Qty`, `Amt`, `Percentage`, `PriceOffset` → `double`; `char` → `char`;
-  `Boolean` → `bool` (Y/N); a code-set type → its `enum class`; `MultipleValueString` /
-  `MultipleCharValue` / `MultipleStringValue` code sets → `std::string` (space-separated on the wire);
+  `Boolean` → `bool` (Y/N); a char or int code set → its `enum class`; a Boolean code set →
+  `bool`; a String code set or a `MultipleValueString` / `MultipleCharValue` /
+  `MultipleStringValue` code set → `std::string` (multi-value is space-separated on the wire);
   everything else (String, dates, times, Currency, data, ...) → `std::string`.
 * **Presence.** `presence="required"` members are plain values. All others are `std::optional`.
   A field inside a component is required only if both the field and the reference to its
@@ -118,8 +119,9 @@ template <> struct glz::meta<glz::fix::fix44::NewOrderSingle> {
 * **Enums.** One `enum class` per code set that a field uses. The `CodeSet` suffix is dropped.
   The underlying type is `char` (single-char values), `int32_t` (integer values) or `uint16_t`
   (ordinal, for String/Boolean code sets). `fix_values[i]` is the wire string of the i-th
-  enumerator in `glz::enumerate` order. The codec uses the enumerator value directly for char and
-  int, and `fix_values[ordinal]` otherwise.
+  enumerator in `glz::enumerate` order. `fix/core` writes an enum as its underlying value, so
+  only char and int enums are used as members. Ordinal enums are emitted for reference (names,
+  wire values) but the member stays `bool` / `std::string`.
 * **Components** are flattened into the struct that uses them, because tag=value has no component
   boundary on the wire. If a tag is reached twice through different components, the first wins.
   Every component is also emitted as a standalone struct, including `StandardHeader` and
@@ -132,25 +134,27 @@ template <> struct glz::meta<glz::fix::fix44::NewOrderSingle> {
   10, and the reader skips header tags it does not map (49, 56, 34, 52, ...).
 * **Name clashes** between structs and enums are resolved by appending `2`, `3`, ....
 
-## Contract additions proposed to `fix/core`
+## Relation to the `fix/core` contract
 
-These are recorded here for `fix/core` to accept or reject in `docs/fix/api.md`:
-
-1. `glz::meta<Msg>::fix_begin_string`, so `write` can emit tag 8 without a per-call option.
-2. `glz::meta<Enum>::fix_values`, the wire values of an enum, alongside glaze's usual
-   `glz::enumerate` names.
-3. Group membership is implied by the group struct's own `glz::meta` keys, with no extra marker.
+* `glz::meta<Msg>::fix_begin_string` is accepted in `docs/fix/api.md` (v1).
+* Group handling matches: the vector key is the NumInGroup tag, and the first group member is
+  the delimiter.
+* Proposed, not in the contract: `glz::meta<Enum>::fix_values`, which lets the codec reject a
+  value outside its code set on read and write. It would also let String code sets be enums.
+* Reported to `fix/core`: doubles are written with shortest `std::to_chars`, which gives an
+  exponent for values like 1000000 (`1e+06`). FIX float fields have no exponent, so
+  `std::chars_format::fixed` is needed. The byte-exact test here avoids such values for now.
 
 ## Limitations
 
 * FIX 5.0 SP2 runs over FIXT.1.1: on the wire, 8 is `FIXT.1.1`, and ApplVerID(1128) may be
-  present. `fix50sp2`'s `fix_begin_string` is `FIX.5.0SP2`, the dictionary version. The stub writer
+  present. `fix50sp2`'s `fix_begin_string` is `FIX.5.0SP2`, the dictionary version. The `fix/core` writer
   emits that as 8, so a FIXT session needs `fix/core` to take BeginString from a session option
   (open question for `fix/core`). The 5.0 SP2 file holds the application layer only. FIXT session
   messages come from `FIXTSession.xml` in orchestrations, which is not generated yet.
 * The 2010 Unified file is EP247, so it lacks extension packs after EP247.
-* `write` returns `error_code::unexpected_enum` when an enum member holds a value outside its code
-  set, e.g. a required enum left default-constructed.
+* Enum values are not checked against their code set (the codec reads and writes the
+  underlying value). A required enum left default-constructed is written as a NUL byte.
 * `data` fields (with their `Length` field, e.g. RawData 96) are plain strings. A value holding
   SOH needs length-aware scanning in the codec.
 * Orchestra scenarios other than `base` are skipped.

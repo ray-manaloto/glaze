@@ -25,28 +25,26 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
   (`-std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -Werror`). A 5.0 SP2 NewOrderSingle with
   a Parties group was read, written and read back, and compared equal (scratch program, not
   committed; result below under "Verification").
-* **Local contract stub** `include/glaze/fix/fix.hpp`. `fix/core` had published nothing when
-  this session ran: `git ls-remote origin` showed no `fix/core` branch. The stub implements
-  `glz::FIX`, `glz::fix_opts`, `glz::fix::field`, `parse_fields`, `checksum`, `validate`, `frame`,
-  and `glz::read<fix_opts{...}>` / `glz::write<fix_opts{...}>` for types whose meta has
-  `fix_msg_type`. glaze's own `read`/`write` need `from<FIX,T>`/`to<FIX,T>`, which the stub does
-  not define, so its overloads are the only viable ones.
+* **Merged `fix/core`** (07:17 UTC). The local contract stub this branch used until then was
+  replaced by `fix/core`'s `include/glaze/fix/fix.hpp`. To fit `fix/core`'s enum handling
+  (underlying value), the generator now emits `bool` for Boolean code sets and `std::string` for
+  String code sets. Only char and int code sets are enum members.
 * **Test** `tests/fix_dictionary_test/` (registered in `tests/CMakeLists.txt`, boost-ext ut via
-  `ut/ut.hpp`), 15 tests and 71 asserts, all passing with the `gcc-debug` preset (GCC 13,
+  `ut/ut.hpp`), 13 tests and 69 asserts, all passing against `fix/core`'s codec with the `gcc-debug` preset (GCC 13,
   `-Werror`, ASan/UBSan on):
   * generated metadata: tags, enum wire values, enum names through glaze JSON, msg types;
   * FIX 4.4 round trips: NewOrderSingle with a Parties group, ExecutionReport,
     MarketDataSnapshotFullRefresh (byte-exact), Logon (byte-exact), a message built from scratch;
   * FIX 4.2 NewOrderSingle;
-  * errors: bad checksum, wrong MsgType, an enum value outside its code set (read), a
-    default-constructed required enum (write), stream framing.
+  * errors: bad checksum, wrong MsgType, stream framing.
+  * Before the merge, two more tests checked enum code-set validation in the stub. They were
+    removed because `fix/core` does not validate enums (see `docs/fix/dictionary.md`).
 
 ## Not done
 
-* Replacing the stub with `fix/core`'s header. When `fix/core` lands, delete
-  `include/glaze/fix/fix.hpp` here and merge theirs. The test uses only contract entry points,
-  plus the proposed additions `fix_begin_string` / `fix_values`, which are listed in
-  `docs/fix/dictionary.md` for `fix/core` to accept or reject.
+* Enum code-set validation in the codec (proposal: `meta<E>::fix_values`). Doubles are written
+  as `1e+06` by `fix/core` (exponent); this is reported in `docs/fix/dictionary.md`, and the MD
+  byte-exact sample uses 1500/2500 for now.
 * FIXT.1.1 session layer (`FIXTSession.xml`, `FIX44Session.xml`) and ApplVerID(1128). The writer
   for 5.0 SP2 emits `8=FIX.5.0SP2`, not `8=FIXT.1.1`.
 * `data` fields containing SOH (length-prefixed via the paired Length field).
@@ -80,8 +78,8 @@ validates. Field values (order IDs, symbols, prices) are made up.
 
 ## Next steps
 
-1. Merge `fix/core` and drop the stub. Reconcile `fix_begin_string` / `fix_values` with
-   `docs/fix/api.md`.
+1. Keep merging `fix/core`. Ask it to adopt `fix_values` (enum validation, String code-set
+   enums) and fixed-notation float writing. Then restore the 1000000-sized MD sample.
 2. Generate the session layers (`FIX44Session.xml`, `FIXTSession.xml`) and add a
    StandardHeader member, or header handling, to messages.
 3. Decide whether to commit `fix50sp2.hpp` (5.6 MB), or to generate it at build time from a
