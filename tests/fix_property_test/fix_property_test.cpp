@@ -311,6 +311,18 @@ suite conformance_tests = [] {
       }
    };
 
+   "R11 zero-padded 08= / 09= are not BeginString / BodyLength (regression: fuzzing/regressions/fix_validate)"_test = [] {
+      const std::string good = make("35=0|");
+      const std::string b8 = "0" + good;
+      std::string b9 = good;
+      b9.insert(b9.find("|9=") + 1, "0");
+      expect(glz::fix::frame(b8, '|') == glz::fix::frame_error || glz::fix::frame(b8, '|') == 0u);
+      if constexpr (known_gaps) { // Gap 2: validate accepts both while frame does not
+         expect(bool(glz::fix::validate(b8, '|')));
+         expect(bool(glz::fix::validate(b9, '|')));
+      }
+   };
+
    "R12 a field without '=' is malformed"_test = [] {
       expect(not glz::fix::parse_fields("58x|", '|').has_value());
    };
