@@ -35,6 +35,10 @@ verified all output.
   - after: 234.2, 227.0, 260.3 ns/message
   - The `sink` value is identical before and after, so the same fields and checksum are produced.
 
+## Review
+
+The Review subagent found no correctness problems. It checked haszero false positives (only the lowest set bit is used), bounds, lane overflow, the constexpr path and big-endian. Style nit applied: dropped the redundant `inline` on the two constexpr helpers. Not applied: reusing `glz::has_zero`/`glz::countr_zero` from `util/bit.hpp` and adding `GLZ_ALWAYS_INLINE`.
+
 ## Failed / not done
 
 - The micro-benchmark is not wired into CMake; it is built by hand (see the file header / command below).

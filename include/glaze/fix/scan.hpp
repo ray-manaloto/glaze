@@ -97,7 +97,7 @@ namespace glz::fix
       inline constexpr bool swar_enabled = std::endian::native == std::endian::little;
 
       // Position of the first `c` in s at or after `from`, or npos. Branch-light: one 64-bit compare per 8 bytes.
-      inline constexpr size_t find_byte(std::string_view s, size_t from, char c) noexcept
+      constexpr size_t find_byte(std::string_view s, size_t from, char c) noexcept
       {
          const size_t n = s.size();
          if (from >= n) return std::string_view::npos;
@@ -127,7 +127,7 @@ namespace glz::fix
 
       // Sum of all bytes (no modulo). Eight bytes at a time: lanes are split into even/odd bytes so each
       // 16-bit lane sums without carry into its neighbour; the lanes are folded at the end.
-      inline constexpr uint32_t byte_sum(std::string_view s) noexcept
+      constexpr uint32_t byte_sum(std::string_view s) noexcept
       {
          uint32_t sum = 0;
          size_t i = 0;
