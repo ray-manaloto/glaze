@@ -15,4 +15,4 @@ Failed / left:
 - fix8: clone of fix8org/fix8 asked for credentials; licence not verified. No branch uses fix8.
 - Fuzz seed corpus provenance taken from session notes, not byte-checked.
 - No build run (docs-only change).
-- Philadelphia/simplefix copyright lines in the branch were not individually re-verified.
+- Verified: artio, philadelphia and simplefix copyright lines added by fix/tests-more-parsers match upstream source headers.
