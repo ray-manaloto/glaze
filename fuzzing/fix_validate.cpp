@@ -14,7 +14,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 
    const auto ec = glz::fix::validate(input, soh);
    const size_t n = glz::fix::frame(input, soh);
-   if (n > input.size()) std::abort();
+   if (n != glz::fix::frame_error && n > input.size()) std::abort();
    if (!ec) {
       if (n != input.size()) std::abort();
       const auto pos = input.size() - 7;

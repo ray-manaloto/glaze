@@ -14,10 +14,12 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
 
    while (!rest.empty()) {
       const size_t n = glz::fix::frame(rest, soh);
+      if (n == 0 || n == glz::fix::frame_error) break; // incomplete, or not a FIX message
       if (n > rest.size()) std::abort();
-      if (n == 0) break;
       // Any strict prefix of a frame is incomplete.
-      if (glz::fix::frame(rest.substr(0, n - 1), soh) != 0) std::abort();
+      if (const size_t p = glz::fix::frame(rest.substr(0, n - 1), soh); p != 0 && p != glz::fix::frame_error) {
+         std::abort();
+      }
       [[maybe_unused]] auto ec = glz::fix::validate(rest.substr(0, n), soh);
       rest.remove_prefix(n);
    }
