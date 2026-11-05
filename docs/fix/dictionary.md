@@ -8,15 +8,21 @@ The FIX tag=value codec reads and writes these types (see the API contract in `d
 |----------|--------------------------------------|--------------------|---------------------------------------|
 | FIX 4.2  | `include/glaze/fix/dict/fix42.hpp`   | `glz::fix::fix42`  | `OrchestraFIX42.xml` (FIX.4.2_EP311)  |
 | FIX 4.4  | `include/glaze/fix/dict/fix44.hpp`   | `glz::fix::fix44`  | `OrchestraFIX44.xml` (FIX.4.4_EP311)  |
-| FIX Latest (5.0 SP2 + extension packs) | generated on demand, not committed | `glz::fix::fixlatest` | `OrchestraFIXLatest.xml` |
+| FIX 5.0 SP2 | generated on demand (~5.6 MB), not committed | `glz::fix::fix50sp2` | `FixRepositoryUnifiedEP247.xml` (FIX.5.0SP2_EP247, Repository 2010 Unified format) |
+| FIX Latest (5.0 SP2 + later extension packs) | generated on demand (~6 MB), not committed | `glz::fix::fixlatest` | `OrchestraFIXLatest.xml` |
 
 ## Licence of the source data
 
-The data comes from <https://github.com/FIXTradingCommunity/orchestrations>, directory
-`FIX Standard/`. That repository's README and `LICENSE` say:
+The FIX 4.2, 4.4 and Latest data comes from <https://github.com/FIXTradingCommunity/orchestrations>,
+directory `FIX Standard/`. That repository's README and `LICENSE` say:
 
 > © Copyright 2017-2026 FIX Protocol Limited.
 > Licensed under the Apache License, Version 2.0.
+
+The FIX 5.0 SP2 data is `repository-util/src/test/resources/FixRepositoryUnifiedEP247.xml` in
+<https://github.com/FIXTradingCommunity/fix-orchestra>, whose `LICENSE` is also Apache-2.0 (the
+same text, byte for byte, as orchestrations'). The schema for that format is in
+<https://github.com/FIXTradingCommunity/fix-repository> (Apache-2.0, © 2015 FIX Protocol Limited).
 
 Each XML file's metadata also carries `dcterms:rights` "Copyright (c) FIX Protocol Ltd. All
 Rights Reserved." Under the repository's Apache-2.0 grant, the derived headers can be
@@ -42,7 +48,18 @@ python3 util/fix_codegen/fix_codegen.py --xml "$S/OrchestraFIX42.xml" --namespac
     --out include/glaze/fix/dict/fix42.hpp
 python3 util/fix_codegen/fix_codegen.py --xml "$S/OrchestraFIXLatest.xml" --namespace fixlatest \
     --out include/glaze/fix/dict/fixlatest.hpp   # ~6 MB, not committed
+
+git clone --depth 1 https://github.com/FIXTradingCommunity/fix-orchestra /tmp/refs/fix-orchestra
+python3 util/fix_codegen/fix_codegen.py \
+    --xml /tmp/refs/fix-orchestra/repository-util/src/test/resources/FixRepositoryUnifiedEP247.xml \
+    --namespace fix50sp2 --out include/glaze/fix/dict/fix50sp2.hpp   # ~5.6 MB, not committed
 ```
+
+The input format is detected from the root element: `fixr:repository` (Orchestra) or
+`fixRepository` (Repository 2010 Edition, Unified). In the 2010 format, enums are inline in
+`<field>`, and each becomes a code set named after its field. A `BlockRepeating` component becomes
+a group named after the component. An inline `<repeatingGroup>` becomes a group named after its
+NumInGroup field, without the `No` prefix.
 
 The generator uses the Python 3 standard library only (`xml.etree.ElementTree`, `argparse`, `re`).
 
@@ -126,11 +143,12 @@ These are recorded here for `fix/core` to accept or reject in `docs/fix/api.md`:
 
 ## Limitations
 
-* FIX 5.0 SP2 itself: the FIX Trading Community publishes Orchestra files for 4.2, 4.4 and FIX
-  Latest only. FIX Latest is 5.0 SP2 plus the later extension packs, so it parses and writes 5.0
-  SP2 application messages, but it holds fields and code values added after SP2. An exact
-  SP2-only dictionary needs the older "FIX Repository 2010 Edition" (`FIX.5.0SP2/Base/*.xml`)
-  format, which this generator does not read yet.
+* FIX 5.0 SP2 runs over FIXT.1.1: on the wire, 8 is `FIXT.1.1`, and ApplVerID(1128) may be
+  present. `fix50sp2`'s `fix_begin_string` is `FIX.5.0SP2`, the dictionary version. The stub writer
+  emits that as 8, so a FIXT session needs `fix/core` to take BeginString from a session option
+  (open question for `fix/core`). The 5.0 SP2 file holds the application layer only. FIXT session
+  messages come from `FIXTSession.xml` in orchestrations, which is not generated yet.
+* The 2010 Unified file is EP247, so it lacks extension packs after EP247.
 * `write` returns `error_code::unexpected_enum` when an enum member holds a value outside its code
   set, e.g. a required enum left default-constructed.
 * `data` fields (with their `Length` field, e.g. RawData 96) are plain strings. A value holding
