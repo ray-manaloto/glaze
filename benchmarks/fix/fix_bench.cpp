@@ -329,6 +329,10 @@ static size_t hffix_write(char* buf, size_t cap, char type, const NewOrderSingle
    return size_t(w.message_end() - buf);
 }
 
+#ifdef FIX_BENCH_QUICKFIX
+#include "qf_bench.hpp"
+#endif
+
 // ---------------------------------------------------------------- main
 int main(int argc, char** argv)
 {
@@ -407,6 +411,36 @@ int main(int argc, char** argv)
    rows.push_back({"hffix write", run(n, [&](size_t i) {
       g_sink = g_sink + hffix_write(hbuf, sizeof(hbuf), c.types[i], nos[i], er[i], md[i]);
    })});
+
+#ifdef FIX_BENCH_QUICKFIX
+   {
+      FIX::DataDictionary dd(FIX44_XML);
+      FIX::Message qmsg;
+      std::vector<std::string> owned(c.msgs.begin(), c.msgs.end()); // QuickFIX takes std::string
+      size_t qf_mismatch = 0;
+      for (size_t i = 0; i < n; ++i) {
+         if (!qf::read(dd, qmsg, owned[i], c.types[i], a, b, m)) { ++qf_mismatch; continue; }
+         if (c.types[i] == 'D' && (a.cl_ord_id != nos[i].cl_ord_id || a.price != nos[i].price)) ++qf_mismatch;
+         if (c.types[i] == '8' && (b.exec_id != er[i].exec_id || b.avg_px != er[i].avg_px)) ++qf_mismatch;
+         if (c.types[i] == 'X' && (m.entries.size() != md[i].entries.size() || m.entries.back().px != md[i].entries.back().px)) ++qf_mismatch;
+      }
+      size_t qf_wmismatch = 0;
+      std::string qout;
+      for (size_t i = 0; i < n; ++i) {
+         qf::write(c.types[i], nos[i], er[i], md[i], qout);
+         if (qout != c.msgs[i]) ++qf_wmismatch;
+      }
+      std::printf("quickfix decode == glaze decode: %zu/%zu mismatches\n", qf_mismatch, n);
+      std::printf("quickfix write == corpus bytes: %zu/%zu mismatches\n\n", qf_wmismatch, n);
+      rows.push_back({"quickfix read", run(n, [&](size_t i) {
+         bool ok = qf::read(dd, qmsg, owned[i], c.types[i], a, b, m);
+         g_sink = g_sink + uint64_t(ok) + uint64_t(a.seq + b.seq + m.seq);
+      })});
+      rows.push_back({"quickfix write", run(n, [&](size_t i) {
+         g_sink = g_sink + qf::write(c.types[i], nos[i], er[i], md[i], qout);
+      })});
+   }
+#endif
 
    std::printf("| benchmark | median ns/msg | p99 ns/msg | msgs/s |\n|---|---:|---:|---:|\n");
    for (auto& r : rows)
