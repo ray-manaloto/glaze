@@ -194,21 +194,34 @@ namespace glz::fix::detail
 
    // ---- struct decoding -------------------------------------------------------------------
 
+   // One-field lookahead over a field_cursor: the reader peeks at `cur` and consumes with advance().
+   struct field_stream
+   {
+      field_cursor c{};
+      size_t size{};
+      field cur{};
+      bool has{};
+
+      field_stream(std::string_view msg, char soh) noexcept : c(msg, soh), size(msg.size()) { advance(); }
+      void advance() noexcept { has = c.next(cur); }
+      size_t remaining_bytes() const noexcept { return size - c.position() + 4; }
+   };
+
    template <auto Opts, class T>
-   void decode_struct(T& value, const std::vector<field>& fields, size_t& idx, context& ctx, bool top);
+   void decode_struct(T& value, field_stream& in, context& ctx, bool top);
 
    template <auto Opts, class V>
-   void decode_group(V& vec, const std::vector<field>& fields, size_t& idx, context& ctx)
+   void decode_group(V& vec, field_stream& in, context& ctx)
    {
       using G = typename std::remove_cvref_t<V>::value_type;
       size_t count{};
-      if (!parse_size(fields[idx].value, count)) {
+      if (!parse_size(in.cur.value, count)) {
          ctx.error = error_code::parse_number_failure;
          ctx.custom_error_message = "fix: invalid repeating group count";
          return;
       }
-      ++idx;
-      if (count > fields.size() - idx) {
+      in.advance();
+      if (count > in.remaining_bytes() / 4) { // every entry needs at least "1=x<soh>"
          ctx.error = error_code::syntax_error;
          ctx.custom_error_message = "fix: repeating group count exceeds the remaining fields";
          return;
@@ -216,31 +229,31 @@ namespace glz::fix::detail
       vec.clear();
       vec.resize(count);
       for (size_t k = 0; k < count; ++k) {
-         if (idx >= fields.size() || fields[idx].tag != tags<G>[0]) {
+         if (!in.has || in.cur.tag != tags<G>[0]) {
             ctx.error = error_code::syntax_error;
             ctx.custom_error_message = "fix: repeating group count does not match its entries";
             return;
          }
-         decode_struct<Opts>(vec[k], fields, idx, ctx, false);
+         decode_struct<Opts>(vec[k], in, ctx, false);
          if (bool(ctx.error)) return;
       }
    }
 
    template <auto Opts, class T>
-   void decode_struct(T& value, const std::vector<field>& fields, size_t& idx, context& ctx, bool top)
+   void decode_struct(T& value, field_stream& in, context& ctx, bool top)
    {
       bool first_seen = false;
-      while (idx < fields.size()) {
-         const auto& f = fields[idx];
+      while (in.has) {
+         const field f = in.cur;
          const int m = member_index<T>(f.tag);
          if (m < 0 && is_raw_length_of_mapped<T>(f.tag)) {
-            ++idx; // the scanner already used it to size the data field
+            in.advance(); // the scanner already used it to size the data field
             continue;
          }
          if (m < 0) {
             if (!top) return; // an unknown tag ends the group entry
             if (is_session_envelope_tag(f.tag) || !Opts.error_on_unknown_tags) {
-               ++idx;
+               in.advance();
                continue;
             }
             ctx.error = error_code::unknown_key;
@@ -260,10 +273,10 @@ namespace glz::fix::detail
             auto& member = get_member(value, glz::get<I>(reflect<T>::values));
             using M = std::remove_cvref_t<decltype(member)>;
             if constexpr (group_t<M>) {
-               decode_group<Opts>(member, fields, idx, ctx);
+               decode_group<Opts>(member, in, ctx);
             }
             else {
-               if (decode_scalar(member, f.value, ctx)) ++idx;
+               if (decode_scalar(member, f.value, ctx)) in.advance();
             }
          });
          if (bool(ctx.error)) return;
@@ -436,15 +449,15 @@ namespace glz
       static void op(T& value, is_context auto&& ctx, auto&& it, auto end)
       {
          const std::string_view msg{it, size_t(end - it)};
-         auto fields = fix::parse_fields(msg, Opts.soh);
-         if (!fields) {
-            ctx.error = fields.error().ec;
-            ctx.custom_error_message = fields.error().custom_error_message;
-            it += fields.error().count;
+         fix::detail::field_stream in{msg, Opts.soh};
+         if (!in.has) {
+            const auto e = in.c.error();
+            ctx.error = e ? e.ec : error_code::no_read_input;
+            ctx.custom_error_message = e ? e.custom_error_message : std::string_view{"fix: empty message"};
+            it += e.count;
             return;
          }
-         auto& fs = *fields;
-         if (fs.front().tag == 8) {
+         if (in.cur.tag == 8) {
             // a complete message: check the envelope
             const auto e = fix::validate(msg, Opts.soh, Opts.validate_body_length, Opts.validate_checksum);
             if (e) {
@@ -454,7 +467,10 @@ namespace glz
                return;
             }
             if constexpr (fix::detail::has_msg_type<T>) {
-               if (Opts.validate_msg_type && fs[2].value != std::string_view{meta<T>::fix_msg_type}) {
+               fix::field_cursor hc{msg, Opts.soh};
+               fix::field f8{}, f9{}, f35{};
+               (void)(hc.next(f8) && hc.next(f9) && hc.next(f35)); // validate guarantees 8, 9, 35
+               if (Opts.validate_msg_type && f35.value != std::string_view{meta<T>::fix_msg_type}) {
                   ctx.error = error_code::invalid_header;
                   ctx.custom_error_message = "fix: MsgType (35) does not match the target type";
                   return;
@@ -462,11 +478,17 @@ namespace glz
             }
          }
          context c{};
-         size_t idx = 0;
-         fix::detail::decode_struct<Opts>(value, fs, idx, c, true);
+         fix::detail::decode_struct<Opts>(value, in, c, true);
          if (bool(c.error)) {
             ctx.error = c.error;
             ctx.custom_error_message = c.custom_error_message;
+            it += in.c.position();
+            return;
+         }
+         if (const auto e = in.c.error(); e) {
+            ctx.error = e.ec;
+            ctx.custom_error_message = e.custom_error_message;
+            it += e.count;
             return;
          }
          it = end;
