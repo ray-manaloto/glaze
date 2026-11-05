@@ -584,3 +584,50 @@ namespace
       }
    } const fixpp_more_skips_instance{};
 }
+
+// ---- fix/core v2 typed values ----
+suite fixpp_more_v2 = [] {
+   // visitor_test.cc: should_parse_utc_timestamp, _with_milliseconds, _with_microseconds
+   "should_parse_utc_timestamp"_test = [] {
+      using namespace std::chrono;
+      const auto base = sys_days{year{2017} / 11 / 5} + hours{14} + minutes{9} + seconds{30};
+      glz::fix::utc_timestamp t{};
+      expect(glz::fix::parse_utc_timestamp("20171105-14:09:30", t) && t.time == base && t.precision == 0);
+      expect(glz::fix::parse_utc_timestamp("20171105-14:09:30.123", t) && t.time == base + milliseconds{123} &&
+             t.precision == 3);
+      expect(glz::fix::parse_utc_timestamp("20171105-14:09:30.123456", t) && t.time == base + microseconds{123456} &&
+             t.precision == 6);
+   };
+
+   // writer_test.cc: should_write_utc_timestamp_field (+ milli/microseconds)
+   "should_write_utc_timestamp_field"_test = [] {
+      using namespace std::chrono;
+      const auto base = sys_days{year{2017} / 5 / 16} + hours{13} + minutes{45} + seconds{30};
+      std::string a, b, c;
+      glz::fix::append_utc_timestamp(a, {base, 0});
+      glz::fix::append_utc_timestamp(b, {base + milliseconds{123}, 3});
+      glz::fix::append_utc_timestamp(c, {base + microseconds{123456}, 6});
+      expect(a == "20170516-13:45:30" && b == "20170516-13:45:30.123" && c == "20170516-13:45:30.123456");
+   };
+
+   // writer_test.cc: should_write_float_field - with the exact decimal type there is no exponent.
+   "should_write_decimal_field"_test = [] {
+      std::string a, b, c;
+      glz::fix::decimal d{};
+      expect(glz::fix::parse_decimal("17.35", d));
+      glz::fix::append_decimal(a, d);
+      expect(glz::fix::parse_decimal("1234567.45", d));
+      glz::fix::append_decimal(b, d);
+      glz::fix::append_decimal(c, glz::fix::decimal{1000000, 0});
+      expect(a == "17.35" && b == "1234567.45" && c == "1000000");
+   };
+
+   // visitor_test.cc incremental refresh prices keep their written scale
+   "decimal_keeps_scale"_test = [] {
+      glz::fix::decimal d{};
+      expect(glz::fix::parse_decimal("00104.840000", d));
+      expect(d.to_double() == 104.84);
+      expect(!glz::fix::parse_decimal("1e6", d));
+      expect(!glz::fix::parse_decimal("+1.5", d));
+   };
+};

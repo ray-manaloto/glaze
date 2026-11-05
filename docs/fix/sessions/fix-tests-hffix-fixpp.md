@@ -24,11 +24,14 @@
 - Each target has two sources: `fix_<lib>_test.cpp` (the first port) and `fix_<lib>_more.cpp`
   (the cases added later in the session).
 - `tests/fix_fixpp_test/data/fix42.log` is force-added, because the repository's `.gitignore` excludes `*.log`.
-- `fix/core` was merged at 07:15 UTC, and the local stub header was replaced with core's header.
+- `fix/core` v2 was merged at about 07:37 UTC. It adds raw-data fields and typed `utc_timestamp`
+  and `decimal`. The raw-data (95/96 with SOH) and UTCTimestamp skips became real tests, and the
+  decimal type is shown writing `1000000` without an exponent.
+- `fix/core` v1 was merged at 07:15 UTC, and the local stub header was replaced with core's header.
   Struct-mapping tests are on by default: the test CMake defines `GLZ_FIX_HAS_STRUCT_MAPPING`.
 - Results against fix/core, built with g++ 13 using `-std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -pedantic -Werror`:
-  - hffix: 44 tests pass (24 + 20).
-  - fixpp: 47 tests pass (24 + 23).
+  - hffix: 50 tests pass (24 + 26).
+  - fixpp: 51 tests pass (24 + 27).
   - Both targets are also clean under `-fsanitize=address,undefined`.
 - Design note: `docs/fix/ported-tests-hffix-fixpp.md`.
 
@@ -55,9 +58,8 @@
 
 - hffix `msg_type_string`: glaze has no FIX dictionary.
 - hffix `message_writer_bounds`: needs fixed-size buffer writes.
-- hffix and fixpp typed chrono, date and time tests: core keeps timestamps as text. The test
+- hffix UTCTimeOnly and fixpp UTCDateOnly/UTCTimeOnly: core v2 types only UTCTimestamp. The test
   vectors are recorded in the skip messages.
-- Raw data containing SOH (95/96): core says this is not supported yet.
 - Reader rejection of BeginString `FIX.5.1`.
 - hffix `test/data/fix.5.0.set.1` (2 MB) was not copied.
 - Not ported:
@@ -101,6 +103,8 @@
 | fix_fixpp_more.cpp: heartbeat_42_and_44 | Abc-Arbitrage/fixpp | tests/writer_test.cc | should_write_heartbeat_message_42 / _44 | MIT |
 | fix_fixpp_more.cpp: should_optionally_get, should_overwrite_tags_in_message, should_visit_custom_message_struct, read_into_filled_struct | Abc-Arbitrage/fixpp | tests/message_test.cc, tests/visitor_test.cc | should_optionally_get, should_overwrite_tags_in_message, should_extend_message_properly, should_visit_custom_message | MIT |
 | fix_fixpp_more.cpp: SKIP lines for should_throw_when_missing_fields_in_repeating_group, should_throw_when_getting_not_present_tag (core has no required fields), should_bring_correct_version_with_message_type, should_compare_version, should_set_tag_if_defined (compile-time fixpp API) | Abc-Arbitrage/fixpp | tests/message_test.cc | same names | MIT |
+| fix_hffix_more.cpp: data_with_embedded_soh, raw_data_roundtrip, raw_data_length_past_end, chrono_timestamp, chrono_nano_timestamp, chrono_bad_timestamp | jamesdbrock/hffix | test/src/unit_tests.cpp | data_length, chrono, chrono_nano | BSD-style |
+| fix_fixpp_more.cpp: should_parse_utc_timestamp, should_write_utc_timestamp_field, should_write_decimal_field, decimal_keeps_scale | Abc-Arbitrage/fixpp | tests/visitor_test.cc, tests/writer_test.cc | should_parse_utc_timestamp(_with_milli/microseconds), should_write_utc_timestamp_field*, should_write_float_field | MIT |
 | fix_fixpp_more.cpp: fix42_log_quotes | Abc-Arbitrage/fixpp | tests/data/fix42.log | sample data | MIT |
 | fix_fixpp_more.cpp: group_count_*, group_entry_without_delimiter, bad_boolean, bad_char_length, msg_type_mismatch, unknown_tag_strict_vs_lenient, repeated_tag_overwrites, fields_in_any_order, empty_group_omitted_on_write | written for this port (fixpp strict/non-strict visitor semantics) | - | - | glaze MIT |
 
@@ -110,8 +114,8 @@ The reference repositories were cloned with `git clone --depth 1` into `/tmp/ref
 
 1. Merge newer `fix/core` commits, rebuild, and try `-DGLZ_FIX_KNOWN_FAILURES`. Remove each guard
    once core fixes the gap: unknown tags inside groups, and float output without exponents.
-2. Get core's answers to the open questions in `docs/fix/ported-tests-hffix-fixpp.md` (raw data
-   fields, BeginString check, chrono) and turn the matching SKIPs into tests.
+2. Get core's answers to the remaining open questions in `docs/fix/ported-tests-hffix-fixpp.md`
+   (BeginString check, UTCTimeOnly and UTCDateOnly types) and turn the matching SKIPs into tests.
 3. Optionally add `fix.5.0.set.1` (2 MB) through a fetch step instead of committing it.
 4. Ask core whether a too-small group count should be an error with default options. The tests
    currently pin the lenient behaviour (`group_count_too_small`).
