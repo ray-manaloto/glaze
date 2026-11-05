@@ -1,5 +1,7 @@
 # Session notes: fix/conformance-fuzz
 
+Final state pushed 2026-11-05 ~07:50 UTC. `fix/core` merged at `e5babf6e` (unchanged since 07:20).
+
 ## Done
 
 - `fix/core` is merged (07:20 UTC). The local stub this branch began with is gone; tests and fuzzers
@@ -23,6 +25,10 @@ Long run, 07:32-07:42 UTC, against `fix/core` at `e5babf6e`: all four fuzzers in
 | `fix_frame` | 600 s | | 0 | cov 111 |
 | `fix_parse_fields` | 600 s | | 0 | cov 59 |
 | `fix_validate` | 90 s + 480 s | | 8 + 4 | all gap 2; the second run had the `010=` filter, the 4 it found are `08=`/`09=` |
+
+Second run, 07:44-07:49 UTC, `-fork=2` each, both gap filters in `fix_validate`:
+`fix_validate` about 71 M runs, cov 143, 0 crashes; `fix_read` about 12 M runs, cov 939, 0 crashes.
+So apart from gap 2, no new bug turned up.
 
 The minimised corpora (`-merge=1`) are committed in `fuzzing/corpus/<target>/`; the hand-written
 seeds stay in `fuzzing/corpus/fix/`. No ASan or UBSan report came up in any target: every crash
