@@ -20,7 +20,8 @@
 
 namespace glz::fix::fix42
 {
-   inline constexpr std::string_view begin_string = "FIX.4.2";
+   inline constexpr std::string_view begin_string = "FIX.4.2"; // tag 8 on the wire
+   inline constexpr std::string_view dictionary_version = "FIX.4.2";
 
    namespace tag
    {
@@ -2075,22 +2076,118 @@ namespace glz::fix::fix42
    // ---- messages ----
    struct Heartbeat
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> test_req_id{};
       bool operator==(const Heartbeat&) const = default;
    };
    struct TestRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string test_req_id{};
       bool operator==(const TestRequest&) const = default;
    };
    struct ResendRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       int64_t begin_seq_no{};
       int64_t end_seq_no{};
       bool operator==(const ResendRequest&) const = default;
    };
    struct Reject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       int64_t ref_seq_num{};
       std::optional<int64_t> ref_tag_id{};
       std::optional<std::string> ref_msg_type{};
@@ -2102,12 +2199,60 @@ namespace glz::fix::fix42
    };
    struct SequenceReset
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<bool> gap_fill_flag{};
       int64_t new_seq_no{};
       bool operator==(const SequenceReset&) const = default;
    };
    struct Logout
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
@@ -2115,6 +2260,30 @@ namespace glz::fix::fix42
    };
    struct IOI
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string ioiid{};
       IOITransType ioi_trans_type{};
       std::optional<std::string> ioi_ref_id{};
@@ -2157,6 +2326,30 @@ namespace glz::fix::fix42
    };
    struct Advertisement
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string adv_id{};
       std::string adv_trans_type{};
       std::optional<std::string> adv_ref_id{};
@@ -2195,6 +2388,30 @@ namespace glz::fix::fix42
    };
    struct ExecutionReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string order_id{};
       std::optional<std::string> secondary_order_id{};
       std::optional<std::string> cl_ord_id{};
@@ -2291,6 +2508,30 @@ namespace glz::fix::fix42
    };
    struct OrderCancelReject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string order_id{};
       std::optional<std::string> secondary_order_id{};
       std::string cl_ord_id{};
@@ -2310,6 +2551,30 @@ namespace glz::fix::fix42
    };
    struct Logon
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       EncryptMethod encrypt_method{};
       int64_t heart_bt_int{};
       std::optional<int64_t> raw_data_length{};
@@ -2321,6 +2586,30 @@ namespace glz::fix::fix42
    };
    struct News
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> orig_time{};
       std::optional<Urgency> urgency{};
       std::string headline{};
@@ -2336,6 +2625,30 @@ namespace glz::fix::fix42
    };
    struct Email
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string email_thread_id{};
       EmailType email_type{};
       std::optional<std::string> orig_time{};
@@ -2353,6 +2666,30 @@ namespace glz::fix::fix42
    };
    struct NewOrderSingle
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string cl_ord_id{};
       std::optional<std::string> client_id{};
       std::optional<std::string> exec_broker{};
@@ -2428,6 +2765,30 @@ namespace glz::fix::fix42
    };
    struct NewOrderList
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string list_id{};
       std::optional<std::string> bid_id{};
       std::optional<std::string> client_bid_id{};
@@ -2444,6 +2805,30 @@ namespace glz::fix::fix42
    };
    struct OrderCancelRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string orig_cl_ord_id{};
       std::optional<std::string> order_id{};
       std::string cl_ord_id{};
@@ -2483,6 +2868,30 @@ namespace glz::fix::fix42
    };
    struct OrderCancelReplaceRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> order_id{};
       std::optional<std::string> client_id{};
       std::optional<std::string> exec_broker{};
@@ -2557,6 +2966,30 @@ namespace glz::fix::fix42
    };
    struct OrderStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> order_id{};
       std::string cl_ord_id{};
       std::optional<std::string> client_id{};
@@ -2586,6 +3019,30 @@ namespace glz::fix::fix42
    };
    struct Allocation
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string alloc_id{};
       AllocTransType alloc_trans_type{};
       std::optional<std::string> ref_alloc_id{};
@@ -2636,6 +3093,30 @@ namespace glz::fix::fix42
    };
    struct ListCancelRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string list_id{};
       std::string transact_time{};
       std::optional<std::string> text{};
@@ -2645,6 +3126,30 @@ namespace glz::fix::fix42
    };
    struct ListExecute
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string list_id{};
       std::optional<std::string> client_bid_id{};
       std::optional<std::string> bid_id{};
@@ -2656,6 +3161,30 @@ namespace glz::fix::fix42
    };
    struct ListStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string list_id{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
@@ -2664,6 +3193,30 @@ namespace glz::fix::fix42
    };
    struct ListStatus
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string list_id{};
       ListStatusType list_status_type{};
       int64_t no_rpts{};
@@ -2679,6 +3232,30 @@ namespace glz::fix::fix42
    };
    struct AllocationAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> client_id{};
       std::optional<std::string> exec_broker{};
       std::string alloc_id{};
@@ -2693,6 +3270,30 @@ namespace glz::fix::fix42
    };
    struct DontKnowTrade
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string order_id{};
       std::string exec_id{};
       DKReason dk_reason{};
@@ -2727,12 +3328,60 @@ namespace glz::fix::fix42
    };
    struct QuoteRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string quote_req_id{};
       std::vector<QuotReqGrp> no_related_sym{};
       bool operator==(const QuoteRequest&) const = default;
    };
    struct Quote
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> quote_req_id{};
       std::string quote_id{};
       std::optional<QuoteResponseLevel> quote_response_level{};
@@ -2775,6 +3424,30 @@ namespace glz::fix::fix42
    };
    struct SettlementInstructions
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string settl_inst_id{};
       SettlInstTransType settl_inst_trans_type{};
       std::string settl_inst_ref_id{};
@@ -2815,6 +3488,30 @@ namespace glz::fix::fix42
    };
    struct MarketDataRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string md_req_id{};
       SubscriptionRequestType subscription_request_type{};
       int64_t market_depth{};
@@ -2826,6 +3523,30 @@ namespace glz::fix::fix42
    };
    struct MarketDataSnapshotFullRefresh
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> md_req_id{};
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
@@ -2854,12 +3575,60 @@ namespace glz::fix::fix42
    };
    struct MarketDataIncrementalRefresh
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> md_req_id{};
       std::vector<MDIncGrp> no_md_entries{};
       bool operator==(const MarketDataIncrementalRefresh&) const = default;
    };
    struct MarketDataRequestReject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string md_req_id{};
       std::optional<MDReqRejReason> md_req_rej_reason{};
       std::optional<std::string> text{};
@@ -2869,6 +3638,30 @@ namespace glz::fix::fix42
    };
    struct QuoteCancel
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> quote_req_id{};
       std::string quote_id{};
       QuoteCancelType quote_cancel_type{};
@@ -2879,6 +3672,30 @@ namespace glz::fix::fix42
    };
    struct QuoteStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> quote_id{};
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
@@ -2905,6 +3722,30 @@ namespace glz::fix::fix42
    };
    struct QuoteAcknowledgement
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> quote_req_id{};
       std::optional<std::string> quote_id{};
       QuoteAckStatus quote_ack_status{};
@@ -2917,6 +3758,30 @@ namespace glz::fix::fix42
    };
    struct SecurityDefinitionRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string security_req_id{};
       SecurityRequestType security_request_type{};
       std::optional<std::string> symbol{};
@@ -2948,6 +3813,30 @@ namespace glz::fix::fix42
    };
    struct SecurityDefinition
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string security_req_id{};
       std::string security_response_id{};
       std::optional<SecurityResponseType> security_response_type{};
@@ -2981,6 +3870,30 @@ namespace glz::fix::fix42
    };
    struct SecurityStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string security_status_req_id{};
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
@@ -3008,6 +3921,30 @@ namespace glz::fix::fix42
    };
    struct SecurityStatus
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> security_status_req_id{};
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
@@ -3048,6 +3985,30 @@ namespace glz::fix::fix42
    };
    struct TradingSessionStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string trad_ses_req_id{};
       std::optional<std::string> trading_session_id{};
       std::optional<TradSesMethod> trad_ses_method{};
@@ -3057,6 +4018,30 @@ namespace glz::fix::fix42
    };
    struct TradingSessionStatus
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> trad_ses_req_id{};
       std::string trading_session_id{};
       std::optional<TradSesMethod> trad_ses_method{};
@@ -3076,6 +4061,30 @@ namespace glz::fix::fix42
    };
    struct MassQuote
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> quote_req_id{};
       std::string quote_id{};
       std::optional<QuoteResponseLevel> quote_response_level{};
@@ -3086,6 +4095,30 @@ namespace glz::fix::fix42
    };
    struct BusinessMessageReject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<int64_t> ref_seq_num{};
       std::string ref_msg_type{};
       std::optional<std::string> business_reject_ref_id{};
@@ -3097,6 +4130,30 @@ namespace glz::fix::fix42
    };
    struct BidRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> bid_id{};
       std::string client_bid_id{};
       BidRequestTransType bid_request_trans_type{};
@@ -3130,6 +4187,30 @@ namespace glz::fix::fix42
    };
    struct BidResponse
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::optional<std::string> bid_id{};
       std::optional<std::string> client_bid_id{};
       std::vector<BidCompRspGrp> no_bid_components{};
@@ -3137,6 +4218,30 @@ namespace glz::fix::fix42
    };
    struct ListStrikePrice
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
       std::string list_id{};
       int64_t tot_no_strikes{};
       std::vector<InstrmtStrkPxGrp> no_strikes{};
@@ -3940,7 +5045,7 @@ struct glz::meta<glz::fix::fix42::Heartbeat>
    using T = glz::fix::fix42::Heartbeat;
    static constexpr std::string_view fix_msg_type = "0";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("112", &T::test_req_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "112", &T::test_req_id);
 };
 template <>
 struct glz::meta<glz::fix::fix42::TestRequest>
@@ -3948,7 +5053,7 @@ struct glz::meta<glz::fix::fix42::TestRequest>
    using T = glz::fix::fix42::TestRequest;
    static constexpr std::string_view fix_msg_type = "1";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("112", &T::test_req_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "112", &T::test_req_id);
 };
 template <>
 struct glz::meta<glz::fix::fix42::ResendRequest>
@@ -3956,7 +5061,7 @@ struct glz::meta<glz::fix::fix42::ResendRequest>
    using T = glz::fix::fix42::ResendRequest;
    static constexpr std::string_view fix_msg_type = "2";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("7", &T::begin_seq_no, "16", &T::end_seq_no);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "7", &T::begin_seq_no, "16", &T::end_seq_no);
 };
 template <>
 struct glz::meta<glz::fix::fix42::Reject>
@@ -3964,7 +5069,7 @@ struct glz::meta<glz::fix::fix42::Reject>
    using T = glz::fix::fix42::Reject;
    static constexpr std::string_view fix_msg_type = "3";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("45", &T::ref_seq_num, "371", &T::ref_tag_id, "372", &T::ref_msg_type, "373", &T::session_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "45", &T::ref_seq_num, "371", &T::ref_tag_id, "372", &T::ref_msg_type, "373", &T::session_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::SequenceReset>
@@ -3972,7 +5077,7 @@ struct glz::meta<glz::fix::fix42::SequenceReset>
    using T = glz::fix::fix42::SequenceReset;
    static constexpr std::string_view fix_msg_type = "4";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("123", &T::gap_fill_flag, "36", &T::new_seq_no);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "123", &T::gap_fill_flag, "36", &T::new_seq_no);
 };
 template <>
 struct glz::meta<glz::fix::fix42::Logout>
@@ -3980,7 +5085,7 @@ struct glz::meta<glz::fix::fix42::Logout>
    using T = glz::fix::fix42::Logout;
    static constexpr std::string_view fix_msg_type = "5";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::IOIQualGrp>
@@ -4000,7 +5105,7 @@ struct glz::meta<glz::fix::fix42::IOI>
    using T = glz::fix::fix42::IOI;
    static constexpr std::string_view fix_msg_type = "6";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("23", &T::ioiid, "28", &T::ioi_trans_type, "26", &T::ioi_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "27", &T::ioi_shares, "44", &T::price, "15", &T::currency, "62", &T::valid_until_time, "25", &T::ioi_qlty_ind, "130", &T::ioi_natural_flag, "199", &T::no_ioi_qualifiers, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "60", &T::transact_time, "149", &T::url_link, "215", &T::no_routing_ids, "218", &T::spread_to_benchmark, "219", &T::benchmark);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "23", &T::ioiid, "28", &T::ioi_trans_type, "26", &T::ioi_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "27", &T::ioi_shares, "44", &T::price, "15", &T::currency, "62", &T::valid_until_time, "25", &T::ioi_qlty_ind, "130", &T::ioi_natural_flag, "199", &T::no_ioi_qualifiers, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "60", &T::transact_time, "149", &T::url_link, "215", &T::no_routing_ids, "218", &T::spread_to_benchmark, "219", &T::benchmark);
 };
 template <>
 struct glz::meta<glz::fix::fix42::Advertisement>
@@ -4008,7 +5113,7 @@ struct glz::meta<glz::fix::fix42::Advertisement>
    using T = glz::fix::fix42::Advertisement;
    static constexpr std::string_view fix_msg_type = "7";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("2", &T::adv_id, "5", &T::adv_trans_type, "3", &T::adv_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "4", &T::adv_side, "53", &T::shares, "44", &T::price, "15", &T::currency, "75", &T::trade_date, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "149", &T::url_link, "30", &T::last_mkt, "336", &T::trading_session_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "2", &T::adv_id, "5", &T::adv_trans_type, "3", &T::adv_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "4", &T::adv_side, "53", &T::shares, "44", &T::price, "15", &T::currency, "75", &T::trade_date, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "149", &T::url_link, "30", &T::last_mkt, "336", &T::trading_session_id);
 };
 template <>
 struct glz::meta<glz::fix::fix42::ContraGrp>
@@ -4022,7 +5127,7 @@ struct glz::meta<glz::fix::fix42::ExecutionReport>
    using T = glz::fix::fix42::ExecutionReport;
    static constexpr std::string_view fix_msg_type = "8";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("37", &T::order_id, "198", &T::secondary_order_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "109", &T::client_id, "76", &T::exec_broker, "382", &T::no_contra_brokers, "66", &T::list_id, "17", &T::exec_id, "20", &T::exec_trans_type, "19", &T::exec_ref_id, "150", &T::exec_type, "39", &T::ord_status, "103", &T::ord_rej_reason, "378", &T::exec_restatement_reason, "1", &T::account, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "18", &T::exec_inst, "47", &T::rule80_a, "32", &T::last_shares, "31", &T::last_px, "194", &T::last_spot_rate, "195", &T::last_forward_points, "30", &T::last_mkt, "336", &T::trading_session_id, "29", &T::last_capacity, "151", &T::leaves_qty, "14", &T::cum_qty, "6", &T::avg_px, "424", &T::day_order_qty, "425", &T::day_cum_qty, "426", &T::day_avg_px, "427", &T::gt_booking_inst, "75", &T::trade_date, "60", &T::transact_time, "113", &T::report_to_exch, "12", &T::commission, "13", &T::comm_type, "381", &T::gross_trade_amt, "119", &T::settl_curr_amt, "120", &T::settl_currency, "155", &T::settl_curr_fx_rate, "156", &T::settl_curr_fx_rate_calc, "21", &T::handl_inst, "110", &T::min_qty, "111", &T::max_floor, "77", &T::open_close, "210", &T::max_show, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "439", &T::clearing_firm, "440", &T::clearing_account, "442", &T::multi_leg_reporting_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "37", &T::order_id, "198", &T::secondary_order_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "109", &T::client_id, "76", &T::exec_broker, "382", &T::no_contra_brokers, "66", &T::list_id, "17", &T::exec_id, "20", &T::exec_trans_type, "19", &T::exec_ref_id, "150", &T::exec_type, "39", &T::ord_status, "103", &T::ord_rej_reason, "378", &T::exec_restatement_reason, "1", &T::account, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "18", &T::exec_inst, "47", &T::rule80_a, "32", &T::last_shares, "31", &T::last_px, "194", &T::last_spot_rate, "195", &T::last_forward_points, "30", &T::last_mkt, "336", &T::trading_session_id, "29", &T::last_capacity, "151", &T::leaves_qty, "14", &T::cum_qty, "6", &T::avg_px, "424", &T::day_order_qty, "425", &T::day_cum_qty, "426", &T::day_avg_px, "427", &T::gt_booking_inst, "75", &T::trade_date, "60", &T::transact_time, "113", &T::report_to_exch, "12", &T::commission, "13", &T::comm_type, "381", &T::gross_trade_amt, "119", &T::settl_curr_amt, "120", &T::settl_currency, "155", &T::settl_curr_fx_rate, "156", &T::settl_curr_fx_rate_calc, "21", &T::handl_inst, "110", &T::min_qty, "111", &T::max_floor, "77", &T::open_close, "210", &T::max_show, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "439", &T::clearing_firm, "440", &T::clearing_account, "442", &T::multi_leg_reporting_type);
 };
 template <>
 struct glz::meta<glz::fix::fix42::OrderCancelReject>
@@ -4030,7 +5135,7 @@ struct glz::meta<glz::fix::fix42::OrderCancelReject>
    using T = glz::fix::fix42::OrderCancelReject;
    static constexpr std::string_view fix_msg_type = "9";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("37", &T::order_id, "198", &T::secondary_order_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "39", &T::ord_status, "109", &T::client_id, "76", &T::exec_broker, "66", &T::list_id, "1", &T::account, "60", &T::transact_time, "434", &T::cxl_rej_response_to, "102", &T::cxl_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "37", &T::order_id, "198", &T::secondary_order_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "39", &T::ord_status, "109", &T::client_id, "76", &T::exec_broker, "66", &T::list_id, "1", &T::account, "60", &T::transact_time, "434", &T::cxl_rej_response_to, "102", &T::cxl_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::MsgTypeGrp>
@@ -4044,7 +5149,7 @@ struct glz::meta<glz::fix::fix42::Logon>
    using T = glz::fix::fix42::Logon;
    static constexpr std::string_view fix_msg_type = "A";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("98", &T::encrypt_method, "108", &T::heart_bt_int, "95", &T::raw_data_length, "96", &T::raw_data, "141", &T::reset_seq_num_flag, "383", &T::max_message_size, "384", &T::no_msg_types);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "98", &T::encrypt_method, "108", &T::heart_bt_int, "95", &T::raw_data_length, "96", &T::raw_data, "141", &T::reset_seq_num_flag, "383", &T::max_message_size, "384", &T::no_msg_types);
 };
 template <>
 struct glz::meta<glz::fix::fix42::InstrmtGrp>
@@ -4064,7 +5169,7 @@ struct glz::meta<glz::fix::fix42::News>
    using T = glz::fix::fix42::News;
    static constexpr std::string_view fix_msg_type = "B";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("42", &T::orig_time, "61", &T::urgency, "148", &T::headline, "358", &T::encoded_headline_len, "359", &T::encoded_headline, "215", &T::no_routing_ids, "146", &T::no_related_sym, "33", &T::lines_of_text, "149", &T::url_link, "95", &T::raw_data_length, "96", &T::raw_data);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "42", &T::orig_time, "61", &T::urgency, "148", &T::headline, "358", &T::encoded_headline_len, "359", &T::encoded_headline, "215", &T::no_routing_ids, "146", &T::no_related_sym, "33", &T::lines_of_text, "149", &T::url_link, "95", &T::raw_data_length, "96", &T::raw_data);
 };
 template <>
 struct glz::meta<glz::fix::fix42::Email>
@@ -4072,7 +5177,7 @@ struct glz::meta<glz::fix::fix42::Email>
    using T = glz::fix::fix42::Email;
    static constexpr std::string_view fix_msg_type = "C";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("164", &T::email_thread_id, "94", &T::email_type, "42", &T::orig_time, "147", &T::subject, "356", &T::encoded_subject_len, "357", &T::encoded_subject, "215", &T::no_routing_ids, "146", &T::no_related_sym, "37", &T::order_id, "11", &T::cl_ord_id, "33", &T::lines_of_text, "95", &T::raw_data_length, "96", &T::raw_data);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "164", &T::email_thread_id, "94", &T::email_type, "42", &T::orig_time, "147", &T::subject, "356", &T::encoded_subject_len, "357", &T::encoded_subject, "215", &T::no_routing_ids, "146", &T::no_related_sym, "37", &T::order_id, "11", &T::cl_ord_id, "33", &T::lines_of_text, "95", &T::raw_data_length, "96", &T::raw_data);
 };
 template <>
 struct glz::meta<glz::fix::fix42::PreAllocGrp>
@@ -4092,7 +5197,7 @@ struct glz::meta<glz::fix::fix42::NewOrderSingle>
    using T = glz::fix::fix42::NewOrderSingle;
    static constexpr std::string_view fix_msg_type = "D";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("11", &T::cl_ord_id, "109", &T::client_id, "76", &T::exec_broker, "1", &T::account, "78", &T::no_allocs, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "140", &T::prev_close_px, "54", &T::side, "114", &T::locate_reqd, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "47", &T::rule80_a, "121", &T::forex_req, "120", &T::settl_currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "77", &T::open_close, "203", &T::covered_or_uncovered, "204", &T::customer_or_firm, "210", &T::max_show, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "439", &T::clearing_firm, "440", &T::clearing_account);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "11", &T::cl_ord_id, "109", &T::client_id, "76", &T::exec_broker, "1", &T::account, "78", &T::no_allocs, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "140", &T::prev_close_px, "54", &T::side, "114", &T::locate_reqd, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "47", &T::rule80_a, "121", &T::forex_req, "120", &T::settl_currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "77", &T::open_close, "203", &T::covered_or_uncovered, "204", &T::customer_or_firm, "210", &T::max_show, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "439", &T::clearing_firm, "440", &T::clearing_account);
 };
 template <>
 struct glz::meta<glz::fix::fix42::ListOrdGrp>
@@ -4106,7 +5211,7 @@ struct glz::meta<glz::fix::fix42::NewOrderList>
    using T = glz::fix::fix42::NewOrderList;
    static constexpr std::string_view fix_msg_type = "E";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("66", &T::list_id, "390", &T::bid_id, "391", &T::client_bid_id, "414", &T::prog_rpt_reqs, "394", &T::bid_type, "415", &T::prog_period_interval, "433", &T::list_exec_inst_type, "69", &T::list_exec_inst, "352", &T::encoded_list_exec_inst_len, "353", &T::encoded_list_exec_inst, "68", &T::tot_no_orders, "73", &T::no_orders);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "66", &T::list_id, "390", &T::bid_id, "391", &T::client_bid_id, "414", &T::prog_rpt_reqs, "394", &T::bid_type, "415", &T::prog_period_interval, "433", &T::list_exec_inst_type, "69", &T::list_exec_inst, "352", &T::encoded_list_exec_inst_len, "353", &T::encoded_list_exec_inst, "68", &T::tot_no_orders, "73", &T::no_orders);
 };
 template <>
 struct glz::meta<glz::fix::fix42::OrderCancelRequest>
@@ -4114,7 +5219,7 @@ struct glz::meta<glz::fix::fix42::OrderCancelRequest>
    using T = glz::fix::fix42::OrderCancelRequest;
    static constexpr std::string_view fix_msg_type = "F";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("41", &T::orig_cl_ord_id, "37", &T::order_id, "11", &T::cl_ord_id, "66", &T::list_id, "1", &T::account, "109", &T::client_id, "76", &T::exec_broker, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "376", &T::compliance_id, "377", &T::solicited_flag, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "41", &T::orig_cl_ord_id, "37", &T::order_id, "11", &T::cl_ord_id, "66", &T::list_id, "1", &T::account, "109", &T::client_id, "76", &T::exec_broker, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "376", &T::compliance_id, "377", &T::solicited_flag, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::OrderCancelReplaceRequest>
@@ -4122,7 +5227,7 @@ struct glz::meta<glz::fix::fix42::OrderCancelReplaceRequest>
    using T = glz::fix::fix42::OrderCancelReplaceRequest;
    static constexpr std::string_view fix_msg_type = "G";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("37", &T::order_id, "109", &T::client_id, "76", &T::exec_broker, "41", &T::orig_cl_ord_id, "11", &T::cl_ord_id, "66", &T::list_id, "1", &T::account, "78", &T::no_allocs, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "376", &T::compliance_id, "377", &T::solicited_flag, "15", &T::currency, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "47", &T::rule80_a, "121", &T::forex_req, "120", &T::settl_currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "77", &T::open_close, "203", &T::covered_or_uncovered, "204", &T::customer_or_firm, "210", &T::max_show, "114", &T::locate_reqd, "439", &T::clearing_firm, "440", &T::clearing_account);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "37", &T::order_id, "109", &T::client_id, "76", &T::exec_broker, "41", &T::orig_cl_ord_id, "11", &T::cl_ord_id, "66", &T::list_id, "1", &T::account, "78", &T::no_allocs, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "376", &T::compliance_id, "377", &T::solicited_flag, "15", &T::currency, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "47", &T::rule80_a, "121", &T::forex_req, "120", &T::settl_currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "77", &T::open_close, "203", &T::covered_or_uncovered, "204", &T::customer_or_firm, "210", &T::max_show, "114", &T::locate_reqd, "439", &T::clearing_firm, "440", &T::clearing_account);
 };
 template <>
 struct glz::meta<glz::fix::fix42::OrderStatusRequest>
@@ -4130,7 +5235,7 @@ struct glz::meta<glz::fix::fix42::OrderStatusRequest>
    using T = glz::fix::fix42::OrderStatusRequest;
    static constexpr std::string_view fix_msg_type = "H";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("37", &T::order_id, "11", &T::cl_ord_id, "109", &T::client_id, "1", &T::account, "76", &T::exec_broker, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "37", &T::order_id, "11", &T::cl_ord_id, "109", &T::client_id, "1", &T::account, "76", &T::exec_broker, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side);
 };
 template <>
 struct glz::meta<glz::fix::fix42::OrdAllocGrp>
@@ -4162,7 +5267,7 @@ struct glz::meta<glz::fix::fix42::Allocation>
    using T = glz::fix::fix42::Allocation;
    static constexpr std::string_view fix_msg_type = "J";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("70", &T::alloc_id, "71", &T::alloc_trans_type, "72", &T::ref_alloc_id, "196", &T::alloc_link_id, "197", &T::alloc_link_type, "73", &T::no_orders, "124", &T::no_execs, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "53", &T::shares, "30", &T::last_mkt, "336", &T::trading_session_id, "6", &T::avg_px, "15", &T::currency, "74", &T::avg_prx_precision, "75", &T::trade_date, "60", &T::transact_time, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "381", &T::gross_trade_amt, "118", &T::net_money, "77", &T::open_close, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "157", &T::num_days_interest, "158", &T::accrued_interest_rate, "78", &T::no_allocs);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "70", &T::alloc_id, "71", &T::alloc_trans_type, "72", &T::ref_alloc_id, "196", &T::alloc_link_id, "197", &T::alloc_link_type, "73", &T::no_orders, "124", &T::no_execs, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "53", &T::shares, "30", &T::last_mkt, "336", &T::trading_session_id, "6", &T::avg_px, "15", &T::currency, "74", &T::avg_prx_precision, "75", &T::trade_date, "60", &T::transact_time, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "381", &T::gross_trade_amt, "118", &T::net_money, "77", &T::open_close, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "157", &T::num_days_interest, "158", &T::accrued_interest_rate, "78", &T::no_allocs);
 };
 template <>
 struct glz::meta<glz::fix::fix42::ListCancelRequest>
@@ -4170,7 +5275,7 @@ struct glz::meta<glz::fix::fix42::ListCancelRequest>
    using T = glz::fix::fix42::ListCancelRequest;
    static constexpr std::string_view fix_msg_type = "K";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("66", &T::list_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "66", &T::list_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::ListExecute>
@@ -4178,7 +5283,7 @@ struct glz::meta<glz::fix::fix42::ListExecute>
    using T = glz::fix::fix42::ListExecute;
    static constexpr std::string_view fix_msg_type = "L";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("66", &T::list_id, "391", &T::client_bid_id, "390", &T::bid_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "66", &T::list_id, "391", &T::client_bid_id, "390", &T::bid_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::ListStatusRequest>
@@ -4186,7 +5291,7 @@ struct glz::meta<glz::fix::fix42::ListStatusRequest>
    using T = glz::fix::fix42::ListStatusRequest;
    static constexpr std::string_view fix_msg_type = "M";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("66", &T::list_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "66", &T::list_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::OrdListStatGrp>
@@ -4200,7 +5305,7 @@ struct glz::meta<glz::fix::fix42::ListStatus>
    using T = glz::fix::fix42::ListStatus;
    static constexpr std::string_view fix_msg_type = "N";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("66", &T::list_id, "429", &T::list_status_type, "82", &T::no_rpts, "431", &T::list_order_status, "83", &T::rpt_seq, "444", &T::list_status_text, "445", &T::encoded_list_status_text_len, "446", &T::encoded_list_status_text, "60", &T::transact_time, "68", &T::tot_no_orders, "73", &T::no_orders);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "66", &T::list_id, "429", &T::list_status_type, "82", &T::no_rpts, "431", &T::list_order_status, "83", &T::rpt_seq, "444", &T::list_status_text, "445", &T::encoded_list_status_text_len, "446", &T::encoded_list_status_text, "60", &T::transact_time, "68", &T::tot_no_orders, "73", &T::no_orders);
 };
 template <>
 struct glz::meta<glz::fix::fix42::AllocationAck>
@@ -4208,7 +5313,7 @@ struct glz::meta<glz::fix::fix42::AllocationAck>
    using T = glz::fix::fix42::AllocationAck;
    static constexpr std::string_view fix_msg_type = "P";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("109", &T::client_id, "76", &T::exec_broker, "70", &T::alloc_id, "75", &T::trade_date, "60", &T::transact_time, "87", &T::alloc_status, "88", &T::alloc_rej_code, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "109", &T::client_id, "76", &T::exec_broker, "70", &T::alloc_id, "75", &T::trade_date, "60", &T::transact_time, "87", &T::alloc_status, "88", &T::alloc_rej_code, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::DontKnowTrade>
@@ -4216,7 +5321,7 @@ struct glz::meta<glz::fix::fix42::DontKnowTrade>
    using T = glz::fix::fix42::DontKnowTrade;
    static constexpr std::string_view fix_msg_type = "Q";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("37", &T::order_id, "17", &T::exec_id, "127", &T::dk_reason, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "32", &T::last_shares, "31", &T::last_px, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "37", &T::order_id, "17", &T::exec_id, "127", &T::dk_reason, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "32", &T::last_shares, "31", &T::last_px, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::QuotReqGrp>
@@ -4230,7 +5335,7 @@ struct glz::meta<glz::fix::fix42::QuoteRequest>
    using T = glz::fix::fix42::QuoteRequest;
    static constexpr std::string_view fix_msg_type = "R";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "146", &T::no_related_sym);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "131", &T::quote_req_id, "146", &T::no_related_sym);
 };
 template <>
 struct glz::meta<glz::fix::fix42::Quote>
@@ -4238,7 +5343,7 @@ struct glz::meta<glz::fix::fix42::Quote>
    using T = glz::fix::fix42::Quote;
    static constexpr std::string_view fix_msg_type = "S";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "301", &T::quote_response_level, "336", &T::trading_session_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "132", &T::bid_px, "133", &T::offer_px, "134", &T::bid_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "60", &T::transact_time, "64", &T::fut_sett_date, "40", &T::ord_type, "193", &T::fut_sett_date2, "192", &T::order_qty2, "15", &T::currency);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "131", &T::quote_req_id, "117", &T::quote_id, "301", &T::quote_response_level, "336", &T::trading_session_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "132", &T::bid_px, "133", &T::offer_px, "134", &T::bid_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "60", &T::transact_time, "64", &T::fut_sett_date, "40", &T::ord_type, "193", &T::fut_sett_date2, "192", &T::order_qty2, "15", &T::currency);
 };
 template <>
 struct glz::meta<glz::fix::fix42::SettlementInstructions>
@@ -4246,7 +5351,7 @@ struct glz::meta<glz::fix::fix42::SettlementInstructions>
    using T = glz::fix::fix42::SettlementInstructions;
    static constexpr std::string_view fix_msg_type = "T";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("162", &T::settl_inst_id, "163", &T::settl_inst_trans_type, "214", &T::settl_inst_ref_id, "160", &T::settl_inst_mode, "165", &T::settl_inst_source, "79", &T::alloc_account, "166", &T::settl_location, "75", &T::trade_date, "70", &T::alloc_id, "30", &T::last_mkt, "336", &T::trading_session_id, "54", &T::side, "167", &T::security_type, "168", &T::effective_time, "60", &T::transact_time, "109", &T::client_id, "76", &T::exec_broker, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "172", &T::settl_delivery_type, "173", &T::settl_depository_code, "174", &T::settl_brkr_code, "175", &T::settl_inst_code, "176", &T::security_settl_agent_name, "177", &T::security_settl_agent_code, "178", &T::security_settl_agent_acct_num, "179", &T::security_settl_agent_acct_name, "180", &T::security_settl_agent_contact_name, "181", &T::security_settl_agent_contact_phone, "182", &T::cash_settl_agent_name, "183", &T::cash_settl_agent_code, "184", &T::cash_settl_agent_acct_num, "185", &T::cash_settl_agent_acct_name, "186", &T::cash_settl_agent_contact_name, "187", &T::cash_settl_agent_contact_phone);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "162", &T::settl_inst_id, "163", &T::settl_inst_trans_type, "214", &T::settl_inst_ref_id, "160", &T::settl_inst_mode, "165", &T::settl_inst_source, "79", &T::alloc_account, "166", &T::settl_location, "75", &T::trade_date, "70", &T::alloc_id, "30", &T::last_mkt, "336", &T::trading_session_id, "54", &T::side, "167", &T::security_type, "168", &T::effective_time, "60", &T::transact_time, "109", &T::client_id, "76", &T::exec_broker, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "172", &T::settl_delivery_type, "173", &T::settl_depository_code, "174", &T::settl_brkr_code, "175", &T::settl_inst_code, "176", &T::security_settl_agent_name, "177", &T::security_settl_agent_code, "178", &T::security_settl_agent_acct_num, "179", &T::security_settl_agent_acct_name, "180", &T::security_settl_agent_contact_name, "181", &T::security_settl_agent_contact_phone, "182", &T::cash_settl_agent_name, "183", &T::cash_settl_agent_code, "184", &T::cash_settl_agent_acct_num, "185", &T::cash_settl_agent_acct_name, "186", &T::cash_settl_agent_contact_name, "187", &T::cash_settl_agent_contact_phone);
 };
 template <>
 struct glz::meta<glz::fix::fix42::MDReqGrp>
@@ -4266,7 +5371,7 @@ struct glz::meta<glz::fix::fix42::MarketDataRequest>
    using T = glz::fix::fix42::MarketDataRequest;
    static constexpr std::string_view fix_msg_type = "V";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "263", &T::subscription_request_type, "264", &T::market_depth, "265", &T::md_update_type, "266", &T::aggregated_book, "267", &T::no_md_entry_types, "146", &T::no_related_sym);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "262", &T::md_req_id, "263", &T::subscription_request_type, "264", &T::market_depth, "265", &T::md_update_type, "266", &T::aggregated_book, "267", &T::no_md_entry_types, "146", &T::no_related_sym);
 };
 template <>
 struct glz::meta<glz::fix::fix42::MDFullGrp>
@@ -4280,7 +5385,7 @@ struct glz::meta<glz::fix::fix42::MarketDataSnapshotFullRefresh>
    using T = glz::fix::fix42::MarketDataSnapshotFullRefresh;
    static constexpr std::string_view fix_msg_type = "W";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "291", &T::financial_status, "292", &T::corporate_action, "387", &T::total_volume_traded, "268", &T::no_md_entries);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "262", &T::md_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "291", &T::financial_status, "292", &T::corporate_action, "387", &T::total_volume_traded, "268", &T::no_md_entries);
 };
 template <>
 struct glz::meta<glz::fix::fix42::MDIncGrp>
@@ -4294,7 +5399,7 @@ struct glz::meta<glz::fix::fix42::MarketDataIncrementalRefresh>
    using T = glz::fix::fix42::MarketDataIncrementalRefresh;
    static constexpr std::string_view fix_msg_type = "X";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "268", &T::no_md_entries);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "262", &T::md_req_id, "268", &T::no_md_entries);
 };
 template <>
 struct glz::meta<glz::fix::fix42::MarketDataRequestReject>
@@ -4302,7 +5407,7 @@ struct glz::meta<glz::fix::fix42::MarketDataRequestReject>
    using T = glz::fix::fix42::MarketDataRequestReject;
    static constexpr std::string_view fix_msg_type = "Y";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "281", &T::md_req_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "262", &T::md_req_id, "281", &T::md_req_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::QuotCxlEntriesGrp>
@@ -4316,7 +5421,7 @@ struct glz::meta<glz::fix::fix42::QuoteCancel>
    using T = glz::fix::fix42::QuoteCancel;
    static constexpr std::string_view fix_msg_type = "Z";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "298", &T::quote_cancel_type, "301", &T::quote_response_level, "336", &T::trading_session_id, "295", &T::no_quote_entries);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "131", &T::quote_req_id, "117", &T::quote_id, "298", &T::quote_cancel_type, "301", &T::quote_response_level, "336", &T::trading_session_id, "295", &T::no_quote_entries);
 };
 template <>
 struct glz::meta<glz::fix::fix42::QuoteStatusRequest>
@@ -4324,7 +5429,7 @@ struct glz::meta<glz::fix::fix42::QuoteStatusRequest>
    using T = glz::fix::fix42::QuoteStatusRequest;
    static constexpr std::string_view fix_msg_type = "a";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("117", &T::quote_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "336", &T::trading_session_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "117", &T::quote_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "336", &T::trading_session_id);
 };
 template <>
 struct glz::meta<glz::fix::fix42::QuotEntryAckGrp>
@@ -4344,7 +5449,7 @@ struct glz::meta<glz::fix::fix42::QuoteAcknowledgement>
    using T = glz::fix::fix42::QuoteAcknowledgement;
    static constexpr std::string_view fix_msg_type = "b";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "297", &T::quote_ack_status, "300", &T::quote_reject_reason, "301", &T::quote_response_level, "336", &T::trading_session_id, "58", &T::text, "296", &T::no_quote_sets);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "131", &T::quote_req_id, "117", &T::quote_id, "297", &T::quote_ack_status, "300", &T::quote_reject_reason, "301", &T::quote_response_level, "336", &T::trading_session_id, "58", &T::text, "296", &T::no_quote_sets);
 };
 template <>
 struct glz::meta<glz::fix::fix42::UndInstrmtGrp>
@@ -4358,7 +5463,7 @@ struct glz::meta<glz::fix::fix42::SecurityDefinitionRequest>
    using T = glz::fix::fix42::SecurityDefinitionRequest;
    static constexpr std::string_view fix_msg_type = "c";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "321", &T::security_request_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "146", &T::no_related_sym);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "320", &T::security_req_id, "321", &T::security_request_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "146", &T::no_related_sym);
 };
 template <>
 struct glz::meta<glz::fix::fix42::SecurityDefinition>
@@ -4366,7 +5471,7 @@ struct glz::meta<glz::fix::fix42::SecurityDefinition>
    using T = glz::fix::fix42::SecurityDefinition;
    static constexpr std::string_view fix_msg_type = "d";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "322", &T::security_response_id, "323", &T::security_response_type, "393", &T::total_num_securities, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "336", &T::trading_session_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "146", &T::no_related_sym);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "320", &T::security_req_id, "322", &T::security_response_id, "323", &T::security_response_type, "393", &T::total_num_securities, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "336", &T::trading_session_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "146", &T::no_related_sym);
 };
 template <>
 struct glz::meta<glz::fix::fix42::SecurityStatusRequest>
@@ -4374,7 +5479,7 @@ struct glz::meta<glz::fix::fix42::SecurityStatusRequest>
    using T = glz::fix::fix42::SecurityStatusRequest;
    static constexpr std::string_view fix_msg_type = "e";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "263", &T::subscription_request_type, "336", &T::trading_session_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "263", &T::subscription_request_type, "336", &T::trading_session_id);
 };
 template <>
 struct glz::meta<glz::fix::fix42::SecurityStatus>
@@ -4382,7 +5487,7 @@ struct glz::meta<glz::fix::fix42::SecurityStatus>
    using T = glz::fix::fix42::SecurityStatus;
    static constexpr std::string_view fix_msg_type = "f";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "336", &T::trading_session_id, "325", &T::unsolicited_indicator, "326", &T::security_trading_status, "291", &T::financial_status, "292", &T::corporate_action, "327", &T::halt_reason, "328", &T::in_view_of_common, "329", &T::due_to_related, "330", &T::buy_volume, "331", &T::sell_volume, "332", &T::high_px, "333", &T::low_px, "31", &T::last_px, "60", &T::transact_time, "334", &T::adjustment);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "336", &T::trading_session_id, "325", &T::unsolicited_indicator, "326", &T::security_trading_status, "291", &T::financial_status, "292", &T::corporate_action, "327", &T::halt_reason, "328", &T::in_view_of_common, "329", &T::due_to_related, "330", &T::buy_volume, "331", &T::sell_volume, "332", &T::high_px, "333", &T::low_px, "31", &T::last_px, "60", &T::transact_time, "334", &T::adjustment);
 };
 template <>
 struct glz::meta<glz::fix::fix42::TradingSessionStatusRequest>
@@ -4390,7 +5495,7 @@ struct glz::meta<glz::fix::fix42::TradingSessionStatusRequest>
    using T = glz::fix::fix42::TradingSessionStatusRequest;
    static constexpr std::string_view fix_msg_type = "g";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("335", &T::trad_ses_req_id, "336", &T::trading_session_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "335", &T::trad_ses_req_id, "336", &T::trading_session_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix42::TradingSessionStatus>
@@ -4398,7 +5503,7 @@ struct glz::meta<glz::fix::fix42::TradingSessionStatus>
    using T = glz::fix::fix42::TradingSessionStatus;
    static constexpr std::string_view fix_msg_type = "h";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("335", &T::trad_ses_req_id, "336", &T::trading_session_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "325", &T::unsolicited_indicator, "340", &T::trad_ses_status, "341", &T::trad_ses_start_time, "342", &T::trad_ses_open_time, "343", &T::trad_ses_pre_close_time, "344", &T::trad_ses_close_time, "345", &T::trad_ses_end_time, "387", &T::total_volume_traded, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "335", &T::trad_ses_req_id, "336", &T::trading_session_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "325", &T::unsolicited_indicator, "340", &T::trad_ses_status, "341", &T::trad_ses_start_time, "342", &T::trad_ses_open_time, "343", &T::trad_ses_pre_close_time, "344", &T::trad_ses_close_time, "345", &T::trad_ses_end_time, "387", &T::total_volume_traded, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::QuotEntryGrp>
@@ -4418,7 +5523,7 @@ struct glz::meta<glz::fix::fix42::MassQuote>
    using T = glz::fix::fix42::MassQuote;
    static constexpr std::string_view fix_msg_type = "i";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "301", &T::quote_response_level, "293", &T::def_bid_size, "294", &T::def_offer_size, "296", &T::no_quote_sets);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "131", &T::quote_req_id, "117", &T::quote_id, "301", &T::quote_response_level, "293", &T::def_bid_size, "294", &T::def_offer_size, "296", &T::no_quote_sets);
 };
 template <>
 struct glz::meta<glz::fix::fix42::BusinessMessageReject>
@@ -4426,7 +5531,7 @@ struct glz::meta<glz::fix::fix42::BusinessMessageReject>
    using T = glz::fix::fix42::BusinessMessageReject;
    static constexpr std::string_view fix_msg_type = "j";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("45", &T::ref_seq_num, "372", &T::ref_msg_type, "379", &T::business_reject_ref_id, "380", &T::business_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "45", &T::ref_seq_num, "372", &T::ref_msg_type, "379", &T::business_reject_ref_id, "380", &T::business_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::BidDescReqGrp>
@@ -4446,7 +5551,7 @@ struct glz::meta<glz::fix::fix42::BidRequest>
    using T = glz::fix::fix42::BidRequest;
    static constexpr std::string_view fix_msg_type = "k";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("390", &T::bid_id, "391", &T::client_bid_id, "374", &T::bid_request_trans_type, "392", &T::list_name, "393", &T::total_num_securities, "394", &T::bid_type, "395", &T::num_tickets, "15", &T::currency, "396", &T::side_value1, "397", &T::side_value2, "398", &T::no_bid_descriptors, "420", &T::no_bid_components, "409", &T::liquidity_ind_type, "410", &T::wt_average_liquidity, "411", &T::exchange_for_physical, "412", &T::out_main_cntry_u_index, "413", &T::cross_percent, "414", &T::prog_rpt_reqs, "415", &T::prog_period_interval, "416", &T::inc_tax_ind, "121", &T::forex_req, "417", &T::num_bidders, "75", &T::trade_date, "418", &T::trade_type, "419", &T::basis_px_type, "443", &T::strike_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "390", &T::bid_id, "391", &T::client_bid_id, "374", &T::bid_request_trans_type, "392", &T::list_name, "393", &T::total_num_securities, "394", &T::bid_type, "395", &T::num_tickets, "15", &T::currency, "396", &T::side_value1, "397", &T::side_value2, "398", &T::no_bid_descriptors, "420", &T::no_bid_components, "409", &T::liquidity_ind_type, "410", &T::wt_average_liquidity, "411", &T::exchange_for_physical, "412", &T::out_main_cntry_u_index, "413", &T::cross_percent, "414", &T::prog_rpt_reqs, "415", &T::prog_period_interval, "416", &T::inc_tax_ind, "121", &T::forex_req, "417", &T::num_bidders, "75", &T::trade_date, "418", &T::trade_type, "419", &T::basis_px_type, "443", &T::strike_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix42::BidCompRspGrp>
@@ -4460,7 +5565,7 @@ struct glz::meta<glz::fix::fix42::BidResponse>
    using T = glz::fix::fix42::BidResponse;
    static constexpr std::string_view fix_msg_type = "l";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("390", &T::bid_id, "391", &T::client_bid_id, "420", &T::no_bid_components);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "390", &T::bid_id, "391", &T::client_bid_id, "420", &T::no_bid_components);
 };
 template <>
 struct glz::meta<glz::fix::fix42::InstrmtStrkPxGrp>
@@ -4474,5 +5579,5 @@ struct glz::meta<glz::fix::fix42::ListStrikePrice>
    using T = glz::fix::fix42::ListStrikePrice;
    static constexpr std::string_view fix_msg_type = "m";
    static constexpr std::string_view fix_begin_string = "FIX.4.2";
-   static constexpr auto value = glz::object("66", &T::list_id, "422", &T::tot_no_strikes, "428", &T::no_strikes);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time, "66", &T::list_id, "422", &T::tot_no_strikes, "428", &T::no_strikes);
 };

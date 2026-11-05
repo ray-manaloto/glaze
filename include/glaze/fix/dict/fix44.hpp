@@ -20,7 +20,8 @@
 
 namespace glz::fix::fix44
 {
-   inline constexpr std::string_view begin_string = "FIX.4.4";
+   inline constexpr std::string_view begin_string = "FIX.4.4"; // tag 8 on the wire
+   inline constexpr std::string_view dictionary_version = "FIX.4.4";
 
    namespace tag
    {
@@ -6195,22 +6196,118 @@ namespace glz::fix::fix44
    // ---- messages ----
    struct Heartbeat
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> test_req_id{};
       bool operator==(const Heartbeat&) const = default;
    };
    struct TestRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string test_req_id{};
       bool operator==(const TestRequest&) const = default;
    };
    struct ResendRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       int64_t begin_seq_no{};
       int64_t end_seq_no{};
       bool operator==(const ResendRequest&) const = default;
    };
    struct Reject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       int64_t ref_seq_num{};
       std::optional<int64_t> ref_tag_id{};
       std::optional<std::string> ref_msg_type{};
@@ -6222,12 +6319,60 @@ namespace glz::fix::fix44
    };
    struct SequenceReset
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<bool> gap_fill_flag{};
       int64_t new_seq_no{};
       bool operator==(const SequenceReset&) const = default;
    };
    struct Logout
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
@@ -6235,6 +6380,30 @@ namespace glz::fix::fix44
    };
    struct IOI
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string ioiid{};
       IOITransType ioi_trans_type{};
       std::optional<std::string> ioi_ref_id{};
@@ -6332,6 +6501,30 @@ namespace glz::fix::fix44
    };
    struct Advertisement
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string adv_id{};
       std::string adv_trans_type{};
       std::optional<std::string> adv_ref_id{};
@@ -6398,6 +6591,30 @@ namespace glz::fix::fix44
    };
    struct ExecutionReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string order_id{};
       std::optional<std::string> secondary_order_id{};
       std::optional<std::string> secondary_cl_ord_id{};
@@ -6620,6 +6837,30 @@ namespace glz::fix::fix44
    };
    struct OrderCancelReject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string order_id{};
       std::optional<std::string> secondary_order_id{};
       std::optional<std::string> secondary_cl_ord_id{};
@@ -6645,6 +6886,30 @@ namespace glz::fix::fix44
    };
    struct Logon
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       EncryptMethod encrypt_method{};
       int64_t heart_bt_int{};
       std::optional<int64_t> raw_data_length{};
@@ -6660,6 +6925,30 @@ namespace glz::fix::fix44
    };
    struct News
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> orig_time{};
       std::optional<Urgency> urgency{};
       std::string headline{};
@@ -6677,6 +6966,30 @@ namespace glz::fix::fix44
    };
    struct Email
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string email_thread_id{};
       EmailType email_type{};
       std::optional<std::string> orig_time{};
@@ -6696,6 +7009,30 @@ namespace glz::fix::fix44
    };
    struct NewOrderSingle
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string cl_ord_id{};
       std::optional<std::string> secondary_cl_ord_id{};
       std::optional<std::string> cl_ord_link_id{};
@@ -6856,6 +7193,30 @@ namespace glz::fix::fix44
    };
    struct NewOrderList
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string list_id{};
       std::optional<std::string> bid_id{};
       std::optional<std::string> client_bid_id{};
@@ -6879,6 +7240,30 @@ namespace glz::fix::fix44
    };
    struct OrderCancelRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string orig_cl_ord_id{};
       std::optional<std::string> order_id{};
       std::string cl_ord_id{};
@@ -6958,6 +7343,30 @@ namespace glz::fix::fix44
    };
    struct OrderCancelReplaceRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> order_id{};
       std::vector<PartiesGrp> no_party_ids{};
       std::optional<std::string> trade_origination_date{};
@@ -7117,6 +7526,30 @@ namespace glz::fix::fix44
    };
    struct OrderStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> order_id{};
       std::string cl_ord_id{};
       std::optional<std::string> secondary_cl_ord_id{};
@@ -7183,6 +7616,30 @@ namespace glz::fix::fix44
    };
    struct AllocationInstruction
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string alloc_id{};
       AllocTransType alloc_trans_type{};
       AllocType alloc_type{};
@@ -7314,6 +7771,30 @@ namespace glz::fix::fix44
    };
    struct ListCancelRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string list_id{};
       std::string transact_time{};
       std::optional<std::string> trade_origination_date{};
@@ -7325,6 +7806,30 @@ namespace glz::fix::fix44
    };
    struct ListExecute
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string list_id{};
       std::optional<std::string> client_bid_id{};
       std::optional<std::string> bid_id{};
@@ -7336,6 +7841,30 @@ namespace glz::fix::fix44
    };
    struct ListStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string list_id{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
@@ -7344,6 +7873,30 @@ namespace glz::fix::fix44
    };
    struct ListStatus
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string list_id{};
       ListStatusType list_status_type{};
       int64_t no_rpts{};
@@ -7360,6 +7913,30 @@ namespace glz::fix::fix44
    };
    struct AllocationInstructionAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string alloc_id{};
       std::vector<PartiesGrp> no_party_ids{};
       std::optional<std::string> secondary_alloc_id{};
@@ -7380,6 +7957,30 @@ namespace glz::fix::fix44
    };
    struct DontKnowTrade
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string order_id{};
       std::optional<std::string> secondary_order_id{};
       std::string exec_id{};
@@ -7444,6 +8045,30 @@ namespace glz::fix::fix44
    };
    struct QuoteRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string quote_req_id{};
       std::optional<std::string> rfq_req_id{};
       std::optional<std::string> cl_ord_id{};
@@ -7456,6 +8081,30 @@ namespace glz::fix::fix44
    };
    struct Quote
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> quote_req_id{};
       std::string quote_id{};
       std::optional<std::string> quote_resp_id{};
@@ -7585,6 +8234,30 @@ namespace glz::fix::fix44
    };
    struct SettlementInstructions
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string settl_inst_msg_id{};
       std::optional<std::string> settl_inst_req_id{};
       SettlInstMode settl_inst_mode{};
@@ -7599,6 +8272,30 @@ namespace glz::fix::fix44
    };
    struct MarketDataRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string md_req_id{};
       SubscriptionRequestType subscription_request_type{};
       int64_t market_depth{};
@@ -7616,6 +8313,30 @@ namespace glz::fix::fix44
    };
    struct MarketDataSnapshotFullRefresh
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> md_req_id{};
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
@@ -7672,6 +8393,30 @@ namespace glz::fix::fix44
    };
    struct MarketDataIncrementalRefresh
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> md_req_id{};
       std::vector<MDIncGrp> no_md_entries{};
       std::optional<int64_t> appl_queue_depth{};
@@ -7680,6 +8425,30 @@ namespace glz::fix::fix44
    };
    struct MarketDataRequestReject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string md_req_id{};
       std::optional<MDReqRejReason> md_req_rej_reason{};
       std::vector<MDRjctGrp> no_alt_md_source{};
@@ -7690,6 +8459,30 @@ namespace glz::fix::fix44
    };
    struct QuoteCancel
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> quote_req_id{};
       std::string quote_id{};
       QuoteCancelType quote_cancel_type{};
@@ -7705,6 +8498,30 @@ namespace glz::fix::fix44
    };
    struct QuoteStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> quote_status_req_id{};
       std::optional<std::string> quote_id{};
       std::optional<std::string> symbol{};
@@ -7772,6 +8589,30 @@ namespace glz::fix::fix44
    };
    struct MassQuoteAcknowledgement
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> quote_req_id{};
       std::optional<std::string> quote_id{};
       QuoteStatus quote_status{};
@@ -7790,6 +8631,30 @@ namespace glz::fix::fix44
    };
    struct SecurityDefinitionRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       SecurityRequestType security_request_type{};
       std::optional<std::string> symbol{};
@@ -7852,6 +8717,30 @@ namespace glz::fix::fix44
    };
    struct SecurityDefinition
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       std::string security_response_id{};
       SecurityResponseType security_response_type{};
@@ -7916,6 +8805,30 @@ namespace glz::fix::fix44
    };
    struct SecurityStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_status_req_id{};
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
@@ -7973,6 +8886,30 @@ namespace glz::fix::fix44
    };
    struct SecurityStatus
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> security_status_req_id{};
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
@@ -8046,6 +8983,30 @@ namespace glz::fix::fix44
    };
    struct TradingSessionStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string trad_ses_req_id{};
       std::optional<std::string> trading_session_id{};
       std::optional<std::string> trading_session_sub_id{};
@@ -8056,6 +9017,30 @@ namespace glz::fix::fix44
    };
    struct TradingSessionStatus
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> trad_ses_req_id{};
       std::string trading_session_id{};
       std::optional<std::string> trading_session_sub_id{};
@@ -8077,6 +9062,30 @@ namespace glz::fix::fix44
    };
    struct MassQuote
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> quote_req_id{};
       std::string quote_id{};
       std::optional<QuoteType> quote_type{};
@@ -8092,6 +9101,30 @@ namespace glz::fix::fix44
    };
    struct BusinessMessageReject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<int64_t> ref_seq_num{};
       std::string ref_msg_type{};
       std::optional<std::string> business_reject_ref_id{};
@@ -8103,6 +9136,30 @@ namespace glz::fix::fix44
    };
    struct BidRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> bid_id{};
       std::string client_bid_id{};
       BidRequestTransType bid_request_trans_type{};
@@ -8136,6 +9193,30 @@ namespace glz::fix::fix44
    };
    struct BidResponse
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> bid_id{};
       std::optional<std::string> client_bid_id{};
       std::vector<BidCompRspGrp> no_bid_components{};
@@ -8143,6 +9224,30 @@ namespace glz::fix::fix44
    };
    struct ListStrikePrice
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string list_id{};
       int64_t tot_no_strikes{};
       std::optional<bool> last_fragment{};
@@ -8152,10 +9257,58 @@ namespace glz::fix::fix44
    };
    struct XMLnonFIX
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       bool operator==(const XMLnonFIX&) const = default;
    };
    struct RegistrationInstructions
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string regist_id{};
       RegistTransType regist_trans_type{};
       std::string regist_ref_id{};
@@ -8172,6 +9325,30 @@ namespace glz::fix::fix44
    };
    struct RegistrationInstructionsResponse
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string regist_id{};
       RegistTransType regist_trans_type{};
       std::string regist_ref_id{};
@@ -8186,6 +9363,30 @@ namespace glz::fix::fix44
    };
    struct OrderMassCancelRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string cl_ord_id{};
       std::optional<std::string> secondary_cl_ord_id{};
       MassCancelRequestType mass_cancel_request_type{};
@@ -8290,6 +9491,30 @@ namespace glz::fix::fix44
    };
    struct OrderMassCancelReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> cl_ord_id{};
       std::optional<std::string> secondary_cl_ord_id{};
       std::string order_id{};
@@ -8400,6 +9625,30 @@ namespace glz::fix::fix44
    };
    struct NewOrderCross
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string cross_id{};
       CrossType cross_type{};
       CrossPrioritization cross_prioritization{};
@@ -8514,6 +9763,30 @@ namespace glz::fix::fix44
    };
    struct CrossOrderCancelReplaceRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> order_id{};
       std::string cross_id{};
       std::string orig_cross_id{};
@@ -8630,6 +9903,30 @@ namespace glz::fix::fix44
    };
    struct CrossOrderCancelRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> order_id{};
       std::string cross_id{};
       std::string orig_cross_id{};
@@ -8686,6 +9983,30 @@ namespace glz::fix::fix44
    };
    struct SecurityTypeRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
@@ -8699,6 +10020,30 @@ namespace glz::fix::fix44
    };
    struct SecurityTypes
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       std::string security_response_id{};
       SecurityResponseType security_response_type{};
@@ -8715,6 +10060,30 @@ namespace glz::fix::fix44
    };
    struct SecurityListRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       SecurityListRequestType security_list_request_type{};
       std::optional<std::string> symbol{};
@@ -8785,6 +10154,30 @@ namespace glz::fix::fix44
    };
    struct SecurityList
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       std::string security_response_id{};
       SecurityRequestResult security_request_result{};
@@ -8795,6 +10188,30 @@ namespace glz::fix::fix44
    };
    struct DerivativeSecurityListRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       SecurityListRequestType security_list_request_type{};
       std::optional<std::string> underlying_symbol{};
@@ -8856,6 +10273,30 @@ namespace glz::fix::fix44
    };
    struct DerivativeSecurityList
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string security_req_id{};
       std::string security_response_id{};
       SecurityRequestResult security_request_result{};
@@ -8913,6 +10354,30 @@ namespace glz::fix::fix44
    };
    struct NewOrderMultileg
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string cl_ord_id{};
       std::optional<std::string> secondary_cl_ord_id{};
       std::optional<std::string> cl_ord_link_id{};
@@ -9048,6 +10513,30 @@ namespace glz::fix::fix44
    };
    struct MultilegOrderCancelReplace
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> order_id{};
       std::string orig_cl_ord_id{};
       std::string cl_ord_id{};
@@ -9186,6 +10675,30 @@ namespace glz::fix::fix44
    };
    struct TradeCaptureReportRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string trade_request_id{};
       TradeRequestType trade_request_type{};
       std::optional<SubscriptionRequestType> subscription_request_type{};
@@ -9278,6 +10791,30 @@ namespace glz::fix::fix44
    };
    struct TradeCaptureReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string trade_report_id{};
       std::optional<TradeReportTransType> trade_report_trans_type{};
       std::optional<TradeReportType> trade_report_type{};
@@ -9405,6 +10942,30 @@ namespace glz::fix::fix44
    };
    struct OrderMassStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string mass_status_req_id{};
       MassStatusReqType mass_status_req_type{};
       std::vector<PartiesGrp> no_party_ids{};
@@ -9507,6 +11068,30 @@ namespace glz::fix::fix44
    };
    struct QuoteRequestReject
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string quote_req_id{};
       std::optional<std::string> rfq_req_id{};
       QuoteRequestRejectReason quote_request_reject_reason{};
@@ -9518,6 +11103,30 @@ namespace glz::fix::fix44
    };
    struct RFQRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string rfq_req_id{};
       std::vector<RFQReqGrp> no_related_sym{};
       std::optional<SubscriptionRequestType> subscription_request_type{};
@@ -9525,6 +11134,30 @@ namespace glz::fix::fix44
    };
    struct QuoteStatusReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::optional<std::string> quote_status_req_id{};
       std::optional<std::string> quote_req_id{};
       std::string quote_id{};
@@ -9656,6 +11289,30 @@ namespace glz::fix::fix44
    };
    struct QuoteResponse
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string quote_resp_id{};
       std::optional<std::string> quote_id{};
       QuoteRespType quote_resp_type{};
@@ -9787,6 +11444,30 @@ namespace glz::fix::fix44
    };
    struct Confirmation
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string confirm_id{};
       std::optional<std::string> confirm_ref_id{};
       std::optional<std::string> confirm_req_id{};
@@ -9927,6 +11608,30 @@ namespace glz::fix::fix44
    };
    struct PositionMaintenanceRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string pos_req_id{};
       PosTransType pos_trans_type{};
       PosMaintAction pos_maint_action{};
@@ -9999,6 +11704,30 @@ namespace glz::fix::fix44
    };
    struct PositionMaintenanceReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string pos_maint_rpt_id{};
       PosTransType pos_trans_type{};
       std::optional<std::string> pos_req_id{};
@@ -10072,6 +11801,30 @@ namespace glz::fix::fix44
    };
    struct RequestForPositions
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string pos_req_id{};
       PosReqType pos_req_type{};
       std::optional<MatchStatus> match_status{};
@@ -10140,6 +11893,30 @@ namespace glz::fix::fix44
    };
    struct RequestForPositionsAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string pos_maint_rpt_id{};
       std::optional<std::string> pos_req_id{};
       std::optional<int64_t> total_num_pos_reports{};
@@ -10205,6 +11982,30 @@ namespace glz::fix::fix44
    };
    struct PositionReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string pos_maint_rpt_id{};
       std::optional<std::string> pos_req_id{};
       std::optional<PosReqType> pos_req_type{};
@@ -10279,6 +12080,30 @@ namespace glz::fix::fix44
    };
    struct TradeCaptureReportRequestAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string trade_request_id{};
       TradeRequestType trade_request_type{};
       std::optional<SubscriptionRequestType> subscription_request_type{};
@@ -10340,6 +12165,30 @@ namespace glz::fix::fix44
    };
    struct TradeCaptureReportAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string trade_report_id{};
       std::optional<TradeReportTransType> trade_report_trans_type{};
       std::optional<TradeReportType> trade_report_type{};
@@ -10423,6 +12272,30 @@ namespace glz::fix::fix44
    };
    struct AllocationReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string alloc_report_id{};
       std::optional<std::string> alloc_id{};
       AllocTransType alloc_trans_type{};
@@ -10558,6 +12431,30 @@ namespace glz::fix::fix44
    };
    struct AllocationReportAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string alloc_report_id{};
       std::string alloc_id{};
       std::vector<PartiesGrp> no_party_ids{};
@@ -10579,6 +12476,30 @@ namespace glz::fix::fix44
    };
    struct ConfirmationAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string confirm_id{};
       std::string trade_date{};
       std::string transact_time{};
@@ -10592,6 +12513,30 @@ namespace glz::fix::fix44
    };
    struct SettlementInstructionRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string settl_inst_req_id{};
       std::string transact_time{};
       std::vector<PartiesGrp> no_party_ids{};
@@ -10611,6 +12556,30 @@ namespace glz::fix::fix44
    };
    struct AssignmentReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string asgn_rpt_id{};
       std::optional<int64_t> tot_num_assignment_reports{};
       std::optional<bool> last_rpt_requested{};
@@ -10684,6 +12653,30 @@ namespace glz::fix::fix44
    };
    struct CollateralRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string coll_req_id{};
       CollAsgnReason coll_asgn_reason{};
       std::string transact_time{};
@@ -10788,6 +12781,30 @@ namespace glz::fix::fix44
    };
    struct CollateralAssignment
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string coll_asgn_id{};
       std::optional<std::string> coll_req_id{};
       CollAsgnReason coll_asgn_reason{};
@@ -10900,6 +12917,30 @@ namespace glz::fix::fix44
    };
    struct CollateralResponse
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string coll_resp_id{};
       std::string coll_asgn_id{};
       std::optional<std::string> coll_req_id{};
@@ -11003,6 +13044,30 @@ namespace glz::fix::fix44
    };
    struct CollateralReport
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string coll_rpt_id{};
       std::optional<std::string> coll_inquiry_id{};
       CollStatus coll_status{};
@@ -11113,6 +13178,30 @@ namespace glz::fix::fix44
    };
    struct CollateralInquiry
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string coll_inquiry_id{};
       std::vector<CollInqQualGrp> no_coll_inquiry_qualifier{};
       std::optional<SubscriptionRequestType> subscription_request_type{};
@@ -11222,6 +13311,30 @@ namespace glz::fix::fix44
    };
    struct NetworkCounterpartySystemStatusRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       NetworkRequestType network_request_type{};
       std::string network_request_id{};
       std::vector<CompIDReqGrp> no_comp_ids{};
@@ -11229,6 +13342,30 @@ namespace glz::fix::fix44
    };
    struct NetworkCounterpartySystemStatusResponse
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       NetworkStatusResponseType network_status_response_type{};
       std::optional<std::string> network_request_id{};
       std::string network_response_id{};
@@ -11238,6 +13375,30 @@ namespace glz::fix::fix44
    };
    struct UserRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string user_request_id{};
       UserRequestType user_request_type{};
       std::string username{};
@@ -11249,6 +13410,30 @@ namespace glz::fix::fix44
    };
    struct UserResponse
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string user_request_id{};
       std::string username{};
       std::optional<UserStatus> user_status{};
@@ -11257,6 +13442,30 @@ namespace glz::fix::fix44
    };
    struct CollateralInquiryAck
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string coll_inquiry_id{};
       CollInquiryStatus coll_inquiry_status{};
       std::optional<CollInquiryResult> coll_inquiry_result{};
@@ -11343,6 +13552,30 @@ namespace glz::fix::fix44
    };
    struct ConfirmationRequest
    {
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<std::string> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::vector<HopGrp> no_hops{};
       std::string confirm_req_id{};
       ConfirmType confirm_type{};
       std::vector<OrdAllocGrp> no_orders{};
@@ -13246,7 +15479,7 @@ struct glz::meta<glz::fix::fix44::Heartbeat>
    using T = glz::fix::fix44::Heartbeat;
    static constexpr std::string_view fix_msg_type = "0";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("112", &T::test_req_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "112", &T::test_req_id);
 };
 template <>
 struct glz::meta<glz::fix::fix44::TestRequest>
@@ -13254,7 +15487,7 @@ struct glz::meta<glz::fix::fix44::TestRequest>
    using T = glz::fix::fix44::TestRequest;
    static constexpr std::string_view fix_msg_type = "1";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("112", &T::test_req_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "112", &T::test_req_id);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ResendRequest>
@@ -13262,7 +15495,7 @@ struct glz::meta<glz::fix::fix44::ResendRequest>
    using T = glz::fix::fix44::ResendRequest;
    static constexpr std::string_view fix_msg_type = "2";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("7", &T::begin_seq_no, "16", &T::end_seq_no);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "7", &T::begin_seq_no, "16", &T::end_seq_no);
 };
 template <>
 struct glz::meta<glz::fix::fix44::Reject>
@@ -13270,7 +15503,7 @@ struct glz::meta<glz::fix::fix44::Reject>
    using T = glz::fix::fix44::Reject;
    static constexpr std::string_view fix_msg_type = "3";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("45", &T::ref_seq_num, "371", &T::ref_tag_id, "372", &T::ref_msg_type, "373", &T::session_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "45", &T::ref_seq_num, "371", &T::ref_tag_id, "372", &T::ref_msg_type, "373", &T::session_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SequenceReset>
@@ -13278,7 +15511,7 @@ struct glz::meta<glz::fix::fix44::SequenceReset>
    using T = glz::fix::fix44::SequenceReset;
    static constexpr std::string_view fix_msg_type = "4";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("123", &T::gap_fill_flag, "36", &T::new_seq_no);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "123", &T::gap_fill_flag, "36", &T::new_seq_no);
 };
 template <>
 struct glz::meta<glz::fix::fix44::Logout>
@@ -13286,7 +15519,7 @@ struct glz::meta<glz::fix::fix44::Logout>
    using T = glz::fix::fix44::Logout;
    static constexpr std::string_view fix_msg_type = "5";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::UndInstrmtGrp>
@@ -13330,7 +15563,7 @@ struct glz::meta<glz::fix::fix44::IOI>
    using T = glz::fix::fix44::IOI;
    static constexpr std::string_view fix_msg_type = "6";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("23", &T::ioiid, "28", &T::ioi_trans_type, "26", &T::ioi_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "27", &T::ioi_qty, "15", &T::currency, "232", &T::no_stipulations, "555", &T::no_legs, "423", &T::price_type, "44", &T::price, "62", &T::valid_until_time, "25", &T::ioi_qlty_ind, "130", &T::ioi_natural_flag, "199", &T::no_ioi_qualifiers, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "60", &T::transact_time, "149", &T::url_link, "215", &T::no_routing_ids, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "23", &T::ioiid, "28", &T::ioi_trans_type, "26", &T::ioi_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "27", &T::ioi_qty, "15", &T::currency, "232", &T::no_stipulations, "555", &T::no_legs, "423", &T::price_type, "44", &T::price, "62", &T::valid_until_time, "25", &T::ioi_qlty_ind, "130", &T::ioi_natural_flag, "199", &T::no_ioi_qualifiers, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "60", &T::transact_time, "149", &T::url_link, "215", &T::no_routing_ids, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::InstrmtLegGrp>
@@ -13344,7 +15577,7 @@ struct glz::meta<glz::fix::fix44::Advertisement>
    using T = glz::fix::fix44::Advertisement;
    static constexpr std::string_view fix_msg_type = "7";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("2", &T::adv_id, "5", &T::adv_trans_type, "3", &T::adv_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "555", &T::no_legs, "711", &T::no_underlyings, "4", &T::adv_side, "53", &T::quantity, "854", &T::qty_type, "44", &T::price, "15", &T::currency, "75", &T::trade_date, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "149", &T::url_link, "30", &T::last_mkt, "336", &T::trading_session_id, "625", &T::trading_session_sub_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "2", &T::adv_id, "5", &T::adv_trans_type, "3", &T::adv_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "555", &T::no_legs, "711", &T::no_underlyings, "4", &T::adv_side, "53", &T::quantity, "854", &T::qty_type, "44", &T::price, "15", &T::currency, "75", &T::trade_date, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "149", &T::url_link, "30", &T::last_mkt, "336", &T::trading_session_id, "625", &T::trading_session_sub_id);
 };
 template <>
 struct glz::meta<glz::fix::fix44::PtysSubGrp>
@@ -13400,7 +15633,7 @@ struct glz::meta<glz::fix::fix44::ExecutionReport>
    using T = glz::fix::fix44::ExecutionReport;
    static constexpr std::string_view fix_msg_type = "8";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "527", &T::secondary_exec_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "583", &T::cl_ord_link_id, "693", &T::quote_resp_id, "790", &T::ord_status_req_id, "584", &T::mass_status_req_id, "911", &T::tot_num_reports, "912", &T::last_rpt_requested, "453", &T::no_party_ids, "229", &T::trade_origination_date, "382", &T::no_contra_brokers, "66", &T::list_id, "548", &T::cross_id, "551", &T::orig_cross_id, "549", &T::cross_type, "17", &T::exec_id, "19", &T::exec_ref_id, "150", &T::exec_type, "39", &T::ord_status, "636", &T::working_indicator, "103", &T::ord_rej_reason, "378", &T::exec_restatement_reason, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "232", &T::no_stipulations, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "839", &T::pegged_price, "845", &T::discretion_price, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "850", &T::target_strategy_performance, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "18", &T::exec_inst, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "32", &T::last_qty, "652", &T::underlying_last_qty, "31", &T::last_px, "651", &T::underlying_last_px, "669", &T::last_par_px, "194", &T::last_spot_rate, "195", &T::last_forward_points, "30", &T::last_mkt, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "943", &T::time_bracket, "29", &T::last_capacity, "151", &T::leaves_qty, "14", &T::cum_qty, "6", &T::avg_px, "424", &T::day_order_qty, "425", &T::day_cum_qty, "426", &T::day_avg_px, "427", &T::gt_booking_inst, "75", &T::trade_date, "60", &T::transact_time, "113", &T::report_to_exch, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "381", &T::gross_trade_amt, "157", &T::num_days_interest, "230", &T::ex_date, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "258", &T::traded_flat_switch, "259", &T::basis_feature_date, "260", &T::basis_feature_price, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "119", &T::settl_curr_amt, "120", &T::settl_currency, "155", &T::settl_curr_fx_rate, "156", &T::settl_curr_fx_rate_calc, "21", &T::handl_inst, "110", &T::min_qty, "111", &T::max_floor, "77", &T::position_effect, "210", &T::max_show, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::settl_date2, "192", &T::order_qty2, "641", &T::last_forward_points2, "442", &T::multi_leg_reporting_type, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation, "483", &T::trans_bkd_time, "515", &T::exec_valuation_point, "484", &T::exec_price_type, "485", &T::exec_price_adjustment, "638", &T::priority_indicator, "639", &T::price_improvement, "851", &T::last_liquidity_ind, "518", &T::no_cont_amts, "555", &T::no_legs, "797", &T::copy_msg_indicator, "136", &T::no_misc_fees);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "527", &T::secondary_exec_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "583", &T::cl_ord_link_id, "693", &T::quote_resp_id, "790", &T::ord_status_req_id, "584", &T::mass_status_req_id, "911", &T::tot_num_reports, "912", &T::last_rpt_requested, "453", &T::no_party_ids, "229", &T::trade_origination_date, "382", &T::no_contra_brokers, "66", &T::list_id, "548", &T::cross_id, "551", &T::orig_cross_id, "549", &T::cross_type, "17", &T::exec_id, "19", &T::exec_ref_id, "150", &T::exec_type, "39", &T::ord_status, "636", &T::working_indicator, "103", &T::ord_rej_reason, "378", &T::exec_restatement_reason, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "232", &T::no_stipulations, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "839", &T::pegged_price, "845", &T::discretion_price, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "850", &T::target_strategy_performance, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "18", &T::exec_inst, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "32", &T::last_qty, "652", &T::underlying_last_qty, "31", &T::last_px, "651", &T::underlying_last_px, "669", &T::last_par_px, "194", &T::last_spot_rate, "195", &T::last_forward_points, "30", &T::last_mkt, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "943", &T::time_bracket, "29", &T::last_capacity, "151", &T::leaves_qty, "14", &T::cum_qty, "6", &T::avg_px, "424", &T::day_order_qty, "425", &T::day_cum_qty, "426", &T::day_avg_px, "427", &T::gt_booking_inst, "75", &T::trade_date, "60", &T::transact_time, "113", &T::report_to_exch, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "381", &T::gross_trade_amt, "157", &T::num_days_interest, "230", &T::ex_date, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "258", &T::traded_flat_switch, "259", &T::basis_feature_date, "260", &T::basis_feature_price, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "119", &T::settl_curr_amt, "120", &T::settl_currency, "155", &T::settl_curr_fx_rate, "156", &T::settl_curr_fx_rate_calc, "21", &T::handl_inst, "110", &T::min_qty, "111", &T::max_floor, "77", &T::position_effect, "210", &T::max_show, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::settl_date2, "192", &T::order_qty2, "641", &T::last_forward_points2, "442", &T::multi_leg_reporting_type, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation, "483", &T::trans_bkd_time, "515", &T::exec_valuation_point, "484", &T::exec_price_type, "485", &T::exec_price_adjustment, "638", &T::priority_indicator, "639", &T::price_improvement, "851", &T::last_liquidity_ind, "518", &T::no_cont_amts, "555", &T::no_legs, "797", &T::copy_msg_indicator, "136", &T::no_misc_fees);
 };
 template <>
 struct glz::meta<glz::fix::fix44::OrderCancelReject>
@@ -13408,7 +15641,7 @@ struct glz::meta<glz::fix::fix44::OrderCancelReject>
    using T = glz::fix::fix44::OrderCancelReject;
    static constexpr std::string_view fix_msg_type = "9";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "11", &T::cl_ord_id, "583", &T::cl_ord_link_id, "41", &T::orig_cl_ord_id, "39", &T::ord_status, "636", &T::working_indicator, "586", &T::orig_ord_mod_time, "66", &T::list_id, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "229", &T::trade_origination_date, "75", &T::trade_date, "60", &T::transact_time, "434", &T::cxl_rej_response_to, "102", &T::cxl_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "11", &T::cl_ord_id, "583", &T::cl_ord_link_id, "41", &T::orig_cl_ord_id, "39", &T::ord_status, "636", &T::working_indicator, "586", &T::orig_ord_mod_time, "66", &T::list_id, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "229", &T::trade_origination_date, "75", &T::trade_date, "60", &T::transact_time, "434", &T::cxl_rej_response_to, "102", &T::cxl_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::MsgTypeGrp>
@@ -13422,7 +15655,7 @@ struct glz::meta<glz::fix::fix44::Logon>
    using T = glz::fix::fix44::Logon;
    static constexpr std::string_view fix_msg_type = "A";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("98", &T::encrypt_method, "108", &T::heart_bt_int, "95", &T::raw_data_length, "96", &T::raw_data, "141", &T::reset_seq_num_flag, "789", &T::next_expected_msg_seq_num, "383", &T::max_message_size, "384", &T::no_msg_types, "464", &T::test_message_indicator, "553", &T::username, "554", &T::password);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "98", &T::encrypt_method, "108", &T::heart_bt_int, "95", &T::raw_data_length, "96", &T::raw_data, "141", &T::reset_seq_num_flag, "789", &T::next_expected_msg_seq_num, "383", &T::max_message_size, "384", &T::no_msg_types, "464", &T::test_message_indicator, "553", &T::username, "554", &T::password);
 };
 template <>
 struct glz::meta<glz::fix::fix44::InstrmtGrp>
@@ -13442,7 +15675,7 @@ struct glz::meta<glz::fix::fix44::News>
    using T = glz::fix::fix44::News;
    static constexpr std::string_view fix_msg_type = "B";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("42", &T::orig_time, "61", &T::urgency, "148", &T::headline, "358", &T::encoded_headline_len, "359", &T::encoded_headline, "215", &T::no_routing_ids, "146", &T::no_related_sym, "555", &T::no_legs, "711", &T::no_underlyings, "33", &T::no_lines_of_text, "149", &T::url_link, "95", &T::raw_data_length, "96", &T::raw_data);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "42", &T::orig_time, "61", &T::urgency, "148", &T::headline, "358", &T::encoded_headline_len, "359", &T::encoded_headline, "215", &T::no_routing_ids, "146", &T::no_related_sym, "555", &T::no_legs, "711", &T::no_underlyings, "33", &T::no_lines_of_text, "149", &T::url_link, "95", &T::raw_data_length, "96", &T::raw_data);
 };
 template <>
 struct glz::meta<glz::fix::fix44::Email>
@@ -13450,7 +15683,7 @@ struct glz::meta<glz::fix::fix44::Email>
    using T = glz::fix::fix44::Email;
    static constexpr std::string_view fix_msg_type = "C";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("164", &T::email_thread_id, "94", &T::email_type, "42", &T::orig_time, "147", &T::subject, "356", &T::encoded_subject_len, "357", &T::encoded_subject, "215", &T::no_routing_ids, "146", &T::no_related_sym, "711", &T::no_underlyings, "555", &T::no_legs, "37", &T::order_id, "11", &T::cl_ord_id, "33", &T::no_lines_of_text, "95", &T::raw_data_length, "96", &T::raw_data);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "164", &T::email_thread_id, "94", &T::email_type, "42", &T::orig_time, "147", &T::subject, "356", &T::encoded_subject_len, "357", &T::encoded_subject, "215", &T::no_routing_ids, "146", &T::no_related_sym, "711", &T::no_underlyings, "555", &T::no_legs, "37", &T::order_id, "11", &T::cl_ord_id, "33", &T::no_lines_of_text, "95", &T::raw_data_length, "96", &T::raw_data);
 };
 template <>
 struct glz::meta<glz::fix::fix44::PreAllocGrp>
@@ -13470,7 +15703,7 @@ struct glz::meta<glz::fix::fix44::NewOrderSingle>
    using T = glz::fix::fix44::NewOrderSingle;
    static constexpr std::string_view fix_msg_type = "D";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "140", &T::prev_close_px, "54", &T::side, "114", &T::locate_reqd, "60", &T::transact_time, "232", &T::no_stipulations, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::settl_date2, "192", &T::order_qty2, "640", &T::price2, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "140", &T::prev_close_px, "54", &T::side, "114", &T::locate_reqd, "60", &T::transact_time, "232", &T::no_stipulations, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::settl_date2, "192", &T::order_qty2, "640", &T::price2, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ListOrdGrp>
@@ -13484,7 +15717,7 @@ struct glz::meta<glz::fix::fix44::NewOrderList>
    using T = glz::fix::fix44::NewOrderList;
    static constexpr std::string_view fix_msg_type = "E";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("66", &T::list_id, "390", &T::bid_id, "391", &T::client_bid_id, "414", &T::prog_rpt_reqs, "394", &T::bid_type, "415", &T::prog_period_interval, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "433", &T::list_exec_inst_type, "69", &T::list_exec_inst, "352", &T::encoded_list_exec_inst_len, "353", &T::encoded_list_exec_inst, "765", &T::allowable_one_sidedness_pct, "766", &T::allowable_one_sidedness_value, "767", &T::allowable_one_sidedness_curr, "68", &T::tot_no_orders, "893", &T::last_fragment, "73", &T::no_orders);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "66", &T::list_id, "390", &T::bid_id, "391", &T::client_bid_id, "414", &T::prog_rpt_reqs, "394", &T::bid_type, "415", &T::prog_period_interval, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "433", &T::list_exec_inst_type, "69", &T::list_exec_inst, "352", &T::encoded_list_exec_inst_len, "353", &T::encoded_list_exec_inst, "765", &T::allowable_one_sidedness_pct, "766", &T::allowable_one_sidedness_value, "767", &T::allowable_one_sidedness_curr, "68", &T::tot_no_orders, "893", &T::last_fragment, "73", &T::no_orders);
 };
 template <>
 struct glz::meta<glz::fix::fix44::OrderCancelRequest>
@@ -13492,7 +15725,7 @@ struct glz::meta<glz::fix::fix44::OrderCancelRequest>
    using T = glz::fix::fix44::OrderCancelRequest;
    static constexpr std::string_view fix_msg_type = "F";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("41", &T::orig_cl_ord_id, "37", &T::order_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "66", &T::list_id, "586", &T::orig_ord_mod_time, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "453", &T::no_party_ids, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "376", &T::compliance_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "41", &T::orig_cl_ord_id, "37", &T::order_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "66", &T::list_id, "586", &T::orig_ord_mod_time, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "453", &T::no_party_ids, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "376", &T::compliance_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::OrderCancelReplaceRequest>
@@ -13500,7 +15733,7 @@ struct glz::meta<glz::fix::fix44::OrderCancelReplaceRequest>
    using T = glz::fix::fix44::OrderCancelReplaceRequest;
    static constexpr std::string_view fix_msg_type = "G";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "41", &T::orig_cl_ord_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "66", &T::list_id, "586", &T::orig_ord_mod_time, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "60", &T::transact_time, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "376", &T::compliance_id, "377", &T::solicited_flag, "15", &T::currency, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::settl_date2, "192", &T::order_qty2, "640", &T::price2, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "114", &T::locate_reqd, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "41", &T::orig_cl_ord_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "66", &T::list_id, "586", &T::orig_ord_mod_time, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "60", &T::transact_time, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "376", &T::compliance_id, "377", &T::solicited_flag, "15", &T::currency, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::settl_date2, "192", &T::order_qty2, "640", &T::price2, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "114", &T::locate_reqd, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
 };
 template <>
 struct glz::meta<glz::fix::fix44::OrderStatusRequest>
@@ -13508,7 +15741,7 @@ struct glz::meta<glz::fix::fix44::OrderStatusRequest>
    using T = glz::fix::fix44::OrderStatusRequest;
    static constexpr std::string_view fix_msg_type = "H";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "453", &T::no_party_ids, "790", &T::ord_status_req_id, "1", &T::account, "660", &T::acct_id_source, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "453", &T::no_party_ids, "790", &T::ord_status_req_id, "1", &T::account, "660", &T::acct_id_source, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side);
 };
 template <>
 struct glz::meta<glz::fix::fix44::NstdPtys2SubGrp>
@@ -13552,7 +15785,7 @@ struct glz::meta<glz::fix::fix44::AllocationInstruction>
    using T = glz::fix::fix44::AllocationInstruction;
    static constexpr std::string_view fix_msg_type = "J";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("70", &T::alloc_id, "71", &T::alloc_trans_type, "626", &T::alloc_type, "793", &T::secondary_alloc_id, "72", &T::ref_alloc_id, "796", &T::alloc_canc_replace_reason, "808", &T::alloc_intermed_req_type, "196", &T::alloc_link_id, "197", &T::alloc_link_type, "466", &T::booking_ref_id, "857", &T::alloc_no_orders_type, "73", &T::no_orders, "124", &T::no_execs, "570", &T::previously_reported, "700", &T::reversal_indicator, "574", &T::match_type, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "53", &T::quantity, "854", &T::qty_type, "30", &T::last_mkt, "229", &T::trade_origination_date, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "423", &T::price_type, "6", &T::avg_px, "860", &T::avg_par_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "15", &T::currency, "74", &T::avg_px_precision, "453", &T::no_party_ids, "75", &T::trade_date, "60", &T::transact_time, "63", &T::settl_type, "64", &T::settl_date, "775", &T::booking_type, "381", &T::gross_trade_amt, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "77", &T::position_effect, "754", &T::auto_accept_indicator, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "157", &T::num_days_interest, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "540", &T::total_accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "650", &T::legal_confirm, "232", &T::no_stipulations, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "892", &T::tot_no_allocs, "893", &T::last_fragment, "78", &T::no_allocs);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "70", &T::alloc_id, "71", &T::alloc_trans_type, "626", &T::alloc_type, "793", &T::secondary_alloc_id, "72", &T::ref_alloc_id, "796", &T::alloc_canc_replace_reason, "808", &T::alloc_intermed_req_type, "196", &T::alloc_link_id, "197", &T::alloc_link_type, "466", &T::booking_ref_id, "857", &T::alloc_no_orders_type, "73", &T::no_orders, "124", &T::no_execs, "570", &T::previously_reported, "700", &T::reversal_indicator, "574", &T::match_type, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "53", &T::quantity, "854", &T::qty_type, "30", &T::last_mkt, "229", &T::trade_origination_date, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "423", &T::price_type, "6", &T::avg_px, "860", &T::avg_par_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "15", &T::currency, "74", &T::avg_px_precision, "453", &T::no_party_ids, "75", &T::trade_date, "60", &T::transact_time, "63", &T::settl_type, "64", &T::settl_date, "775", &T::booking_type, "381", &T::gross_trade_amt, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "77", &T::position_effect, "754", &T::auto_accept_indicator, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "157", &T::num_days_interest, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "540", &T::total_accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "650", &T::legal_confirm, "232", &T::no_stipulations, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "892", &T::tot_no_allocs, "893", &T::last_fragment, "78", &T::no_allocs);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ListCancelRequest>
@@ -13560,7 +15793,7 @@ struct glz::meta<glz::fix::fix44::ListCancelRequest>
    using T = glz::fix::fix44::ListCancelRequest;
    static constexpr std::string_view fix_msg_type = "K";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("66", &T::list_id, "60", &T::transact_time, "229", &T::trade_origination_date, "75", &T::trade_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "66", &T::list_id, "60", &T::transact_time, "229", &T::trade_origination_date, "75", &T::trade_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ListExecute>
@@ -13568,7 +15801,7 @@ struct glz::meta<glz::fix::fix44::ListExecute>
    using T = glz::fix::fix44::ListExecute;
    static constexpr std::string_view fix_msg_type = "L";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("66", &T::list_id, "391", &T::client_bid_id, "390", &T::bid_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "66", &T::list_id, "391", &T::client_bid_id, "390", &T::bid_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ListStatusRequest>
@@ -13576,7 +15809,7 @@ struct glz::meta<glz::fix::fix44::ListStatusRequest>
    using T = glz::fix::fix44::ListStatusRequest;
    static constexpr std::string_view fix_msg_type = "M";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("66", &T::list_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "66", &T::list_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::OrdListStatGrp>
@@ -13590,7 +15823,7 @@ struct glz::meta<glz::fix::fix44::ListStatus>
    using T = glz::fix::fix44::ListStatus;
    static constexpr std::string_view fix_msg_type = "N";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("66", &T::list_id, "429", &T::list_status_type, "82", &T::no_rpts, "431", &T::list_order_status, "83", &T::rpt_seq, "444", &T::list_status_text, "445", &T::encoded_list_status_text_len, "446", &T::encoded_list_status_text, "60", &T::transact_time, "68", &T::tot_no_orders, "893", &T::last_fragment, "73", &T::no_orders);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "66", &T::list_id, "429", &T::list_status_type, "82", &T::no_rpts, "431", &T::list_order_status, "83", &T::rpt_seq, "444", &T::list_status_text, "445", &T::encoded_list_status_text_len, "446", &T::encoded_list_status_text, "60", &T::transact_time, "68", &T::tot_no_orders, "893", &T::last_fragment, "73", &T::no_orders);
 };
 template <>
 struct glz::meta<glz::fix::fix44::AllocAckGrp>
@@ -13604,7 +15837,7 @@ struct glz::meta<glz::fix::fix44::AllocationInstructionAck>
    using T = glz::fix::fix44::AllocationInstructionAck;
    static constexpr std::string_view fix_msg_type = "P";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("70", &T::alloc_id, "453", &T::no_party_ids, "793", &T::secondary_alloc_id, "75", &T::trade_date, "60", &T::transact_time, "87", &T::alloc_status, "88", &T::alloc_rej_code, "626", &T::alloc_type, "808", &T::alloc_intermed_req_type, "573", &T::match_status, "460", &T::product, "167", &T::security_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "78", &T::no_allocs);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "70", &T::alloc_id, "453", &T::no_party_ids, "793", &T::secondary_alloc_id, "75", &T::trade_date, "60", &T::transact_time, "87", &T::alloc_status, "88", &T::alloc_rej_code, "626", &T::alloc_type, "808", &T::alloc_intermed_req_type, "573", &T::match_status, "460", &T::product, "167", &T::security_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "78", &T::no_allocs);
 };
 template <>
 struct glz::meta<glz::fix::fix44::DontKnowTrade>
@@ -13612,7 +15845,7 @@ struct glz::meta<glz::fix::fix44::DontKnowTrade>
    using T = glz::fix::fix44::DontKnowTrade;
    static constexpr std::string_view fix_msg_type = "Q";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "198", &T::secondary_order_id, "17", &T::exec_id, "127", &T::dk_reason, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "32", &T::last_qty, "31", &T::last_px, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "198", &T::secondary_order_id, "17", &T::exec_id, "127", &T::dk_reason, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "32", &T::last_qty, "31", &T::last_px, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::QuotReqLegsGrp>
@@ -13638,7 +15871,7 @@ struct glz::meta<glz::fix::fix44::QuoteRequest>
    using T = glz::fix::fix44::QuoteRequest;
    static constexpr std::string_view fix_msg_type = "R";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "644", &T::rfq_req_id, "11", &T::cl_ord_id, "528", &T::order_capacity, "146", &T::no_related_sym, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "131", &T::quote_req_id, "644", &T::rfq_req_id, "11", &T::cl_ord_id, "528", &T::order_capacity, "146", &T::no_related_sym, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::LegQuotGrp>
@@ -13652,7 +15885,7 @@ struct glz::meta<glz::fix::fix44::Quote>
    using T = glz::fix::fix44::Quote;
    static constexpr std::string_view fix_msg_type = "S";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "693", &T::quote_resp_id, "537", &T::quote_type, "735", &T::no_quote_qualifiers, "301", &T::quote_response_level, "453", &T::no_party_ids, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "63", &T::settl_type, "64", &T::settl_date, "193", &T::settl_date2, "192", &T::order_qty2, "15", &T::currency, "232", &T::no_stipulations, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "555", &T::no_legs, "132", &T::bid_px, "133", &T::offer_px, "645", &T::mkt_bid_px, "646", &T::mkt_offer_px, "647", &T::min_bid_size, "134", &T::bid_size, "648", &T::min_offer_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "631", &T::mid_px, "632", &T::bid_yield, "633", &T::mid_yield, "634", &T::offer_yield, "60", &T::transact_time, "40", &T::ord_type, "642", &T::bid_forward_points2, "643", &T::offer_forward_points2, "656", &T::settl_curr_bid_fx_rate, "657", &T::settl_curr_offer_fx_rate, "156", &T::settl_curr_fx_rate_calc, "13", &T::comm_type, "12", &T::commission, "582", &T::cust_order_capacity, "100", &T::ex_destination, "528", &T::order_capacity, "423", &T::price_type, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "131", &T::quote_req_id, "117", &T::quote_id, "693", &T::quote_resp_id, "537", &T::quote_type, "735", &T::no_quote_qualifiers, "301", &T::quote_response_level, "453", &T::no_party_ids, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "63", &T::settl_type, "64", &T::settl_date, "193", &T::settl_date2, "192", &T::order_qty2, "15", &T::currency, "232", &T::no_stipulations, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "555", &T::no_legs, "132", &T::bid_px, "133", &T::offer_px, "645", &T::mkt_bid_px, "646", &T::mkt_offer_px, "647", &T::min_bid_size, "134", &T::bid_size, "648", &T::min_offer_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "631", &T::mid_px, "632", &T::bid_yield, "633", &T::mid_yield, "634", &T::offer_yield, "60", &T::transact_time, "40", &T::ord_type, "642", &T::bid_forward_points2, "643", &T::offer_forward_points2, "656", &T::settl_curr_bid_fx_rate, "657", &T::settl_curr_offer_fx_rate, "156", &T::settl_curr_fx_rate_calc, "13", &T::comm_type, "12", &T::commission, "582", &T::cust_order_capacity, "100", &T::ex_destination, "528", &T::order_capacity, "423", &T::price_type, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SettlInstGrp>
@@ -13666,7 +15899,7 @@ struct glz::meta<glz::fix::fix44::SettlementInstructions>
    using T = glz::fix::fix44::SettlementInstructions;
    static constexpr std::string_view fix_msg_type = "T";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("777", &T::settl_inst_msg_id, "791", &T::settl_inst_req_id, "160", &T::settl_inst_mode, "792", &T::settl_inst_req_rej_code, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "11", &T::cl_ord_id, "60", &T::transact_time, "778", &T::no_settl_inst);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "777", &T::settl_inst_msg_id, "791", &T::settl_inst_req_id, "160", &T::settl_inst_mode, "792", &T::settl_inst_req_rej_code, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "11", &T::cl_ord_id, "60", &T::transact_time, "778", &T::no_settl_inst);
 };
 template <>
 struct glz::meta<glz::fix::fix44::MDReqGrp>
@@ -13686,7 +15919,7 @@ struct glz::meta<glz::fix::fix44::MarketDataRequest>
    using T = glz::fix::fix44::MarketDataRequest;
    static constexpr std::string_view fix_msg_type = "V";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "263", &T::subscription_request_type, "264", &T::market_depth, "265", &T::md_update_type, "266", &T::aggregated_book, "286", &T::open_close_settl_flag, "546", &T::scope, "547", &T::md_implicit_delete, "267", &T::no_md_entry_types, "146", &T::no_related_sym, "386", &T::no_trading_sessions, "815", &T::appl_queue_action, "812", &T::appl_queue_max);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "262", &T::md_req_id, "263", &T::subscription_request_type, "264", &T::market_depth, "265", &T::md_update_type, "266", &T::aggregated_book, "286", &T::open_close_settl_flag, "546", &T::scope, "547", &T::md_implicit_delete, "267", &T::no_md_entry_types, "146", &T::no_related_sym, "386", &T::no_trading_sessions, "815", &T::appl_queue_action, "812", &T::appl_queue_max);
 };
 template <>
 struct glz::meta<glz::fix::fix44::MDFullGrp>
@@ -13700,7 +15933,7 @@ struct glz::meta<glz::fix::fix44::MarketDataSnapshotFullRefresh>
    using T = glz::fix::fix44::MarketDataSnapshotFullRefresh;
    static constexpr std::string_view fix_msg_type = "W";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "291", &T::financial_status, "292", &T::corporate_action, "451", &T::net_chg_prev_day, "268", &T::no_md_entries, "813", &T::appl_queue_depth, "814", &T::appl_queue_resolution);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "262", &T::md_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "291", &T::financial_status, "292", &T::corporate_action, "451", &T::net_chg_prev_day, "268", &T::no_md_entries, "813", &T::appl_queue_depth, "814", &T::appl_queue_resolution);
 };
 template <>
 struct glz::meta<glz::fix::fix44::MDIncGrp>
@@ -13714,7 +15947,7 @@ struct glz::meta<glz::fix::fix44::MarketDataIncrementalRefresh>
    using T = glz::fix::fix44::MarketDataIncrementalRefresh;
    static constexpr std::string_view fix_msg_type = "X";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "268", &T::no_md_entries, "813", &T::appl_queue_depth, "814", &T::appl_queue_resolution);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "262", &T::md_req_id, "268", &T::no_md_entries, "813", &T::appl_queue_depth, "814", &T::appl_queue_resolution);
 };
 template <>
 struct glz::meta<glz::fix::fix44::MDRjctGrp>
@@ -13728,7 +15961,7 @@ struct glz::meta<glz::fix::fix44::MarketDataRequestReject>
    using T = glz::fix::fix44::MarketDataRequestReject;
    static constexpr std::string_view fix_msg_type = "Y";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("262", &T::md_req_id, "281", &T::md_req_rej_reason, "816", &T::no_alt_md_source, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "262", &T::md_req_id, "281", &T::md_req_rej_reason, "816", &T::no_alt_md_source, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::QuotCxlEntriesGrp>
@@ -13742,7 +15975,7 @@ struct glz::meta<glz::fix::fix44::QuoteCancel>
    using T = glz::fix::fix44::QuoteCancel;
    static constexpr std::string_view fix_msg_type = "Z";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "298", &T::quote_cancel_type, "301", &T::quote_response_level, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "295", &T::no_quote_entries);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "131", &T::quote_req_id, "117", &T::quote_id, "298", &T::quote_cancel_type, "301", &T::quote_response_level, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "295", &T::no_quote_entries);
 };
 template <>
 struct glz::meta<glz::fix::fix44::QuoteStatusRequest>
@@ -13750,7 +15983,7 @@ struct glz::meta<glz::fix::fix44::QuoteStatusRequest>
    using T = glz::fix::fix44::QuoteStatusRequest;
    static constexpr std::string_view fix_msg_type = "a";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("649", &T::quote_status_req_id, "117", &T::quote_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "649", &T::quote_status_req_id, "117", &T::quote_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::QuotEntryAckGrp>
@@ -13770,7 +16003,7 @@ struct glz::meta<glz::fix::fix44::MassQuoteAcknowledgement>
    using T = glz::fix::fix44::MassQuoteAcknowledgement;
    static constexpr std::string_view fix_msg_type = "b";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "297", &T::quote_status, "300", &T::quote_reject_reason, "301", &T::quote_response_level, "537", &T::quote_type, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "296", &T::no_quote_sets);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "131", &T::quote_req_id, "117", &T::quote_id, "297", &T::quote_status, "300", &T::quote_reject_reason, "301", &T::quote_response_level, "537", &T::quote_type, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "296", &T::no_quote_sets);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SecurityDefinitionRequest>
@@ -13778,7 +16011,7 @@ struct glz::meta<glz::fix::fix44::SecurityDefinitionRequest>
    using T = glz::fix::fix44::SecurityDefinitionRequest;
    static constexpr std::string_view fix_msg_type = "c";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "321", &T::security_request_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "555", &T::no_legs, "827", &T::expiration_cycle, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "321", &T::security_request_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "555", &T::no_legs, "827", &T::expiration_cycle, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SecurityDefinition>
@@ -13786,7 +16019,7 @@ struct glz::meta<glz::fix::fix44::SecurityDefinition>
    using T = glz::fix::fix44::SecurityDefinition;
    static constexpr std::string_view fix_msg_type = "d";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "322", &T::security_response_id, "323", &T::security_response_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "15", &T::currency, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "555", &T::no_legs, "827", &T::expiration_cycle, "561", &T::round_lot, "562", &T::min_trade_vol);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "322", &T::security_response_id, "323", &T::security_response_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "15", &T::currency, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "555", &T::no_legs, "827", &T::expiration_cycle, "561", &T::round_lot, "562", &T::min_trade_vol);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SecurityStatusRequest>
@@ -13794,7 +16027,7 @@ struct glz::meta<glz::fix::fix44::SecurityStatusRequest>
    using T = glz::fix::fix44::SecurityStatusRequest;
    static constexpr std::string_view fix_msg_type = "e";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "555", &T::no_legs, "15", &T::currency, "263", &T::subscription_request_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "555", &T::no_legs, "15", &T::currency, "263", &T::subscription_request_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SecurityStatus>
@@ -13802,7 +16035,7 @@ struct glz::meta<glz::fix::fix44::SecurityStatus>
    using T = glz::fix::fix44::SecurityStatus;
    static constexpr std::string_view fix_msg_type = "f";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "555", &T::no_legs, "15", &T::currency, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "325", &T::unsolicited_indicator, "326", &T::security_trading_status, "291", &T::financial_status, "292", &T::corporate_action, "327", &T::halt_reason, "328", &T::in_view_of_common, "329", &T::due_to_related, "330", &T::buy_volume, "331", &T::sell_volume, "332", &T::high_px, "333", &T::low_px, "31", &T::last_px, "60", &T::transact_time, "334", &T::adjustment, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "711", &T::no_underlyings, "555", &T::no_legs, "15", &T::currency, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "325", &T::unsolicited_indicator, "326", &T::security_trading_status, "291", &T::financial_status, "292", &T::corporate_action, "327", &T::halt_reason, "328", &T::in_view_of_common, "329", &T::due_to_related, "330", &T::buy_volume, "331", &T::sell_volume, "332", &T::high_px, "333", &T::low_px, "31", &T::last_px, "60", &T::transact_time, "334", &T::adjustment, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::TradingSessionStatusRequest>
@@ -13810,7 +16043,7 @@ struct glz::meta<glz::fix::fix44::TradingSessionStatusRequest>
    using T = glz::fix::fix44::TradingSessionStatusRequest;
    static constexpr std::string_view fix_msg_type = "g";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("335", &T::trad_ses_req_id, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "335", &T::trad_ses_req_id, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::TradingSessionStatus>
@@ -13818,7 +16051,7 @@ struct glz::meta<glz::fix::fix44::TradingSessionStatus>
    using T = glz::fix::fix44::TradingSessionStatus;
    static constexpr std::string_view fix_msg_type = "h";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("335", &T::trad_ses_req_id, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "325", &T::unsolicited_indicator, "340", &T::trad_ses_status, "567", &T::trad_ses_status_rej_reason, "341", &T::trad_ses_start_time, "342", &T::trad_ses_open_time, "343", &T::trad_ses_pre_close_time, "344", &T::trad_ses_close_time, "345", &T::trad_ses_end_time, "387", &T::total_volume_traded, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "335", &T::trad_ses_req_id, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "325", &T::unsolicited_indicator, "340", &T::trad_ses_status, "567", &T::trad_ses_status_rej_reason, "341", &T::trad_ses_start_time, "342", &T::trad_ses_open_time, "343", &T::trad_ses_pre_close_time, "344", &T::trad_ses_close_time, "345", &T::trad_ses_end_time, "387", &T::total_volume_traded, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::QuotEntryGrp>
@@ -13838,7 +16071,7 @@ struct glz::meta<glz::fix::fix44::MassQuote>
    using T = glz::fix::fix44::MassQuote;
    static constexpr std::string_view fix_msg_type = "i";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "537", &T::quote_type, "301", &T::quote_response_level, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "293", &T::def_bid_size, "294", &T::def_offer_size, "296", &T::no_quote_sets);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "131", &T::quote_req_id, "117", &T::quote_id, "537", &T::quote_type, "301", &T::quote_response_level, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "293", &T::def_bid_size, "294", &T::def_offer_size, "296", &T::no_quote_sets);
 };
 template <>
 struct glz::meta<glz::fix::fix44::BusinessMessageReject>
@@ -13846,7 +16079,7 @@ struct glz::meta<glz::fix::fix44::BusinessMessageReject>
    using T = glz::fix::fix44::BusinessMessageReject;
    static constexpr std::string_view fix_msg_type = "j";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("45", &T::ref_seq_num, "372", &T::ref_msg_type, "379", &T::business_reject_ref_id, "380", &T::business_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "45", &T::ref_seq_num, "372", &T::ref_msg_type, "379", &T::business_reject_ref_id, "380", &T::business_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::BidDescReqGrp>
@@ -13866,7 +16099,7 @@ struct glz::meta<glz::fix::fix44::BidRequest>
    using T = glz::fix::fix44::BidRequest;
    static constexpr std::string_view fix_msg_type = "k";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("390", &T::bid_id, "391", &T::client_bid_id, "374", &T::bid_request_trans_type, "392", &T::list_name, "393", &T::tot_no_related_sym, "394", &T::bid_type, "395", &T::num_tickets, "15", &T::currency, "396", &T::side_value1, "397", &T::side_value2, "398", &T::no_bid_descriptors, "420", &T::no_bid_components, "409", &T::liquidity_ind_type, "410", &T::wt_average_liquidity, "411", &T::exchange_for_physical, "412", &T::out_main_cntry_u_index, "413", &T::cross_percent, "414", &T::prog_rpt_reqs, "415", &T::prog_period_interval, "416", &T::inc_tax_ind, "121", &T::forex_req, "417", &T::num_bidders, "75", &T::trade_date, "418", &T::bid_trade_type, "419", &T::basis_px_type, "443", &T::strike_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "390", &T::bid_id, "391", &T::client_bid_id, "374", &T::bid_request_trans_type, "392", &T::list_name, "393", &T::tot_no_related_sym, "394", &T::bid_type, "395", &T::num_tickets, "15", &T::currency, "396", &T::side_value1, "397", &T::side_value2, "398", &T::no_bid_descriptors, "420", &T::no_bid_components, "409", &T::liquidity_ind_type, "410", &T::wt_average_liquidity, "411", &T::exchange_for_physical, "412", &T::out_main_cntry_u_index, "413", &T::cross_percent, "414", &T::prog_rpt_reqs, "415", &T::prog_period_interval, "416", &T::inc_tax_ind, "121", &T::forex_req, "417", &T::num_bidders, "75", &T::trade_date, "418", &T::bid_trade_type, "419", &T::basis_px_type, "443", &T::strike_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::BidCompRspGrp>
@@ -13880,7 +16113,7 @@ struct glz::meta<glz::fix::fix44::BidResponse>
    using T = glz::fix::fix44::BidResponse;
    static constexpr std::string_view fix_msg_type = "l";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("390", &T::bid_id, "391", &T::client_bid_id, "420", &T::no_bid_components);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "390", &T::bid_id, "391", &T::client_bid_id, "420", &T::no_bid_components);
 };
 template <>
 struct glz::meta<glz::fix::fix44::InstrmtStrkPxGrp>
@@ -13900,7 +16133,7 @@ struct glz::meta<glz::fix::fix44::ListStrikePrice>
    using T = glz::fix::fix44::ListStrikePrice;
    static constexpr std::string_view fix_msg_type = "m";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("66", &T::list_id, "422", &T::tot_no_strikes, "893", &T::last_fragment, "428", &T::no_strikes, "711", &T::no_underlyings);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "66", &T::list_id, "422", &T::tot_no_strikes, "893", &T::last_fragment, "428", &T::no_strikes, "711", &T::no_underlyings);
 };
 template <>
 struct glz::meta<glz::fix::fix44::XMLnonFIX>
@@ -13908,7 +16141,7 @@ struct glz::meta<glz::fix::fix44::XMLnonFIX>
    using T = glz::fix::fix44::XMLnonFIX;
    static constexpr std::string_view fix_msg_type = "n";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object();
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops);
 };
 template <>
 struct glz::meta<glz::fix::fix44::RgstDtlsGrp>
@@ -13928,7 +16161,7 @@ struct glz::meta<glz::fix::fix44::RegistrationInstructions>
    using T = glz::fix::fix44::RegistrationInstructions;
    static constexpr std::string_view fix_msg_type = "o";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("513", &T::regist_id, "514", &T::regist_trans_type, "508", &T::regist_ref_id, "11", &T::cl_ord_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "493", &T::regist_acct_type, "495", &T::tax_advantage_type, "517", &T::ownership_type, "473", &T::no_regist_dtls, "510", &T::no_distrib_insts);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "513", &T::regist_id, "514", &T::regist_trans_type, "508", &T::regist_ref_id, "11", &T::cl_ord_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "493", &T::regist_acct_type, "495", &T::tax_advantage_type, "517", &T::ownership_type, "473", &T::no_regist_dtls, "510", &T::no_distrib_insts);
 };
 template <>
 struct glz::meta<glz::fix::fix44::RegistrationInstructionsResponse>
@@ -13936,7 +16169,7 @@ struct glz::meta<glz::fix::fix44::RegistrationInstructionsResponse>
    using T = glz::fix::fix44::RegistrationInstructionsResponse;
    static constexpr std::string_view fix_msg_type = "p";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("513", &T::regist_id, "514", &T::regist_trans_type, "508", &T::regist_ref_id, "11", &T::cl_ord_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "506", &T::regist_status, "507", &T::regist_rej_reason_code, "496", &T::regist_rej_reason_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "513", &T::regist_id, "514", &T::regist_trans_type, "508", &T::regist_ref_id, "11", &T::cl_ord_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "506", &T::regist_status, "507", &T::regist_rej_reason_code, "496", &T::regist_rej_reason_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::OrderMassCancelRequest>
@@ -13944,7 +16177,7 @@ struct glz::meta<glz::fix::fix44::OrderMassCancelRequest>
    using T = glz::fix::fix44::OrderMassCancelRequest;
    static constexpr std::string_view fix_msg_type = "q";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "530", &T::mass_cancel_request_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "54", &T::side, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "530", &T::mass_cancel_request_type, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "54", &T::side, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::AffectedOrdGrp>
@@ -13958,7 +16191,7 @@ struct glz::meta<glz::fix::fix44::OrderMassCancelReport>
    using T = glz::fix::fix44::OrderMassCancelReport;
    static constexpr std::string_view fix_msg_type = "r";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "530", &T::mass_cancel_request_type, "531", &T::mass_cancel_response, "532", &T::mass_cancel_reject_reason, "533", &T::total_affected_orders, "534", &T::no_affected_orders, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "54", &T::side, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "530", &T::mass_cancel_request_type, "531", &T::mass_cancel_response, "532", &T::mass_cancel_reject_reason, "533", &T::total_affected_orders, "534", &T::no_affected_orders, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "54", &T::side, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SideCrossOrdModGrp>
@@ -13972,7 +16205,7 @@ struct glz::meta<glz::fix::fix44::NewOrderCross>
    using T = glz::fix::fix44::NewOrderCross;
    static constexpr std::string_view fix_msg_type = "s";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("548", &T::cross_id, "549", &T::cross_type, "550", &T::cross_prioritization, "552", &T::no_sides, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "63", &T::settl_type, "64", &T::settl_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "140", &T::prev_close_px, "114", &T::locate_reqd, "60", &T::transact_time, "232", &T::no_stipulations, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "15", &T::currency, "376", &T::compliance_id, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "548", &T::cross_id, "549", &T::cross_type, "550", &T::cross_prioritization, "552", &T::no_sides, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "63", &T::settl_type, "64", &T::settl_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "140", &T::prev_close_px, "114", &T::locate_reqd, "60", &T::transact_time, "232", &T::no_stipulations, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "15", &T::currency, "376", &T::compliance_id, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CrossOrderCancelReplaceRequest>
@@ -13980,7 +16213,7 @@ struct glz::meta<glz::fix::fix44::CrossOrderCancelReplaceRequest>
    using T = glz::fix::fix44::CrossOrderCancelReplaceRequest;
    static constexpr std::string_view fix_msg_type = "t";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "548", &T::cross_id, "551", &T::orig_cross_id, "549", &T::cross_type, "550", &T::cross_prioritization, "552", &T::no_sides, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "63", &T::settl_type, "64", &T::settl_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "140", &T::prev_close_px, "114", &T::locate_reqd, "60", &T::transact_time, "232", &T::no_stipulations, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "15", &T::currency, "376", &T::compliance_id, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "548", &T::cross_id, "551", &T::orig_cross_id, "549", &T::cross_type, "550", &T::cross_prioritization, "552", &T::no_sides, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "63", &T::settl_type, "64", &T::settl_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "140", &T::prev_close_px, "114", &T::locate_reqd, "60", &T::transact_time, "232", &T::no_stipulations, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "15", &T::currency, "376", &T::compliance_id, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SideCrossOrdCxlGrp>
@@ -13994,7 +16227,7 @@ struct glz::meta<glz::fix::fix44::CrossOrderCancelRequest>
    using T = glz::fix::fix44::CrossOrderCancelRequest;
    static constexpr std::string_view fix_msg_type = "u";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "548", &T::cross_id, "551", &T::orig_cross_id, "549", &T::cross_type, "550", &T::cross_prioritization, "552", &T::no_sides, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "60", &T::transact_time);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "548", &T::cross_id, "551", &T::orig_cross_id, "549", &T::cross_type, "550", &T::cross_prioritization, "552", &T::no_sides, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "60", &T::transact_time);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SecurityTypeRequest>
@@ -14002,7 +16235,7 @@ struct glz::meta<glz::fix::fix44::SecurityTypeRequest>
    using T = glz::fix::fix44::SecurityTypeRequest;
    static constexpr std::string_view fix_msg_type = "v";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "460", &T::product, "167", &T::security_type, "762", &T::security_sub_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "460", &T::product, "167", &T::security_type, "762", &T::security_sub_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SecTypesGrp>
@@ -14016,7 +16249,7 @@ struct glz::meta<glz::fix::fix44::SecurityTypes>
    using T = glz::fix::fix44::SecurityTypes;
    static constexpr std::string_view fix_msg_type = "w";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "322", &T::security_response_id, "323", &T::security_response_type, "557", &T::tot_no_security_types, "893", &T::last_fragment, "558", &T::no_security_types, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "322", &T::security_response_id, "323", &T::security_response_type, "557", &T::tot_no_security_types, "893", &T::last_fragment, "558", &T::no_security_types, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SecurityListRequest>
@@ -14024,7 +16257,7 @@ struct glz::meta<glz::fix::fix44::SecurityListRequest>
    using T = glz::fix::fix44::SecurityListRequest;
    static constexpr std::string_view fix_msg_type = "x";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "559", &T::security_list_request_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "559", &T::security_list_request_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::InstrmtLegSecListGrp>
@@ -14044,7 +16277,7 @@ struct glz::meta<glz::fix::fix44::SecurityList>
    using T = glz::fix::fix44::SecurityList;
    static constexpr std::string_view fix_msg_type = "y";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "322", &T::security_response_id, "560", &T::security_request_result, "393", &T::tot_no_related_sym, "893", &T::last_fragment, "146", &T::no_related_sym);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "322", &T::security_response_id, "560", &T::security_request_result, "393", &T::tot_no_related_sym, "893", &T::last_fragment, "146", &T::no_related_sym);
 };
 template <>
 struct glz::meta<glz::fix::fix44::DerivativeSecurityListRequest>
@@ -14052,7 +16285,7 @@ struct glz::meta<glz::fix::fix44::DerivativeSecurityListRequest>
    using T = glz::fix::fix44::DerivativeSecurityListRequest;
    static constexpr std::string_view fix_msg_type = "z";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "559", &T::security_list_request_type, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "762", &T::security_sub_type, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "559", &T::security_list_request_type, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "762", &T::security_sub_type, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::RelSymDerivSecGrp>
@@ -14066,7 +16299,7 @@ struct glz::meta<glz::fix::fix44::DerivativeSecurityList>
    using T = glz::fix::fix44::DerivativeSecurityList;
    static constexpr std::string_view fix_msg_type = "AA";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("320", &T::security_req_id, "322", &T::security_response_id, "560", &T::security_request_result, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "393", &T::tot_no_related_sym, "893", &T::last_fragment, "146", &T::no_related_sym);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "320", &T::security_req_id, "322", &T::security_response_id, "560", &T::security_request_result, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "393", &T::tot_no_related_sym, "893", &T::last_fragment, "146", &T::no_related_sym);
 };
 template <>
 struct glz::meta<glz::fix::fix44::NstdPtys3SubGrp>
@@ -14104,7 +16337,7 @@ struct glz::meta<glz::fix::fix44::NewOrderMultileg>
    using T = glz::fix::fix44::NewOrderMultileg;
    static constexpr std::string_view fix_msg_type = "AB";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "140", &T::prev_close_px, "555", &T::no_legs, "114", &T::locate_reqd, "60", &T::transact_time, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation, "563", &T::multi_leg_rpt_type_req);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "140", &T::prev_close_px, "555", &T::no_legs, "114", &T::locate_reqd, "60", &T::transact_time, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation, "563", &T::multi_leg_rpt_type_req);
 };
 template <>
 struct glz::meta<glz::fix::fix44::MultilegOrderCancelReplace>
@@ -14112,7 +16345,7 @@ struct glz::meta<glz::fix::fix44::MultilegOrderCancelReplace>
    using T = glz::fix::fix44::MultilegOrderCancelReplace;
    static constexpr std::string_view fix_msg_type = "AC";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("37", &T::order_id, "41", &T::orig_cl_ord_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "586", &T::orig_ord_mod_time, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "140", &T::prev_close_px, "555", &T::no_legs, "114", &T::locate_reqd, "60", &T::transact_time, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation, "563", &T::multi_leg_rpt_type_req);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "37", &T::order_id, "41", &T::orig_cl_ord_id, "11", &T::cl_ord_id, "526", &T::secondary_cl_ord_id, "583", &T::cl_ord_link_id, "586", &T::orig_ord_mod_time, "453", &T::no_party_ids, "229", &T::trade_origination_date, "75", &T::trade_date, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "589", &T::day_booking_inst, "590", &T::booking_unit, "591", &T::prealloc_method, "70", &T::alloc_id, "78", &T::no_allocs, "63", &T::settl_type, "64", &T::settl_date, "544", &T::cash_margin, "635", &T::clearing_fee_indicator, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "140", &T::prev_close_px, "555", &T::no_legs, "114", &T::locate_reqd, "60", &T::transact_time, "854", &T::qty_type, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "40", &T::ord_type, "423", &T::price_type, "44", &T::price, "99", &T::stop_px, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "121", &T::forex_req, "120", &T::settl_currency, "775", &T::booking_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "77", &T::position_effect, "203", &T::covered_or_uncovered, "210", &T::max_show, "211", &T::peg_offset_value, "835", &T::peg_move_type, "836", &T::peg_offset_type, "837", &T::peg_limit_type, "838", &T::peg_round_direction, "840", &T::peg_scope, "388", &T::discretion_inst, "389", &T::discretion_offset_value, "841", &T::discretion_move_type, "842", &T::discretion_offset_type, "843", &T::discretion_limit_type, "844", &T::discretion_round_direction, "846", &T::discretion_scope, "847", &T::target_strategy, "848", &T::target_strategy_parameters, "849", &T::participation_rate, "480", &T::cancellation_rights, "481", &T::money_laundering_status, "513", &T::regist_id, "494", &T::designation, "563", &T::multi_leg_rpt_type_req);
 };
 template <>
 struct glz::meta<glz::fix::fix44::TrdCapDtGrp>
@@ -14126,7 +16359,7 @@ struct glz::meta<glz::fix::fix44::TradeCaptureReportRequest>
    using T = glz::fix::fix44::TradeCaptureReportRequest;
    static constexpr std::string_view fix_msg_type = "AD";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("568", &T::trade_request_id, "569", &T::trade_request_type, "263", &T::subscription_request_type, "571", &T::trade_report_id, "818", &T::secondary_trade_report_id, "17", &T::exec_id, "150", &T::exec_type, "37", &T::order_id, "11", &T::cl_ord_id, "573", &T::match_status, "828", &T::trd_type, "829", &T::trd_sub_type, "830", &T::transfer_reason, "855", &T::secondary_trd_type, "820", &T::trade_link_id, "880", &T::trd_match_id, "453", &T::no_party_ids, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "580", &T::no_dates, "715", &T::clearing_business_date, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "943", &T::time_bracket, "54", &T::side, "442", &T::multi_leg_reporting_type, "578", &T::trade_input_source, "579", &T::trade_input_device, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "568", &T::trade_request_id, "569", &T::trade_request_type, "263", &T::subscription_request_type, "571", &T::trade_report_id, "818", &T::secondary_trade_report_id, "17", &T::exec_id, "150", &T::exec_type, "37", &T::order_id, "11", &T::cl_ord_id, "573", &T::match_status, "828", &T::trd_type, "829", &T::trd_sub_type, "830", &T::transfer_reason, "855", &T::secondary_trd_type, "820", &T::trade_link_id, "880", &T::trd_match_id, "453", &T::no_party_ids, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "580", &T::no_dates, "715", &T::clearing_business_date, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "943", &T::time_bracket, "54", &T::side, "442", &T::multi_leg_reporting_type, "578", &T::trade_input_source, "579", &T::trade_input_device, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::PositionAmountDataGrp>
@@ -14164,7 +16397,7 @@ struct glz::meta<glz::fix::fix44::TradeCaptureReport>
    using T = glz::fix::fix44::TradeCaptureReport;
    static constexpr std::string_view fix_msg_type = "AE";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("571", &T::trade_report_id, "487", &T::trade_report_trans_type, "856", &T::trade_report_type, "568", &T::trade_request_id, "828", &T::trd_type, "829", &T::trd_sub_type, "855", &T::secondary_trd_type, "830", &T::transfer_reason, "150", &T::exec_type, "748", &T::tot_num_trade_reports, "912", &T::last_rpt_requested, "325", &T::unsolicited_indicator, "263", &T::subscription_request_type, "572", &T::trade_report_ref_id, "881", &T::secondary_trade_report_ref_id, "818", &T::secondary_trade_report_id, "820", &T::trade_link_id, "880", &T::trd_match_id, "17", &T::exec_id, "39", &T::ord_status, "527", &T::secondary_exec_id, "378", &T::exec_restatement_reason, "570", &T::previously_reported, "423", &T::price_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "854", &T::qty_type, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "711", &T::no_underlyings, "822", &T::underlying_trading_session_id, "823", &T::underlying_trading_session_sub_id, "32", &T::last_qty, "31", &T::last_px, "669", &T::last_par_px, "194", &T::last_spot_rate, "195", &T::last_forward_points, "30", &T::last_mkt, "75", &T::trade_date, "715", &T::clearing_business_date, "6", &T::avg_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "819", &T::avg_px_indicator, "753", &T::no_pos_amt, "442", &T::multi_leg_reporting_type, "824", &T::trade_leg_ref_id, "555", &T::no_legs, "60", &T::transact_time, "768", &T::no_trd_reg_timestamps, "63", &T::settl_type, "64", &T::settl_date, "573", &T::match_status, "574", &T::match_type, "552", &T::no_sides, "797", &T::copy_msg_indicator, "852", &T::publish_trd_indicator, "853", &T::short_sale_reason);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "571", &T::trade_report_id, "487", &T::trade_report_trans_type, "856", &T::trade_report_type, "568", &T::trade_request_id, "828", &T::trd_type, "829", &T::trd_sub_type, "855", &T::secondary_trd_type, "830", &T::transfer_reason, "150", &T::exec_type, "748", &T::tot_num_trade_reports, "912", &T::last_rpt_requested, "325", &T::unsolicited_indicator, "263", &T::subscription_request_type, "572", &T::trade_report_ref_id, "881", &T::secondary_trade_report_ref_id, "818", &T::secondary_trade_report_id, "820", &T::trade_link_id, "880", &T::trd_match_id, "17", &T::exec_id, "39", &T::ord_status, "527", &T::secondary_exec_id, "378", &T::exec_restatement_reason, "570", &T::previously_reported, "423", &T::price_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "854", &T::qty_type, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "711", &T::no_underlyings, "822", &T::underlying_trading_session_id, "823", &T::underlying_trading_session_sub_id, "32", &T::last_qty, "31", &T::last_px, "669", &T::last_par_px, "194", &T::last_spot_rate, "195", &T::last_forward_points, "30", &T::last_mkt, "75", &T::trade_date, "715", &T::clearing_business_date, "6", &T::avg_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "819", &T::avg_px_indicator, "753", &T::no_pos_amt, "442", &T::multi_leg_reporting_type, "824", &T::trade_leg_ref_id, "555", &T::no_legs, "60", &T::transact_time, "768", &T::no_trd_reg_timestamps, "63", &T::settl_type, "64", &T::settl_date, "573", &T::match_status, "574", &T::match_type, "552", &T::no_sides, "797", &T::copy_msg_indicator, "852", &T::publish_trd_indicator, "853", &T::short_sale_reason);
 };
 template <>
 struct glz::meta<glz::fix::fix44::OrderMassStatusRequest>
@@ -14172,7 +16405,7 @@ struct glz::meta<glz::fix::fix44::OrderMassStatusRequest>
    using T = glz::fix::fix44::OrderMassStatusRequest;
    static constexpr std::string_view fix_msg_type = "AF";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("584", &T::mass_status_req_id, "585", &T::mass_status_req_type, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "54", &T::side);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "584", &T::mass_status_req_id, "585", &T::mass_status_req_type, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "311", &T::underlying_symbol, "312", &T::underlying_symbol_sfx, "309", &T::underlying_security_id, "305", &T::underlying_security_id_source, "457", &T::no_underlying_security_alt_id, "462", &T::underlying_product, "463", &T::underlying_cfi_code, "310", &T::underlying_security_type, "763", &T::underlying_security_sub_type, "313", &T::underlying_maturity_month_year, "542", &T::underlying_maturity_date, "315", &T::underlying_put_or_call, "241", &T::underlying_coupon_payment_date, "242", &T::underlying_issue_date, "243", &T::underlying_repo_collateral_security_type, "244", &T::underlying_repurchase_term, "245", &T::underlying_repurchase_rate, "246", &T::underlying_factor, "256", &T::underlying_credit_rating, "595", &T::underlying_instr_registry, "592", &T::underlying_country_of_issue, "593", &T::underlying_state_or_province_of_issue, "594", &T::underlying_locale_of_issue, "247", &T::underlying_redemption_date, "316", &T::underlying_strike_price, "941", &T::underlying_strike_currency, "317", &T::underlying_opt_attribute, "436", &T::underlying_contract_multiplier, "435", &T::underlying_coupon_rate, "308", &T::underlying_security_exchange, "306", &T::underlying_issuer, "362", &T::encoded_underlying_issuer_len, "363", &T::encoded_underlying_issuer, "307", &T::underlying_security_desc, "364", &T::encoded_underlying_security_desc_len, "365", &T::encoded_underlying_security_desc, "877", &T::underlying_cp_program, "878", &T::underlying_cp_reg_type, "318", &T::underlying_currency, "879", &T::underlying_qty, "810", &T::underlying_px, "882", &T::underlying_dirty_price, "883", &T::underlying_end_price, "884", &T::underlying_start_value, "885", &T::underlying_current_value, "886", &T::underlying_end_value, "887", &T::no_underlying_stips, "54", &T::side);
 };
 template <>
 struct glz::meta<glz::fix::fix44::QuotReqRjctGrp>
@@ -14186,7 +16419,7 @@ struct glz::meta<glz::fix::fix44::QuoteRequestReject>
    using T = glz::fix::fix44::QuoteRequestReject;
    static constexpr std::string_view fix_msg_type = "AG";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("131", &T::quote_req_id, "644", &T::rfq_req_id, "658", &T::quote_request_reject_reason, "146", &T::no_related_sym, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "131", &T::quote_req_id, "644", &T::rfq_req_id, "658", &T::quote_request_reject_reason, "146", &T::no_related_sym, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::RFQReqGrp>
@@ -14200,7 +16433,7 @@ struct glz::meta<glz::fix::fix44::RFQRequest>
    using T = glz::fix::fix44::RFQRequest;
    static constexpr std::string_view fix_msg_type = "AH";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("644", &T::rfq_req_id, "146", &T::no_related_sym, "263", &T::subscription_request_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "644", &T::rfq_req_id, "146", &T::no_related_sym, "263", &T::subscription_request_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::LegQuotStatGrp>
@@ -14214,7 +16447,7 @@ struct glz::meta<glz::fix::fix44::QuoteStatusReport>
    using T = glz::fix::fix44::QuoteStatusReport;
    static constexpr std::string_view fix_msg_type = "AI";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("649", &T::quote_status_req_id, "131", &T::quote_req_id, "117", &T::quote_id, "693", &T::quote_resp_id, "537", &T::quote_type, "453", &T::no_party_ids, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "63", &T::settl_type, "64", &T::settl_date, "193", &T::settl_date2, "192", &T::order_qty2, "15", &T::currency, "232", &T::no_stipulations, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "555", &T::no_legs, "735", &T::no_quote_qualifiers, "126", &T::expire_time, "44", &T::price, "423", &T::price_type, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "132", &T::bid_px, "133", &T::offer_px, "645", &T::mkt_bid_px, "646", &T::mkt_offer_px, "647", &T::min_bid_size, "134", &T::bid_size, "648", &T::min_offer_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "631", &T::mid_px, "632", &T::bid_yield, "633", &T::mid_yield, "634", &T::offer_yield, "60", &T::transact_time, "40", &T::ord_type, "642", &T::bid_forward_points2, "643", &T::offer_forward_points2, "656", &T::settl_curr_bid_fx_rate, "657", &T::settl_curr_offer_fx_rate, "156", &T::settl_curr_fx_rate_calc, "13", &T::comm_type, "12", &T::commission, "582", &T::cust_order_capacity, "100", &T::ex_destination, "297", &T::quote_status, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "649", &T::quote_status_req_id, "131", &T::quote_req_id, "117", &T::quote_id, "693", &T::quote_resp_id, "537", &T::quote_type, "453", &T::no_party_ids, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "63", &T::settl_type, "64", &T::settl_date, "193", &T::settl_date2, "192", &T::order_qty2, "15", &T::currency, "232", &T::no_stipulations, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "555", &T::no_legs, "735", &T::no_quote_qualifiers, "126", &T::expire_time, "44", &T::price, "423", &T::price_type, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "132", &T::bid_px, "133", &T::offer_px, "645", &T::mkt_bid_px, "646", &T::mkt_offer_px, "647", &T::min_bid_size, "134", &T::bid_size, "648", &T::min_offer_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "631", &T::mid_px, "632", &T::bid_yield, "633", &T::mid_yield, "634", &T::offer_yield, "60", &T::transact_time, "40", &T::ord_type, "642", &T::bid_forward_points2, "643", &T::offer_forward_points2, "656", &T::settl_curr_bid_fx_rate, "657", &T::settl_curr_offer_fx_rate, "156", &T::settl_curr_fx_rate_calc, "13", &T::comm_type, "12", &T::commission, "582", &T::cust_order_capacity, "100", &T::ex_destination, "297", &T::quote_status, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::QuoteResponse>
@@ -14222,7 +16455,7 @@ struct glz::meta<glz::fix::fix44::QuoteResponse>
    using T = glz::fix::fix44::QuoteResponse;
    static constexpr std::string_view fix_msg_type = "AJ";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("693", &T::quote_resp_id, "117", &T::quote_id, "694", &T::quote_resp_type, "11", &T::cl_ord_id, "528", &T::order_capacity, "23", &T::ioiid, "537", &T::quote_type, "735", &T::no_quote_qualifiers, "453", &T::no_party_ids, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "63", &T::settl_type, "64", &T::settl_date, "193", &T::settl_date2, "192", &T::order_qty2, "15", &T::currency, "232", &T::no_stipulations, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "555", &T::no_legs, "132", &T::bid_px, "133", &T::offer_px, "645", &T::mkt_bid_px, "646", &T::mkt_offer_px, "647", &T::min_bid_size, "134", &T::bid_size, "648", &T::min_offer_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "631", &T::mid_px, "632", &T::bid_yield, "633", &T::mid_yield, "634", &T::offer_yield, "60", &T::transact_time, "40", &T::ord_type, "642", &T::bid_forward_points2, "643", &T::offer_forward_points2, "656", &T::settl_curr_bid_fx_rate, "657", &T::settl_curr_offer_fx_rate, "156", &T::settl_curr_fx_rate_calc, "12", &T::commission, "13", &T::comm_type, "582", &T::cust_order_capacity, "100", &T::ex_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "44", &T::price, "423", &T::price_type, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "693", &T::quote_resp_id, "117", &T::quote_id, "694", &T::quote_resp_type, "11", &T::cl_ord_id, "528", &T::order_capacity, "23", &T::ioiid, "537", &T::quote_type, "735", &T::no_quote_qualifiers, "453", &T::no_party_ids, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "516", &T::order_percent, "468", &T::rounding_direction, "469", &T::rounding_modulus, "63", &T::settl_type, "64", &T::settl_date, "193", &T::settl_date2, "192", &T::order_qty2, "15", &T::currency, "232", &T::no_stipulations, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "555", &T::no_legs, "132", &T::bid_px, "133", &T::offer_px, "645", &T::mkt_bid_px, "646", &T::mkt_offer_px, "647", &T::min_bid_size, "134", &T::bid_size, "648", &T::min_offer_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "631", &T::mid_px, "632", &T::bid_yield, "633", &T::mid_yield, "634", &T::offer_yield, "60", &T::transact_time, "40", &T::ord_type, "642", &T::bid_forward_points2, "643", &T::offer_forward_points2, "656", &T::settl_curr_bid_fx_rate, "657", &T::settl_curr_offer_fx_rate, "156", &T::settl_curr_fx_rate_calc, "12", &T::commission, "13", &T::comm_type, "582", &T::cust_order_capacity, "100", &T::ex_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "44", &T::price, "423", &T::price_type, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CpctyConfGrp>
@@ -14236,7 +16469,7 @@ struct glz::meta<glz::fix::fix44::Confirmation>
    using T = glz::fix::fix44::Confirmation;
    static constexpr std::string_view fix_msg_type = "AK";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("664", &T::confirm_id, "772", &T::confirm_ref_id, "859", &T::confirm_req_id, "666", &T::confirm_trans_type, "773", &T::confirm_type, "797", &T::copy_msg_indicator, "650", &T::legal_confirm, "665", &T::confirm_status, "453", &T::no_party_ids, "73", &T::no_orders, "70", &T::alloc_id, "793", &T::secondary_alloc_id, "467", &T::individual_alloc_id, "60", &T::transact_time, "75", &T::trade_date, "768", &T::no_trd_reg_timestamps, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "80", &T::alloc_qty, "854", &T::qty_type, "54", &T::side, "15", &T::currency, "30", &T::last_mkt, "862", &T::no_capacities, "79", &T::alloc_account, "661", &T::alloc_acct_id_source, "798", &T::alloc_account_type, "6", &T::avg_px, "74", &T::avg_px_precision, "423", &T::price_type, "860", &T::avg_par_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "861", &T::reported_px, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "81", &T::process_code, "381", &T::gross_trade_amt, "157", &T::num_days_interest, "230", &T::ex_date, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "890", &T::maturity_net_money, "119", &T::settl_curr_amt, "120", &T::settl_currency, "155", &T::settl_curr_fx_rate, "156", &T::settl_curr_fx_rate_calc, "63", &T::settl_type, "64", &T::settl_date, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "858", &T::shared_commission, "232", &T::no_stipulations, "136", &T::no_misc_fees);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "664", &T::confirm_id, "772", &T::confirm_ref_id, "859", &T::confirm_req_id, "666", &T::confirm_trans_type, "773", &T::confirm_type, "797", &T::copy_msg_indicator, "650", &T::legal_confirm, "665", &T::confirm_status, "453", &T::no_party_ids, "73", &T::no_orders, "70", &T::alloc_id, "793", &T::secondary_alloc_id, "467", &T::individual_alloc_id, "60", &T::transact_time, "75", &T::trade_date, "768", &T::no_trd_reg_timestamps, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "80", &T::alloc_qty, "854", &T::qty_type, "54", &T::side, "15", &T::currency, "30", &T::last_mkt, "862", &T::no_capacities, "79", &T::alloc_account, "661", &T::alloc_acct_id_source, "798", &T::alloc_account_type, "6", &T::avg_px, "74", &T::avg_px_precision, "423", &T::price_type, "860", &T::avg_par_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "861", &T::reported_px, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "81", &T::process_code, "381", &T::gross_trade_amt, "157", &T::num_days_interest, "230", &T::ex_date, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "890", &T::maturity_net_money, "119", &T::settl_curr_amt, "120", &T::settl_currency, "155", &T::settl_curr_fx_rate, "156", &T::settl_curr_fx_rate_calc, "63", &T::settl_type, "64", &T::settl_date, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "12", &T::commission, "13", &T::comm_type, "479", &T::comm_currency, "497", &T::fund_renew_waiv, "858", &T::shared_commission, "232", &T::no_stipulations, "136", &T::no_misc_fees);
 };
 template <>
 struct glz::meta<glz::fix::fix44::PositionQtyGrp>
@@ -14250,7 +16483,7 @@ struct glz::meta<glz::fix::fix44::PositionMaintenanceRequest>
    using T = glz::fix::fix44::PositionMaintenanceRequest;
    static constexpr std::string_view fix_msg_type = "AL";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("710", &T::pos_req_id, "709", &T::pos_trans_type, "712", &T::pos_maint_action, "713", &T::orig_pos_req_ref_id, "714", &T::pos_maint_rpt_ref_id, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "386", &T::no_trading_sessions, "60", &T::transact_time, "702", &T::no_positions, "718", &T::adjustment_type, "719", &T::contrary_instruction_indicator, "720", &T::prior_spread_indicator, "834", &T::threshold_amount, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "710", &T::pos_req_id, "709", &T::pos_trans_type, "712", &T::pos_maint_action, "713", &T::orig_pos_req_ref_id, "714", &T::pos_maint_rpt_ref_id, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "386", &T::no_trading_sessions, "60", &T::transact_time, "702", &T::no_positions, "718", &T::adjustment_type, "719", &T::contrary_instruction_indicator, "720", &T::prior_spread_indicator, "834", &T::threshold_amount, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::PositionMaintenanceReport>
@@ -14258,7 +16491,7 @@ struct glz::meta<glz::fix::fix44::PositionMaintenanceReport>
    using T = glz::fix::fix44::PositionMaintenanceReport;
    static constexpr std::string_view fix_msg_type = "AM";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("721", &T::pos_maint_rpt_id, "709", &T::pos_trans_type, "710", &T::pos_req_id, "712", &T::pos_maint_action, "713", &T::orig_pos_req_ref_id, "722", &T::pos_maint_status, "723", &T::pos_maint_result, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "386", &T::no_trading_sessions, "60", &T::transact_time, "702", &T::no_positions, "753", &T::no_pos_amt, "718", &T::adjustment_type, "834", &T::threshold_amount, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "721", &T::pos_maint_rpt_id, "709", &T::pos_trans_type, "710", &T::pos_req_id, "712", &T::pos_maint_action, "713", &T::orig_pos_req_ref_id, "722", &T::pos_maint_status, "723", &T::pos_maint_result, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "386", &T::no_trading_sessions, "60", &T::transact_time, "702", &T::no_positions, "753", &T::no_pos_amt, "718", &T::adjustment_type, "834", &T::threshold_amount, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::RequestForPositions>
@@ -14266,7 +16499,7 @@ struct glz::meta<glz::fix::fix44::RequestForPositions>
    using T = glz::fix::fix44::RequestForPositions;
    static constexpr std::string_view fix_msg_type = "AN";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("710", &T::pos_req_id, "724", &T::pos_req_type, "573", &T::match_status, "263", &T::subscription_request_type, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "386", &T::no_trading_sessions, "60", &T::transact_time, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "710", &T::pos_req_id, "724", &T::pos_req_type, "573", &T::match_status, "263", &T::subscription_request_type, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "386", &T::no_trading_sessions, "60", &T::transact_time, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::RequestForPositionsAck>
@@ -14274,7 +16507,7 @@ struct glz::meta<glz::fix::fix44::RequestForPositionsAck>
    using T = glz::fix::fix44::RequestForPositionsAck;
    static constexpr std::string_view fix_msg_type = "AO";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("721", &T::pos_maint_rpt_id, "710", &T::pos_req_id, "727", &T::total_num_pos_reports, "325", &T::unsolicited_indicator, "728", &T::pos_req_result, "729", &T::pos_req_status, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "721", &T::pos_maint_rpt_id, "710", &T::pos_req_id, "727", &T::total_num_pos_reports, "325", &T::unsolicited_indicator, "728", &T::pos_req_result, "729", &T::pos_req_status, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::PosUndInstrmtGrp>
@@ -14288,7 +16521,7 @@ struct glz::meta<glz::fix::fix44::PositionReport>
    using T = glz::fix::fix44::PositionReport;
    static constexpr std::string_view fix_msg_type = "AP";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("721", &T::pos_maint_rpt_id, "710", &T::pos_req_id, "724", &T::pos_req_type, "263", &T::subscription_request_type, "727", &T::total_num_pos_reports, "325", &T::unsolicited_indicator, "728", &T::pos_req_result, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "730", &T::settl_price, "731", &T::settl_price_type, "734", &T::prior_settl_price, "555", &T::no_legs, "711", &T::no_underlyings, "702", &T::no_positions, "753", &T::no_pos_amt, "506", &T::regist_status, "743", &T::delivery_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "721", &T::pos_maint_rpt_id, "710", &T::pos_req_id, "724", &T::pos_req_type, "263", &T::subscription_request_type, "727", &T::total_num_pos_reports, "325", &T::unsolicited_indicator, "728", &T::pos_req_result, "715", &T::clearing_business_date, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "453", &T::no_party_ids, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "730", &T::settl_price, "731", &T::settl_price_type, "734", &T::prior_settl_price, "555", &T::no_legs, "711", &T::no_underlyings, "702", &T::no_positions, "753", &T::no_pos_amt, "506", &T::regist_status, "743", &T::delivery_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::TradeCaptureReportRequestAck>
@@ -14296,7 +16529,7 @@ struct glz::meta<glz::fix::fix44::TradeCaptureReportRequestAck>
    using T = glz::fix::fix44::TradeCaptureReportRequestAck;
    static constexpr std::string_view fix_msg_type = "AQ";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("568", &T::trade_request_id, "569", &T::trade_request_type, "263", &T::subscription_request_type, "748", &T::tot_num_trade_reports, "749", &T::trade_request_result, "750", &T::trade_request_status, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "442", &T::multi_leg_reporting_type, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "568", &T::trade_request_id, "569", &T::trade_request_type, "263", &T::subscription_request_type, "748", &T::tot_num_trade_reports, "749", &T::trade_request_result, "750", &T::trade_request_status, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "711", &T::no_underlyings, "555", &T::no_legs, "442", &T::multi_leg_reporting_type, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::TradeCaptureReportAck>
@@ -14304,7 +16537,7 @@ struct glz::meta<glz::fix::fix44::TradeCaptureReportAck>
    using T = glz::fix::fix44::TradeCaptureReportAck;
    static constexpr std::string_view fix_msg_type = "AR";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("571", &T::trade_report_id, "487", &T::trade_report_trans_type, "856", &T::trade_report_type, "828", &T::trd_type, "829", &T::trd_sub_type, "855", &T::secondary_trd_type, "830", &T::transfer_reason, "150", &T::exec_type, "572", &T::trade_report_ref_id, "881", &T::secondary_trade_report_ref_id, "939", &T::trd_rpt_status, "751", &T::trade_report_reject_reason, "818", &T::secondary_trade_report_id, "263", &T::subscription_request_type, "820", &T::trade_link_id, "880", &T::trd_match_id, "17", &T::exec_id, "527", &T::secondary_exec_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "60", &T::transact_time, "768", &T::no_trd_reg_timestamps, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "555", &T::no_legs, "635", &T::clearing_fee_indicator, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "77", &T::position_effect, "591", &T::prealloc_method, "78", &T::no_allocs);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "571", &T::trade_report_id, "487", &T::trade_report_trans_type, "856", &T::trade_report_type, "828", &T::trd_type, "829", &T::trd_sub_type, "855", &T::secondary_trd_type, "830", &T::transfer_reason, "150", &T::exec_type, "572", &T::trade_report_ref_id, "881", &T::secondary_trade_report_ref_id, "939", &T::trd_rpt_status, "751", &T::trade_report_reject_reason, "818", &T::secondary_trade_report_id, "263", &T::subscription_request_type, "820", &T::trade_link_id, "880", &T::trd_match_id, "17", &T::exec_id, "527", &T::secondary_exec_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "60", &T::transact_time, "768", &T::no_trd_reg_timestamps, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "555", &T::no_legs, "635", &T::clearing_fee_indicator, "528", &T::order_capacity, "529", &T::order_restrictions, "582", &T::cust_order_capacity, "1", &T::account, "660", &T::acct_id_source, "581", &T::account_type, "77", &T::position_effect, "591", &T::prealloc_method, "78", &T::no_allocs);
 };
 template <>
 struct glz::meta<glz::fix::fix44::AllocationReport>
@@ -14312,7 +16545,7 @@ struct glz::meta<glz::fix::fix44::AllocationReport>
    using T = glz::fix::fix44::AllocationReport;
    static constexpr std::string_view fix_msg_type = "AS";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("755", &T::alloc_report_id, "70", &T::alloc_id, "71", &T::alloc_trans_type, "795", &T::alloc_report_ref_id, "796", &T::alloc_canc_replace_reason, "793", &T::secondary_alloc_id, "794", &T::alloc_report_type, "87", &T::alloc_status, "88", &T::alloc_rej_code, "72", &T::ref_alloc_id, "808", &T::alloc_intermed_req_type, "196", &T::alloc_link_id, "197", &T::alloc_link_type, "466", &T::booking_ref_id, "857", &T::alloc_no_orders_type, "73", &T::no_orders, "124", &T::no_execs, "570", &T::previously_reported, "700", &T::reversal_indicator, "574", &T::match_type, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "53", &T::quantity, "854", &T::qty_type, "30", &T::last_mkt, "229", &T::trade_origination_date, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "423", &T::price_type, "6", &T::avg_px, "860", &T::avg_par_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "15", &T::currency, "74", &T::avg_px_precision, "453", &T::no_party_ids, "75", &T::trade_date, "60", &T::transact_time, "63", &T::settl_type, "64", &T::settl_date, "775", &T::booking_type, "381", &T::gross_trade_amt, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "77", &T::position_effect, "754", &T::auto_accept_indicator, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "157", &T::num_days_interest, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "540", &T::total_accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "650", &T::legal_confirm, "232", &T::no_stipulations, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "892", &T::tot_no_allocs, "893", &T::last_fragment, "78", &T::no_allocs);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "755", &T::alloc_report_id, "70", &T::alloc_id, "71", &T::alloc_trans_type, "795", &T::alloc_report_ref_id, "796", &T::alloc_canc_replace_reason, "793", &T::secondary_alloc_id, "794", &T::alloc_report_type, "87", &T::alloc_status, "88", &T::alloc_rej_code, "72", &T::ref_alloc_id, "808", &T::alloc_intermed_req_type, "196", &T::alloc_link_id, "197", &T::alloc_link_type, "466", &T::booking_ref_id, "857", &T::alloc_no_orders_type, "73", &T::no_orders, "124", &T::no_execs, "570", &T::previously_reported, "700", &T::reversal_indicator, "574", &T::match_type, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "668", &T::delivery_form, "869", &T::pct_at_risk, "870", &T::no_instr_attrib, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "711", &T::no_underlyings, "555", &T::no_legs, "53", &T::quantity, "854", &T::qty_type, "30", &T::last_mkt, "229", &T::trade_origination_date, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "423", &T::price_type, "6", &T::avg_px, "860", &T::avg_par_px, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "15", &T::currency, "74", &T::avg_px_precision, "453", &T::no_party_ids, "75", &T::trade_date, "60", &T::transact_time, "63", &T::settl_type, "64", &T::settl_date, "775", &T::booking_type, "381", &T::gross_trade_amt, "238", &T::concession, "237", &T::total_takedown, "118", &T::net_money, "77", &T::position_effect, "754", &T::auto_accept_indicator, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "157", &T::num_days_interest, "158", &T::accrued_interest_rate, "159", &T::accrued_interest_amt, "540", &T::total_accrued_interest_amt, "738", &T::interest_at_maturity, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "650", &T::legal_confirm, "232", &T::no_stipulations, "235", &T::yield_type, "236", &T::yield, "701", &T::yield_calc_date, "696", &T::yield_redemption_date, "697", &T::yield_redemption_price, "698", &T::yield_redemption_price_type, "892", &T::tot_no_allocs, "893", &T::last_fragment, "78", &T::no_allocs);
 };
 template <>
 struct glz::meta<glz::fix::fix44::AllocationReportAck>
@@ -14320,7 +16553,7 @@ struct glz::meta<glz::fix::fix44::AllocationReportAck>
    using T = glz::fix::fix44::AllocationReportAck;
    static constexpr std::string_view fix_msg_type = "AT";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("755", &T::alloc_report_id, "70", &T::alloc_id, "453", &T::no_party_ids, "793", &T::secondary_alloc_id, "75", &T::trade_date, "60", &T::transact_time, "87", &T::alloc_status, "88", &T::alloc_rej_code, "794", &T::alloc_report_type, "808", &T::alloc_intermed_req_type, "573", &T::match_status, "460", &T::product, "167", &T::security_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "78", &T::no_allocs);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "755", &T::alloc_report_id, "70", &T::alloc_id, "453", &T::no_party_ids, "793", &T::secondary_alloc_id, "75", &T::trade_date, "60", &T::transact_time, "87", &T::alloc_status, "88", &T::alloc_rej_code, "794", &T::alloc_report_type, "808", &T::alloc_intermed_req_type, "573", &T::match_status, "460", &T::product, "167", &T::security_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "78", &T::no_allocs);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ConfirmationAck>
@@ -14328,7 +16561,7 @@ struct glz::meta<glz::fix::fix44::ConfirmationAck>
    using T = glz::fix::fix44::ConfirmationAck;
    static constexpr std::string_view fix_msg_type = "AU";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("664", &T::confirm_id, "75", &T::trade_date, "60", &T::transact_time, "940", &T::affirm_status, "774", &T::confirm_rej_reason, "573", &T::match_status, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "664", &T::confirm_id, "75", &T::trade_date, "60", &T::transact_time, "940", &T::affirm_status, "774", &T::confirm_rej_reason, "573", &T::match_status, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::SettlementInstructionRequest>
@@ -14336,7 +16569,7 @@ struct glz::meta<glz::fix::fix44::SettlementInstructionRequest>
    using T = glz::fix::fix44::SettlementInstructionRequest;
    static constexpr std::string_view fix_msg_type = "AV";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("791", &T::settl_inst_req_id, "60", &T::transact_time, "453", &T::no_party_ids, "79", &T::alloc_account, "661", &T::alloc_acct_id_source, "54", &T::side, "460", &T::product, "167", &T::security_type, "461", &T::cfi_code, "168", &T::effective_time, "126", &T::expire_time, "779", &T::last_update_time, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "791", &T::settl_inst_req_id, "60", &T::transact_time, "453", &T::no_party_ids, "79", &T::alloc_account, "661", &T::alloc_acct_id_source, "54", &T::side, "460", &T::product, "167", &T::security_type, "461", &T::cfi_code, "168", &T::effective_time, "126", &T::expire_time, "779", &T::last_update_time, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id);
 };
 template <>
 struct glz::meta<glz::fix::fix44::AssignmentReport>
@@ -14344,7 +16577,7 @@ struct glz::meta<glz::fix::fix44::AssignmentReport>
    using T = glz::fix::fix44::AssignmentReport;
    static constexpr std::string_view fix_msg_type = "AW";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("833", &T::asgn_rpt_id, "832", &T::tot_num_assignment_reports, "912", &T::last_rpt_requested, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "702", &T::no_positions, "753", &T::no_pos_amt, "834", &T::threshold_amount, "730", &T::settl_price, "731", &T::settl_price_type, "732", &T::underlying_settl_price, "432", &T::expire_date, "744", &T::assignment_method, "745", &T::assignment_unit, "746", &T::open_interest, "747", &T::exercise_method, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "833", &T::asgn_rpt_id, "832", &T::tot_num_assignment_reports, "912", &T::last_rpt_requested, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "702", &T::no_positions, "753", &T::no_pos_amt, "834", &T::threshold_amount, "730", &T::settl_price, "731", &T::settl_price_type, "732", &T::underlying_settl_price, "432", &T::expire_date, "744", &T::assignment_method, "745", &T::assignment_unit, "746", &T::open_interest, "747", &T::exercise_method, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ExecCollGrp>
@@ -14370,7 +16603,7 @@ struct glz::meta<glz::fix::fix44::CollateralRequest>
    using T = glz::fix::fix44::CollateralRequest;
    static constexpr std::string_view fix_msg_type = "AX";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("894", &T::coll_req_id, "895", &T::coll_asgn_reason, "60", &T::transact_time, "126", &T::expire_time, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "894", &T::coll_req_id, "895", &T::coll_asgn_reason, "60", &T::transact_time, "126", &T::expire_time, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CollateralAssignment>
@@ -14378,7 +16611,7 @@ struct glz::meta<glz::fix::fix44::CollateralAssignment>
    using T = glz::fix::fix44::CollateralAssignment;
    static constexpr std::string_view fix_msg_type = "AY";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("902", &T::coll_asgn_id, "894", &T::coll_req_id, "895", &T::coll_asgn_reason, "903", &T::coll_asgn_trans_type, "907", &T::coll_asgn_ref_id, "60", &T::transact_time, "126", &T::expire_time, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "902", &T::coll_asgn_id, "894", &T::coll_req_id, "895", &T::coll_asgn_reason, "903", &T::coll_asgn_trans_type, "907", &T::coll_asgn_ref_id, "60", &T::transact_time, "126", &T::expire_time, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CollateralResponse>
@@ -14386,7 +16619,7 @@ struct glz::meta<glz::fix::fix44::CollateralResponse>
    using T = glz::fix::fix44::CollateralResponse;
    static constexpr std::string_view fix_msg_type = "AZ";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("904", &T::coll_resp_id, "902", &T::coll_asgn_id, "894", &T::coll_req_id, "895", &T::coll_asgn_reason, "903", &T::coll_asgn_trans_type, "905", &T::coll_asgn_resp_type, "906", &T::coll_asgn_reject_reason, "60", &T::transact_time, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "904", &T::coll_resp_id, "902", &T::coll_asgn_id, "894", &T::coll_req_id, "895", &T::coll_asgn_reason, "903", &T::coll_asgn_trans_type, "905", &T::coll_asgn_resp_type, "906", &T::coll_asgn_reject_reason, "60", &T::transact_time, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CollateralReport>
@@ -14394,7 +16627,7 @@ struct glz::meta<glz::fix::fix44::CollateralReport>
    using T = glz::fix::fix44::CollateralReport;
    static constexpr std::string_view fix_msg_type = "BA";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("908", &T::coll_rpt_id, "909", &T::coll_inquiry_id, "910", &T::coll_status, "911", &T::tot_num_reports, "912", &T::last_rpt_requested, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "908", &T::coll_rpt_id, "909", &T::coll_inquiry_id, "910", &T::coll_status, "911", &T::tot_num_reports, "912", &T::last_rpt_requested, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "136", &T::no_misc_fees, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CollInqQualGrp>
@@ -14408,7 +16641,7 @@ struct glz::meta<glz::fix::fix44::CollateralInquiry>
    using T = glz::fix::fix44::CollateralInquiry;
    static constexpr std::string_view fix_msg_type = "BB";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("909", &T::coll_inquiry_id, "938", &T::no_coll_inquiry_qualifier, "263", &T::subscription_request_type, "725", &T::response_transport_type, "726", &T::response_destination, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "909", &T::coll_inquiry_id, "938", &T::no_coll_inquiry_qualifier, "263", &T::subscription_request_type, "725", &T::response_transport_type, "726", &T::response_destination, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "899", &T::margin_excess, "900", &T::total_net_value, "901", &T::cash_outstanding, "768", &T::no_trd_reg_timestamps, "54", &T::side, "44", &T::price, "423", &T::price_type, "159", &T::accrued_interest_amt, "920", &T::end_accrued_interest_amt, "921", &T::start_cash, "922", &T::end_cash, "218", &T::spread, "220", &T::benchmark_curve_currency, "221", &T::benchmark_curve_name, "222", &T::benchmark_curve_point, "662", &T::benchmark_price, "663", &T::benchmark_price_type, "699", &T::benchmark_security_id, "761", &T::benchmark_security_id_source, "232", &T::no_stipulations, "172", &T::settl_delivery_type, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "85", &T::no_dlvy_inst, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CompIDReqGrp>
@@ -14422,7 +16655,7 @@ struct glz::meta<glz::fix::fix44::NetworkCounterpartySystemStatusRequest>
    using T = glz::fix::fix44::NetworkCounterpartySystemStatusRequest;
    static constexpr std::string_view fix_msg_type = "BC";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("935", &T::network_request_type, "933", &T::network_request_id, "936", &T::no_comp_ids);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "935", &T::network_request_type, "933", &T::network_request_id, "936", &T::no_comp_ids);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CompIDStatGrp>
@@ -14436,7 +16669,7 @@ struct glz::meta<glz::fix::fix44::NetworkCounterpartySystemStatusResponse>
    using T = glz::fix::fix44::NetworkCounterpartySystemStatusResponse;
    static constexpr std::string_view fix_msg_type = "BD";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("937", &T::network_status_response_type, "933", &T::network_request_id, "932", &T::network_response_id, "934", &T::last_network_response_id, "936", &T::no_comp_ids);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "937", &T::network_status_response_type, "933", &T::network_request_id, "932", &T::network_response_id, "934", &T::last_network_response_id, "936", &T::no_comp_ids);
 };
 template <>
 struct glz::meta<glz::fix::fix44::UserRequest>
@@ -14444,7 +16677,7 @@ struct glz::meta<glz::fix::fix44::UserRequest>
    using T = glz::fix::fix44::UserRequest;
    static constexpr std::string_view fix_msg_type = "BE";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("923", &T::user_request_id, "924", &T::user_request_type, "553", &T::username, "554", &T::password, "925", &T::new_password, "95", &T::raw_data_length, "96", &T::raw_data);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "923", &T::user_request_id, "924", &T::user_request_type, "553", &T::username, "554", &T::password, "925", &T::new_password, "95", &T::raw_data_length, "96", &T::raw_data);
 };
 template <>
 struct glz::meta<glz::fix::fix44::UserResponse>
@@ -14452,7 +16685,7 @@ struct glz::meta<glz::fix::fix44::UserResponse>
    using T = glz::fix::fix44::UserResponse;
    static constexpr std::string_view fix_msg_type = "BF";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("923", &T::user_request_id, "553", &T::username, "926", &T::user_status, "927", &T::user_status_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "923", &T::user_request_id, "553", &T::username, "926", &T::user_status, "927", &T::user_status_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::CollateralInquiryAck>
@@ -14460,7 +16693,7 @@ struct glz::meta<glz::fix::fix44::CollateralInquiryAck>
    using T = glz::fix::fix44::CollateralInquiryAck;
    static constexpr std::string_view fix_msg_type = "BG";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("909", &T::coll_inquiry_id, "945", &T::coll_inquiry_status, "946", &T::coll_inquiry_result, "938", &T::no_coll_inquiry_qualifier, "911", &T::tot_num_reports, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "909", &T::coll_inquiry_id, "945", &T::coll_inquiry_status, "946", &T::coll_inquiry_result, "938", &T::no_coll_inquiry_qualifier, "911", &T::tot_num_reports, "453", &T::no_party_ids, "1", &T::account, "581", &T::account_type, "11", &T::cl_ord_id, "37", &T::order_id, "198", &T::secondary_order_id, "526", &T::secondary_cl_ord_id, "124", &T::no_execs, "897", &T::no_trades, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::security_id_source, "454", &T::no_security_alt_id, "460", &T::product, "461", &T::cfi_code, "167", &T::security_type, "762", &T::security_sub_type, "200", &T::maturity_month_year, "541", &T::maturity_date, "201", &T::put_or_call, "224", &T::coupon_payment_date, "225", &T::issue_date, "239", &T::repo_collateral_security_type, "226", &T::repurchase_term, "227", &T::repurchase_rate, "228", &T::factor, "255", &T::credit_rating, "543", &T::instr_registry, "470", &T::country_of_issue, "471", &T::state_or_province_of_issue, "472", &T::locale_of_issue, "240", &T::redemption_date, "202", &T::strike_price, "947", &T::strike_currency, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "691", &T::pool, "667", &T::contract_settl_month, "875", &T::cp_program, "876", &T::cp_reg_type, "864", &T::no_events, "873", &T::dated_date, "874", &T::interest_accrual_date, "913", &T::agreement_desc, "914", &T::agreement_id, "915", &T::agreement_date, "918", &T::agreement_currency, "788", &T::termination_type, "916", &T::start_date, "917", &T::end_date, "919", &T::delivery_type, "898", &T::margin_ratio, "64", &T::settl_date, "53", &T::quantity, "854", &T::qty_type, "15", &T::currency, "555", &T::no_legs, "711", &T::no_underlyings, "336", &T::trading_session_id, "625", &T::trading_session_sub_id, "716", &T::settl_sess_id, "717", &T::settl_sess_sub_id, "715", &T::clearing_business_date, "725", &T::response_transport_type, "726", &T::response_destination, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
 struct glz::meta<glz::fix::fix44::ConfirmationRequest>
@@ -14468,5 +16701,5 @@ struct glz::meta<glz::fix::fix44::ConfirmationRequest>
    using T = glz::fix::fix44::ConfirmationRequest;
    static constexpr std::string_view fix_msg_type = "BH";
    static constexpr std::string_view fix_begin_string = "FIX.4.4";
-   static constexpr auto value = glz::object("859", &T::confirm_req_id, "773", &T::confirm_type, "73", &T::no_orders, "70", &T::alloc_id, "793", &T::secondary_alloc_id, "467", &T::individual_alloc_id, "60", &T::transact_time, "79", &T::alloc_account, "661", &T::alloc_acct_id_source, "798", &T::alloc_account_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
+   static constexpr auto value = glz::object("49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "627", &T::no_hops, "859", &T::confirm_req_id, "773", &T::confirm_type, "73", &T::no_orders, "70", &T::alloc_id, "793", &T::secondary_alloc_id, "467", &T::individual_alloc_id, "60", &T::transact_time, "79", &T::alloc_account, "661", &T::alloc_acct_id_source, "798", &T::alloc_account_type, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
