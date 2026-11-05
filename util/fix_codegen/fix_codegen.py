@@ -174,10 +174,11 @@ def load(path: str) -> Repo:
 
 
 class Gen:
-    def __init__(self, repo: Repo, ns: str, source: str = "", with_header: bool = True):
+    def __init__(self, repo: Repo, ns: str, source: str = "", with_header: bool = True, typed: bool = False):
         self.r = repo
         self.source = source
         self.with_header = with_header
+        self.typed = typed  # map Price/Qty/... to glz::fix::decimal and UTCTimestamp to utc_timestamp
         # FIX 5.0 and later run over the FIXT.1.1 session layer: 8=FIXT.1.1 on the wire, and the
         # application version travels in ApplVerID(1128). FIX 4.x puts its own version in 8.
         n = repo.name
@@ -283,7 +284,9 @@ class Gen:
         if t in INT_TYPES:
             return "int64_t"
         if t in FLOAT_TYPES:
-            return "double"
+            return "glz::fix::decimal" if self.typed else "double"
+        if t == "UTCTimestamp" and self.typed:
+            return "glz::fix::utc_timestamp"
         if t == "char":
             return "char"
         if t == "Boolean":
@@ -406,6 +409,8 @@ class Gen:
         o.append("#include <vector>")
         o.append("")
         o.append('#include "glaze/core/common.hpp"')
+        if self.typed:
+            o.append('#include "glaze/fix/types.hpp"')
         o.append("")
         o.append(f"namespace glz::fix::{self.ns}")
         o.append("{")
@@ -450,10 +455,12 @@ def main(argv=None) -> int:
     ap.add_argument("--xml", required=True, help="Orchestra repository XML, or a Repository 2010 Unified XML")
     ap.add_argument("--namespace", required=True, help="C++ namespace under glz::fix, e.g. fix44")
     ap.add_argument("--out", required=True, help="output header path")
+    ap.add_argument("--typed", action="store_true",
+                    help="use glz::fix::decimal for float-like fields and glz::fix::utc_timestamp for UTCTimestamp")
     ap.add_argument("--no-header", action="store_true",
                     help="do not flatten StandardHeader fields (49, 56, 34, 52, ...) into messages")
     a = ap.parse_args(argv)
-    text = Gen(load(a.xml), a.namespace, os.path.basename(a.xml), not a.no_header).run()
+    text = Gen(load(a.xml), a.namespace, os.path.basename(a.xml), not a.no_header, a.typed).run()
     with open(a.out, "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
     return 0

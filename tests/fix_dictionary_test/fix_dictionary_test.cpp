@@ -12,6 +12,7 @@
 #include "glaze/fix/dict/fix42.hpp"
 #include "glaze/fix/dict/fix44.hpp"
 #include "glaze/fix/dict/fixt11.hpp"
+#include "glaze/fix/dict/fixt11_typed.hpp"
 #include "glaze/fix/fix.hpp"
 #include "glaze/json.hpp"
 #include "ut/ut.hpp"
@@ -55,6 +56,13 @@ namespace
    // FIXT.1.1 session layer (used under FIX 5.x): DefaultApplVerID(1137)=9 selects FIX 5.0 SP2.
    constexpr std::string_view logon_fixt =
       "8=FIXT.1.1|9=64|35=A|49=SRV|56=CLI|34=1|52=20261105-07:30:00|98=0|108=30|1137=9|10=095|";
+
+   constexpr std::string_view fixt_hb = "8=FIXT.1.1|9=52|35=0|49=SRV|56=CLI|34=2|52=20261105-07:30:00|112=T1|10=081|";
+   constexpr std::string_view fixt_tr = "8=FIXT.1.1|9=52|35=1|49=SRV|56=CLI|34=3|52=20261105-07:30:00|112=T2|10=084|";
+   constexpr std::string_view fixt_rr = "8=FIXT.1.1|9=55|35=2|49=SRV|56=CLI|34=4|52=20261105-07:30:00|7=10|16=0|10=039|";
+   constexpr std::string_view fixt_rj = "8=FIXT.1.1|9=89|35=3|49=SRV|56=CLI|34=5|52=20261105-07:30:00|45=9|371=44|372=D|1130=9|373=5|58=bad price|10=001|";
+   constexpr std::string_view fixt_sr = "8=FIXT.1.1|9=57|35=4|49=SRV|56=CLI|34=6|52=20261105-07:30:00|123=Y|36=20|10=184|";
+   constexpr std::string_view fixt_lo = "8=FIXT.1.1|9=52|35=5|49=SRV|56=CLI|34=7|52=20261105-07:30:00|58=bye|10=239|";
 
    // Reads `msg` into T, checks the header fields, writes it back and expects the same bytes.
    template <class T>
@@ -243,6 +251,33 @@ suite session_layer = [] {
       std::string out;
       expect(not glz::write<pipe_opts>(m, out));
       expect(out.starts_with("8=FIXT.1.1|"));
+   };
+   "FIXT.1.1 session messages"_test = [] {
+      namespace t = glz::fix::fixt11;
+      expect(exact<t::Heartbeat>(fixt_hb, 2).test_req_id == "T1");
+      expect(exact<t::TestRequest>(fixt_tr, 3).test_req_id == "T2");
+      expect(exact<t::ResendRequest>(fixt_rr, 4).begin_seq_no == 10);
+      auto rj = exact<t::Reject>(fixt_rj, 5);
+      expect(rj.ref_seq_num == 9);
+      expect(rj.ref_appl_ver_id == "9");
+      expect(rj.session_reject_reason == t::SessionRejectReason::ValueIsIncorrect);
+      auto sr = exact<t::SequenceReset>(fixt_sr, 6);
+      expect(sr.gap_fill_flag == true);
+      expect(sr.new_seq_no == 20);
+      expect(exact<t::Logout>(fixt_lo, 7).text == "bye");
+   };
+   "FIXT.1.1 Logon, typed header (utc_timestamp)"_test = [] {
+      namespace t = glz::fix::fixt11_typed;
+      t::Logon m{};
+      auto ec = glz::read<pipe_opts>(m, logon_fixt);
+      expect(not ec) << ec.custom_error_message;
+      using namespace std::chrono;
+      const auto expected = sys_days{year{2026} / 11 / 5} + hours{7} + minutes{30};
+      expect(m.sending_time.time == expected);
+      expect(m.sending_time.precision == 0);
+      std::string out;
+      expect(not glz::write<pipe_opts>(m, out));
+      expect(out == logon_fixt) << out;
    };
    "FIX 4.2 Logon"_test = [] {
       auto m = exact<glz::fix::fix42::Logon>(logon42, 1);
