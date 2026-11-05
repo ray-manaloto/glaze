@@ -1,0 +1,260 @@
+# Vectors written afresh from the FIX specification (FIX 4.4 Vol. 2 message format, FIX Session
+# Layer: BeginString/BodyLength/MsgType ordering, BodyLength and CheckSum rules). Nothing here is
+# copied from another project. Used where a reference parser's licence is not permissive enough to
+# copy its data (QuickFIX family, fix8); see docs/fix/references.md.
+
+id = spec.heartbeat_ok
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+expect = ok
+note = minimal FIX.4.2 Heartbeat with correct 9 and 10
+
+id = spec.new_order_single_ok
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=111|35=D|49=BUY|56=SELL|34=2|52=20260105-12:00:00.123|11=ORD1|55=IBM|54=1|38=100|40=2|44=10.5|60=20260105-12:00:00|10=155|
+expect = ok
+note = FIX.4.4 NewOrderSingle with correct 9 and 10
+
+id = spec.fixt_logon_ok
+source = spec
+kind = validate
+msg = 8=FIXT.1.1|9=60|35=A|49=C|56=S|34=1|52=20260105-12:00:00|98=0|108=30|1137=9|10=072|
+expect = ok
+note = FIXT.1.1 Logon (BeginString FIXT.1.1, 1137 DefaultApplVerID)
+
+id = spec.repeated_tag_ok
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=82|35=V|49=A|56=B|34=3|52=20260105-12:00:00|262=R1|263=1|264=0|146=2|55=AAPL|55=MSFT|10=200|
+expect = ok
+note = repeating group entries repeat a tag (55); framing still valid
+
+id = spec.bad_checksum
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=120|
+expect = error
+note = CheckSum(10) off by one
+
+id = spec.bad_body_length_short
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=40|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+expect = error
+note = BodyLength(9) one less than actual
+
+id = spec.bad_body_length_long
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=42|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+expect = error
+note = BodyLength(9) one more than actual
+
+id = spec.body_length_non_numeric
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=4x|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+expect = error
+note = BodyLength(9) is not an integer
+
+id = spec.msgtype_not_third
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=41|49=A|35=0|56=B|34=1|52=20260105-12:00:00|10=119|
+expect = error
+note = 35 must be the third field
+
+id = spec.begin_string_not_first
+source = spec
+kind = validate
+msg = 9=41|8=FIX.4.2|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+expect = error
+note = 8 must be the first field
+
+id = spec.checksum_not_last
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|58=x|
+expect = error
+note = a field after CheckSum(10)
+
+id = spec.checksum_two_digits
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=19|
+expect = error
+note = CheckSum must be exactly three digits
+
+id = spec.missing_trailing_soh
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119
+expect = error
+note = message must end with SOH after 10=nnn
+
+id = spec.missing_checksum
+source = spec
+kind = validate
+msg = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|
+expect = error
+note = no 10 field at all
+
+id = spec.empty_input
+source = spec
+kind = validate
+msg = 
+expect = error
+note = empty message
+
+id = spec.parse_heartbeat_fields
+source = spec
+kind = parse
+msg = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+expect = ok
+fields = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+note = scanner returns fields in order including header and trailer
+
+id = spec.parse_value_with_equals
+source = spec
+kind = parse
+msg = 58=a=b|
+expect = ok
+fields = 58=a=b|
+count = 1
+note = only the first '=' splits tag from value
+
+id = spec.parse_long_tag
+source = spec
+kind = parse
+msg = 20001=x|
+expect = ok
+count = 1
+note = tags above 9999 are legal (user-defined range)
+
+id = spec.parse_missing_equals
+source = spec
+kind = parse
+msg = 8=FIX.4.2|abc|
+expect = error
+note = field without '='
+
+id = spec.parse_empty_tag
+source = spec
+kind = parse
+msg = 8=FIX.4.2|=x|
+expect = error
+note = field with empty tag
+
+id = spec.parse_alpha_tag
+source = spec
+kind = parse
+msg = 8=FIX.4.2|3a=x|
+expect = error
+note = non-numeric tag
+
+id = spec.parse_negative_tag
+source = spec
+kind = parse
+msg = -1=x|
+expect = error
+note = sign is not part of a tag
+
+id = spec.parse_leading_zero_tag
+source = spec
+kind = parse
+msg = 035=0|
+expect = error
+note = tags are positive integers without leading zeros
+
+id = spec.parse_zero_tag
+source = spec
+kind = parse
+msg = 0=x|
+expect = error
+note = tag 0 is not a valid tag
+
+id = spec.parse_unterminated
+source = spec
+kind = parse
+msg = 8=FIX.4.2|35=0
+expect = error
+note = last field missing SOH
+
+id = spec.frame_one
+source = spec
+kind = frame
+stream = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|
+frame_len = 63
+note = one complete message
+
+id = spec.frame_two
+source = spec
+kind = frame
+stream = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119|8=FIX.4.4|9=111|35=D|49=BUY|56=SELL|34=2|52=20260105-12:00:00.123|11=ORD1|55=IBM|54=1|38=100|40=2|44=10.5|60=20260105-12:00:00|10=155|
+frame_len = 63
+note = two messages back to back: length of the first
+
+id = spec.frame_trailing_partial
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=111|35=D|49=BUY|56=SELL|34=2|52=20260105-12:00:00.123|11=ORD1|55=IBM|54=1|38=100|40=2|44=10.5|60=20260105-12:00:00|10=155|8=FIX.4.2|9=41|35=0|
+frame_len = 134
+note = complete message followed by a partial one
+
+id = spec.frame_prefix_1
+source = spec
+kind = frame
+stream = 8
+frame_len = 0
+note = only the first 1 bytes of a message: incomplete
+
+id = spec.frame_prefix_2
+source = spec
+kind = frame
+stream = 8=
+frame_len = 0
+note = only the first 2 bytes of a message: incomplete
+
+id = spec.frame_prefix_10
+source = spec
+kind = frame
+stream = 8=FIX.4.2|
+frame_len = 0
+note = only the first 10 bytes of a message: incomplete
+
+id = spec.frame_prefix_56
+source = spec
+kind = frame
+stream = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|
+frame_len = 0
+note = only the first 56 bytes of a message: incomplete
+
+id = spec.frame_prefix_62
+source = spec
+kind = frame
+stream = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|10=119
+frame_len = 0
+note = only the first 62 bytes of a message: incomplete
+
+id = spec.checksum_heartbeat
+source = spec
+kind = checksum
+bytes = 8=FIX.4.2|9=41|35=0|49=A|56=B|34=1|52=20260105-12:00:00|
+value = 119
+note = sum of all bytes before 10= mod 256
+
+id = spec.checksum_empty
+source = spec
+kind = checksum
+bytes = 
+value = 0
+note = empty input sums to 0
+
+id = spec.checksum_wraps
+source = spec
+kind = checksum
+bytes = ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+value = 0
+note = 256 bytes of 0x01 wrap to 0

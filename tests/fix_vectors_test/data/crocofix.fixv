@@ -1,0 +1,245 @@
+# Test vectors ported from GaryHughes/crocofix (MIT License, Copyright (c) 2019 Gary Hughes).
+# Source: libcrocofix_tests/. crocofix uses one TEST_CASE per file with SECTIONs; the SECTION is named in each note.
+# BodyLength/CheckSum of every validate expect=ok and frame vector verified with python3.
+#
+# Not ported:
+# - message_tests.cpp "decode a message containing a data field" / "... in two pieces" and
+#   "encode a message containing a data field": RawData(89) value contains SOH, which cannot be written with |.
+# - "decode a message with a data field that has no preceeding size field", "... non numeric previous field value",
+#   "... does not have a traling field separator": depend on RawDataLength(93)/RawData(89) semantics that a plain
+#   tag=value scan does not have; under parse_fields they are well-formed, so porting them as errors would be wrong.
+# - second pieces of the split-message SECTIONs: they rely on decoder state carried over from the first piece.
+# - "format checksum ..." SECTIONs: formatting of an integer, no byte checksum is computed.
+# - session_tests.cpp "Invalid CheckSum", "Invalid BodyLength", "Missing BodyLength", "Wrong BeginString",
+#   "Missing BeginString": messages are generated at run time with live SendingTime, no literal bytes to port.
+# - field_tests.cpp, field_collection_tests.cpp, session_state_tests.cpp: no wire-format parsing.
+
+id = crocofix.parse.complete_message
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = ok
+count = 18
+fields = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+note = SECTION "Decode a complete message": 18 fields decoded
+
+id = crocofix.parse.invalid_tag
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = A=FIX.4.4
+expect = error
+note = SECTION "Invalid tag throws": non-numeric tag "A" is rejected
+
+id = crocofix.parse.admin_logon
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = 8=FIX.4.4|9=149|35=A|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = ok
+count = 18
+note = SECTION "is_admin is true for an admin message": 35=A message decodes to 18 fields
+
+id = crocofix.parse.no_msgtype
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = 8=FIX.4.4|9=149|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = ok
+count = 17
+note = SECTION "MsgType lookup throws for a message with no MsgType": message without 35 still decodes (17 fields)
+
+id = crocofix.parse.no_bodylength
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = 8=FIX.4.4|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = ok
+count = 17
+note = SECTION "encode does not add BodyLength if it is not present": message without 9 decodes (17 fields)
+
+id = crocofix.parse.exec_report_merged_field
+source = GaryHughes/crocofix:libcrocofix_tests/order_tests.cpp::Order
+kind = parse
+msg = 8=FIX.4.4|9=173|35=8|49=ACCEPTOR|56=INITIATOR|34=718|52=20200114-08:13:20.072|39=0|11=61|37=INITIATOR-ACCEPTOR-61|17=1|150=0|151=10000|55=BHP.AX|54=1|38=10000|44=20|32=0|31=0|14=0|6=0|40=2|10=021|
+expect = ok
+count = 23
+note = SECTION "key_for_message ExecutionReport": the source literal mixes | and an escaped SOH between 34 and 52; both are the separator here, giving 23 fields
+
+id = crocofix.validate.complete_message
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = ok
+note = SECTION "Decode a complete message"/"encode a message": encode recomputes 9=149 and 10=021 and matches
+
+id = crocofix.validate.no_msgtype
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|9=149|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = error
+note = SECTION "MsgType lookup throws for a message with no MsgType": 35 absent from third position
+
+id = crocofix.validate.no_bodylength
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = error
+note = SECTION "encode does not add BodyLength if it is not present": 9 absent
+
+id = crocofix.validate.no_checksum
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|
+expect = error
+note = SECTION "encode does not add CheckSum if it is not present": 10 absent
+
+id = crocofix.validate.admin_logon_stale_checksum
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|9=149|35=A|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = error
+note = SECTION "is_admin is true for an admin message": 35=D edited to 35=A without updating 10=021 (actual 018); crocofix decode does not verify CheckSum
+
+id = crocofix.validate.unsupported_msgtype_stale_checksum
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIX.4.4|9=149|35=S|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = error
+note = SECTION "MessageWithUnsupportedMsgTypeIgnored": 35=S edited in without updating 10=021 (actual 036)
+
+id = crocofix.validate.exec_report_new
+source = GaryHughes/crocofix:libcrocofix_tests/order_tests.cpp::Order
+kind = validate
+msg = 8=FIX.4.4|9=173|35=8|49=ACCEPTOR|56=INITIATOR|34=718|52=20200114-08:13:20.072|39=0|11=61|37=INITIATOR-ACCEPTOR-61|17=1|150=0|151=10000|55=BHP.AX|54=1|38=10000|44=20|32=0|31=0|14=0|6=0|40=2|10=021|
+expect = ok
+note = SECTION "NewOrderSingleAndExecutionReports": message decoded complete with consumed == length
+
+id = crocofix.validate.exec_report_partial
+source = GaryHughes/crocofix:libcrocofix_tests/order_tests.cpp::Order
+kind = validate
+msg = 8=FIX.4.4|9=187|35=8|49=ACCEPTOR|56=INITIATOR|34=719|52=20200114-08:13:20.072|39=1|11=61|37=INITIATOR-ACCEPTOR-61|17=2|150=1|151=893|55=BHP.AX|54=1|38=10000|44=20|32=9107|31=20|14=9107|6=20|30=AUTO|40=2|10=081|
+expect = ok
+note = SECTION "NewOrderSingleAndExecutionReports": message decoded complete with consumed == length
+
+id = crocofix.validate.exec_report_filled
+source = GaryHughes/crocofix:libcrocofix_tests/order_tests.cpp::Order
+kind = validate
+msg = 8=FIX.4.4|9=185|35=8|49=ACCEPTOR|56=INITIATOR|34=720|52=20200114-08:13:20.072|39=2|11=61|37=INITIATOR-ACCEPTOR-61|17=3|150=2|151=0|55=BHP.AX|54=1|38=10000|44=20|32=893|31=20|14=10000|6=20|30=AUTO|40=2|10=201|
+expect = ok
+note = SECTION "NewOrderSingleAndExecutionReports": message decoded complete with consumed == length
+
+id = crocofix.validate.order_cancel_request
+source = GaryHughes/crocofix:libcrocofix_tests/order_tests.cpp::Order
+kind = validate
+msg = 8=FIX.4.4|9=149|35=F|49=INITIATOR|56=ACCEPTOR|34=2792|52=20200114-09:48:33.082|41=62|37=INITIATOR-ACCEPTOR-62|11=63|55=BHP.AX|54=1|60=20200114-09:48:28.540|38=10000|10=216|
+expect = ok
+note = SECTION "key_for_message OrderCancelRequest": message decoded complete with consumed == length
+
+id = crocofix.validate.order_cancel_replace_request
+source = GaryHughes/crocofix:libcrocofix_tests/order_tests.cpp::Order
+kind = validate
+msg = 8=FIX.4.4|9=180|35=G|49=INITIATOR|56=ACCEPTOR|34=2799|52=20200114-09:50:03.498|37=INITIATOR-ACCEPTOR-66|41=66|11=67|70=64|100=AUTO|55=BHP.AX|54=1|60=20200114-09:49:57.988|38=20000|40=2|44=20|59=1|10=204|
+expect = ok
+note = SECTION "key_for_message OrderCancelReplaceRequest": message decoded complete with consumed == length
+
+id = crocofix.validate.unknown_exec_report
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIX.4.4|9=164|35=8|49=ACCEPTOR|56=INITIATOR|34=232|52=20190929-04:51:06.981|39=0|11=51|37=INITIATOR-ACCEPTOR-51|17=2|150=0|151=10000|55=WTF|54=1|38=10000|32=0|31=0|14=0|6=0|40=1|10=115|
+expect = ok
+note = SECTION "UnknownExecutionReport": message decoded complete with consumed == length
+
+id = crocofix.validate.cancel_replace_unknown_order
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIX.4.4|9=178|35=G|49=INITIATOR|56=ACCEPTOR|34=2536|52=20191117-01:01:47.010|37=INITIATOR-ACCEPTOR-56|41=56|11=57|70=55|100=AUTO|55=WTF|54=1|60=20191117-01:01:38.158|38=100000|40=2|44=11|59=0|10=035|
+expect = ok
+note = SECTION "OrderCancelReplaceRequestForUnknownOrder": message decoded complete with consumed == length
+
+id = crocofix.validate.cancel_request_unknown_order
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIX.4.4|9=147|35=F|49=INITIATOR|56=ACCEPTOR|34=2544|52=20191117-01:09:11.302|41=58|37=INITIATOR-ACCEPTOR-58|11=59|55=WTF|54=1|60=20191117-01:09:09.139|38=100000|10=092|
+expect = ok
+note = SECTION "OrderCancelRequestForUnknownOrder": message decoded complete with consumed == length
+
+id = crocofix.validate.cancel_reject_unknown_order
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIX.4.4|9=127|35=9|49=ACCEPTOR|56=INITIATOR|34=511|52=20191117-01:11:06.578|37=INITIATOR-ACCEPTOR-58|39=8|41=58|434=1|11=59|58=Unknown order|10=208|
+expect = ok
+note = SECTION "OrderCancelRejectForUnknownOrder": message decoded complete with consumed == length
+
+id = crocofix.validate.new_order_single_fix44
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIX.4.4|9=140|35=D|49=INITIATOR|56=ACCEPTOR|34=2283|52=20190929-04:51:06.973|11=51|70=50|100=AUTO|55=WTF|54=1|60=20190929-04:35:33.562|38=10000|40=1|59=1|10=127|
+expect = ok
+note = SECTION "NewOrderSingleAcknowledged": message decoded complete with consumed == length
+
+id = crocofix.validate.fixt_new_order_single
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIXT.1.1|9=148|35=D|49=INITIATOR|56=ACCEPTOR|34=24|52=20200119-04:43:20.679|11=8|70=6|100=AUTO|55=WTF.AX|54=1|60=20200119-04:43:18.221|38=20000|40=2|44=11.56|59=1|10=081|
+expect = ok
+note = SECTION "OrderCancelRequestForKnownOrderAccepted": message decoded complete with consumed == length
+
+id = crocofix.validate.fixt_cancel_request
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIXT.1.1|9=153|35=F|49=INITIATOR|56=ACCEPTOR|34=26|52=20200119-04:43:43.562|41=8|37=INITIATOR-ACCEPTOR-8|11=9|55=WTF.AX|54=1|60=20200119-04:43:42.213|38=20000|100=AUTO|10=056|
+expect = ok
+note = SECTION "OrderCancelRequestForKnownOrderAccepted": message decoded complete with consumed == length
+
+id = crocofix.validate.fixt_cancel_reject
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIXT.1.1|9=128|35=9|49=ACCEPTOR|56=INITIATOR|34=41|52=20200119-04:46:09.609|37=INITIATOR-ACCEPTOR-10|39=8|41=10|434=1|11=11|58=Not telling you|10=092|
+expect = ok
+note = SECTION "OrderCancelRequestForKnownOrderRejected": message decoded complete with consumed == length
+
+id = crocofix.validate.fixt_cancel_replace
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIXT.1.1|9=189|35=G|49=INITIATOR|56=ACCEPTOR|34=50|52=20200119-04:52:29.864|37=INITIATOR-ACCEPTOR-14|41=14|11=15|70=10|100=AUTO|55=WTF.AX|54=1|60=20200119-04:52:19.840|38=35000|40=2|44=12.10|59=1|58=Blah|10=080|
+expect = ok
+note = SECTION "OrderCancelReplaceRequestForKnownOrderRejected": message decoded complete with consumed == length
+
+id = crocofix.validate.fixt_exec_report_replace_rejected
+source = GaryHughes/crocofix:libcrocofix_tests/order_book_tests.cpp::OrderBook
+kind = validate
+msg = 8=FIXT.1.1|9=182|35=8|49=ACCEPTOR|56=INITIATOR|34=59|52=20200119-04:52:29.874|39=E|11=15|37=INITIATOR-ACCEPTOR-14|17=10|150=E|151=20000|41=14|55=WTF.AX|54=1|38=20000|44=11.56|32=0|31=0|14=0|6=0|40=2|10=089|
+expect = ok
+note = SECTION "OrderCancelReplaceRequestForKnownOrderRejected": message decoded complete with consumed == length
+
+id = crocofix.frame.complete_message
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = frame
+stream = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+frame_len = 172
+note = SECTION "Decode a complete message": complete, consumed == text length
+
+id = crocofix.frame.split_on_field_boundary
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = frame
+stream = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|
+frame_len = 0
+note = SECTION "Decode a complete message in two pieces aligned on a field boundary": first piece incomplete
+
+id = crocofix.frame.split_mid_field
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = frame
+stream = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=B
+frame_len = 0
+note = SECTION "Decode a complete message in two pieces not aligned on a field boundary": first piece ends in "55=B", incomplete
+
+id = crocofix.frame.no_checksum
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = frame
+stream = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|
+frame_len = 0
+note = SECTION "encode does not add CheckSum if it is not present": no 10 so decode is incomplete
+
+id = crocofix.checksum.complete_message
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = checksum
+bytes = 8=FIX.4.4|9=149|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|
+value = 21
+note = SECTION "encode a message": encode recomputes CheckSum 021 over the NewOrderSingle
