@@ -14,7 +14,9 @@
    flattened StandardHeader; more quickfix, hffix/fixpp, vectors and fuzz updates) conflicted only in
    `tests/fix_test/fix_test.cpp`, where `fix/core` had fixed the same `raw_data_roundtrip` literal bug
    (below) its own way; `fix/core`'s version was taken. A fourth round at about 07:38 UTC (dictionary,
-   quickfix, hffix/fixpp, more-parsers) merged without conflicts.
+   quickfix, hffix/fixpp, more-parsers) merged without conflicts, and so did the later small
+   updates; each round was built and run with both compilers before it was pushed. Every branch's
+   latest commit as of the final push is merged (checked with `git rev-list HEAD..origin/fix/<b>`).
 4. Configured once per compiler (Ninja, Debug, `-Dglaze_DEVELOPER_MODE=ON`) and built only the
    seven FIX test targets. GCC builds with `-fno-exceptions -fno-rtti -Werror -std=gnu++23`.
 
