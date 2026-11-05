@@ -66,12 +66,13 @@ principle, carry both mappings. That is future work; nothing SBE-specific is imp
 
 ## Current limits
 
-* Raw-data fields (length-prefixed values that may contain SOH, e.g. 95/96, 212/213) are not
-  supported.
-* Timestamps, dates and decimals are text or `double`; there is no fixed-point decimal type and
-  no chrono conversion yet.
+* Raw-data fields use a fixed table of the standard length/data pairs; custom pairs are not
+  configurable.
+* UTCTimestamp and an exact decimal are typed. UTCDateOnly, UTCTimeOnly, LocalMktDate and
+  MonthYear are still text.
 * Header and trailer fields other than 8/9/35/10 (49, 56, 34, 52, ...) are mapped as ordinary
   members; there is no separate standard-header struct.
 * A message is held whole in memory; `frame` finds message boundaries in a stream but the codec
   does not read incrementally.
-* `parse_fields` allocates a `std::vector<field>`; the values inside it are views.
+* `parse_fields` allocates a `std::vector<field>`. `field_cursor` / `for_each_field` (used by
+  the reader) do not.
