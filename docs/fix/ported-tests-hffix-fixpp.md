@@ -29,8 +29,12 @@ FIX libraries. The cases are rewritten for the shared contract in `include/glaze
   - `fix42.log` has 330 lines of FIX.4.2. Its 9 and 10 values do not match the content, so it is
     split on newlines and checked after `repair()`.
 - **Struct mapping.** These tests use `glz::read` and `glz::write` with `glz::fix_opts` and cover
-  groups, optional group fields, strict unknown tags and float output. They are built only when
-  `GLZ_FIX_HAS_STRUCT_MAPPING` is defined. Otherwise each one prints a `SKIP <name>: <reason>` line.
+  groups, nested groups, optional group fields, strict unknown tags (`error_on_unknown_tags`) and
+  float output. They also round-trip every sample message type through write then read. The test
+  CMake defines `GLZ_FIX_HAS_STRUCT_MAPPING` now that fix/core provides the codec.
+- **Malformed input.** Every single-byte change and every truncation of a valid message must be
+  rejected. The group tests cover bad counts, entries without their delimiter, and bad number,
+  Boolean and char values.
 
 ## Open questions for `fix/core`
 
@@ -44,6 +48,6 @@ FIX libraries. The cases are rewritten for the shared contract in `include/glaze
 
 ## Known core gaps (guarded by `GLZ_FIX_KNOWN_FAILURES`)
 
-- An unknown tag inside a group entry ends the group, even with `error_on_unknown_keys = false`
-  (fixpp snapshot frame, tag 9063).
+- An unknown tag inside a group entry ends the group, although unknown top-level tags are skipped
+  by default (fixpp snapshot frame, tag 9063).
 - Floats are written with an exponent (`1e+06`). The FIX float type has no exponent.

@@ -12,24 +12,44 @@
   - custom separators
   - repeating groups, including nested and empty groups and unknown tags
   - field wire forms
-  - struct mapping through `glz::read` and `glz::write<fix_opts>`
-  - all copied sample files
+  - struct mapping through `glz::read` and `glz::write<fix_opts>`, including write-then-read round trips
+  - more message types: Logon, Heartbeat (FIX.4.2 and FIX.4.4), NewOrderSingle, ExecutionReport,
+    MarketDataSnapshot and IncrementalRefresh, Quote, ResendRequest, and the two-character type `BF`
+  - nested groups (NoUnderlyings > NoUnderlyingSecurityAltID) read and written
+  - malformed input: every single-byte change and every truncation of a valid message, header and
+    trailer errors, group count too small or too large, a group entry without its delimiter, bad
+    number, Boolean and char values, MsgType mismatch, strict vs default unknown tags
+  - all copied sample files, read into structs: fix.4.1.set.1 (ExecutionReports), fix.5.0.set.2
+    (FIXT.1.1 orders, logons, ResendRequest), fix42.log (330 Quotes)
+- Each target has two sources: `fix_<lib>_test.cpp` (the first port) and `fix_<lib>_more.cpp`
+  (the cases added later in the session).
+- `tests/fix_fixpp_test/data/fix42.log` is force-added, because the repository's `.gitignore` excludes `*.log`.
 - `fix/core` was merged at 07:15 UTC, and the local stub header was replaced with core's header.
   Struct-mapping tests are on by default: the test CMake defines `GLZ_FIX_HAS_STRUCT_MAPPING`.
 - Results against fix/core, built with g++ 13 using `-std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -pedantic -Werror`:
-  - hffix: 24 tests and 162 asserts pass.
-  - fixpp: 24 tests pass.
+  - hffix: 44 tests pass (24 + 20).
+  - fixpp: 43 tests pass (24 + 19).
   - Both targets are also clean under `-fsanitize=address,undefined`.
 - Design note: `docs/fix/ported-tests-hffix-fixpp.md`.
 
 ## Known core gaps found by these tests (skipped unless built with `-DGLZ_FIX_KNOWN_FAILURES`)
 
 - fixpp `should_visit_snapshot_frame_struct`: an unknown tag (9063) inside a group entry ends the
-  group, even with `error_on_unknown_keys = false`. The read then fails with "repeating group count
+  group, although core skips unknown tags at the top level by default. The read then fails with "repeating group count
   does not match its entries". fixpp's non-strict mode accepts it. A variant with the custom tags
   removed passes.
 - fixpp `should_write_float_field`: `1000000.0` is written as `1e+06`, but the FIX float type has
   no exponent. fixpp expects `1000000`.
+
+## Core behaviour the tests pin down (not bugs, but worth knowing)
+
+- Strict mode is `fix_opts::error_on_unknown_tags = true`, a core extension. glaze's own
+  `error_on_unknown_keys` has no effect on FIX reads. The first port's strict-mode test passed only
+  because of a MsgType mismatch. It now uses `35=A` and expects `unknown_key`.
+- With default options, a group whose count is too small (268=1 followed by two entries) is
+  accepted: the extra entry's tags are skipped as unknown top-level tags. Only strict mode rejects it.
+- A repeated tag inside a group entry that is not the delimiter overwrites the earlier value. It
+  does not start a new entry.
 
 ## Not done / skipped (printed as `SKIP name: reason` when the tests run)
 
@@ -74,6 +94,13 @@
 | should_compute_proper_length_and_checksum, field_wire_forms, should_write_repeating_groups (struct), should_write_float_field (struct) | Abc-Arbitrage/fixpp | tests/writer_test.cc | same / should_write_{bool,char,float,utc_timestamp,int}_field | MIT |
 | fix42_log, fix42_log_streaming | Abc-Arbitrage/fixpp | tests/data/fix42.log (used by bench_test.cc) | sample data | MIT |
 | missing_final_separator_is_incomplete, malformed_fields_rejected, group_count_mismatch_rejected | written for this port | - | - | glaze MIT |
+| fix_hffix_more.cpp: fix_4_1_set_1_message_types, fix_4_1_execution_reports, msg_type_mismatch, fix_5_0_set_2_*, fixt_orders_read_and_roundtrip, fixt_logons, fixt_resend_request | jamesdbrock/hffix | test/data/fix.4.1.set.1, test/data/fix.5.0.set.2 | sample data | BSD-style |
+| fix_hffix_more.cpp: writer01_*_roundtrip, writer01_fix_reads_into_struct, stream_of_written_messages, market_order_without_price | jamesdbrock/hffix | test/src/writer01.cpp, test/expected/writer01.fix | example | BSD-style |
+| fix_hffix_more.cpp: single_byte_corruption_detected, every_truncation_detected, header_errors, frame_garbage, bad_number_in_struct, write_rejects_delimiter_in_value, value_may_contain_equals | written for this port (hffix reader is_complete / is_valid semantics) | - | - | glaze MIT |
+| fix_fixpp_more.cpp: nested_groups_struct, nested_groups_roundtrip, incremental_refresh_*, logon_struct, multi_char_msg_type | Abc-Arbitrage/fixpp | tests/visitor_test.cc, tests/writer_test.cc | should_visit_nested_repeating_groups, should_write_nested_repeating_groups, should_visit_incremental_refresh_frame, should_visit_logon_frame, should_visit_message_with_multiple_chars_message_type | MIT |
+| fix_fixpp_more.cpp: heartbeat_42_and_44 | Abc-Arbitrage/fixpp | tests/writer_test.cc | should_write_heartbeat_message_42 / _44 | MIT |
+| fix_fixpp_more.cpp: fix42_log_quotes | Abc-Arbitrage/fixpp | tests/data/fix42.log | sample data | MIT |
+| fix_fixpp_more.cpp: group_count_*, group_entry_without_delimiter, bad_boolean, bad_char_length, msg_type_mismatch, unknown_tag_strict_vs_lenient, repeated_tag_overwrites, fields_in_any_order, empty_group_omitted_on_write | written for this port (fixpp strict/non-strict visitor semantics) | - | - | glaze MIT |
 
 The reference repositories were cloned with `git clone --depth 1` into `/tmp/refs/`. They are not committed.
 
@@ -84,3 +111,5 @@ The reference repositories were cloned with `git clone --depth 1` into `/tmp/ref
 2. Get core's answers to the open questions in `docs/fix/ported-tests-hffix-fixpp.md` (raw data
    fields, BeginString check, chrono) and turn the matching SKIPs into tests.
 3. Optionally add `fix.5.0.set.1` (2 MB) through a fetch step instead of committing it.
+4. Ask core whether a too-small group count should be an error with default options. The tests
+   currently pin the lenient behaviour (`group_count_too_small`).
