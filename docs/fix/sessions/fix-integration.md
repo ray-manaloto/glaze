@@ -53,7 +53,7 @@ Workaround used: `apt-get install clang-19` (19.1.1 from Ubuntu noble), configur
 `clang-scan-deps-19`, so CMake's module scanning fails without that option). The Clang build uses
 the test project's `-fno-exceptions -fno-rtti -Werror` and ASan/UBSan.
 
-## Results (state at 07:39 UTC, after five merge rounds)
+## Results (state at 07:41 UTC, after six merge rounds)
 
 `ctest -R '^fix_'`: GCC 7/7 pass, Clang 19 7/7 pass.
 
@@ -64,10 +64,10 @@ gaps (not run, not counted in "run").
 | Test target          | GCC 13.3 run | pass | fail | skipped | Clang 19.1 run | pass | fail | skipped |
 |----------------------|-------------:|-----:|-----:|--------:|---------------:|-----:|-----:|--------:|
 | fix_test             | 32 | 32 | 0 | 0 | 32 | 32 | 0 | 0 |
-| fix_dictionary_test  | 24 | 24 | 0 | 0 | 24 | 24 | 0 | 0 |
+| fix_dictionary_test  | 26 | 26 | 0 | 0 | 26 | 26 | 0 | 0 |
 | fix_hffix_test       | 50 | 50 | 0 | 5 | 50 | 50 | 0 | 5 |
 | fix_fixpp_test       | 51 | 51 | 0 | 6 | 51 | 51 | 0 | 6 |
-| fix_quickfix_test    | 163 | 163 | 0 | 20 | 163 | 163 | 0 | 20 |
+| fix_quickfix_test    | 174 | 174 | 0 | 15 | 174 | 174 | 0 | 15 |
 | fix_vectors_test     | 373 | 373 | 0 | 0 | 373 | 373 | 0 | 0 |
 | fix_property_test    | 35 | 35 | 0 | 0 | 35 | 35 | 0 | 0 |
 | Clang 18.1.3         | —   | —   | — | —  | does not compile (see above) | | | |
