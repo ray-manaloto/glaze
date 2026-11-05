@@ -67,3 +67,4 @@ pr.md
 /tmp/
 tmp/
 !tests/fix_fixpp_test/data/*.log
+!tests/fix_suite/fixpp/imported/data/*.log

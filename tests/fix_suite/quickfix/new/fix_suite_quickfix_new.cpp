@@ -413,6 +413,11 @@ suite quickfix_messages = [] {
       expect(l.heart_bt_int == 30);
       expect(l.encrypt_method == 0);
       expect(!l.reset_seq_num.has_value());
+      // Writing it back uses the FIX.4.2 envelope from meta<Logon>::fix_begin_string
+      std::string out{};
+      expect(!glz::write<glz::fix_opts{}>(l, out));
+      expect(out.starts_with("8=FIX.4.2\x01")) << out;
+      expect(!glz::fix::validate(out));
    };
 
    // MessagesTestCase.cpp / setString: MsgType mismatch is rejected (35=A read as Heartbeat)
