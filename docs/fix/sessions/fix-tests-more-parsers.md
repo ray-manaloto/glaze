@@ -25,9 +25,8 @@ Session 4 of 6. Goal: port parsing test vectors from more open-source FIX tag=va
   | `spec.fixv` | 36 | written afresh from the FIX specification |
 
 - `data/SOURCES.md`: one row per vector with its repository, file, test name and what it checks.
-  It is generated from the `.fixv` files; the generator was a throwaway script, so after editing a
-  vector, either update the row by hand or rewrite the short script (it reads `id`, `kind`,
-  `expect`/`frame_len`/`value`, `source`, `note`).
+  It is generated from the `.fixv` files by `tests/fix_vectors_test/tools/gen_sources.py`; rerun it
+  after editing any vector (`python3 -I tests/fix_vectors_test/tools/gen_sources.py tests/fix_vectors_test/data`).
 - `data/licenses/`: the upstream licence text for every copied source, with the copyright line.
   None of the Apache-2.0 projects has a NOTICE file.
 - `docs/fix/references.md`: one section per parser (licence, test inventory, what was ported),
