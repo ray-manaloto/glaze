@@ -89,10 +89,13 @@ validates. Field values (order IDs, symbols, prices) are made up.
 * `cmake --preset gcc-debug && cmake --build build/debug-gcc --target fix_dictionary_test`
   (needs CMake ≥ 3.31; `pip install --user cmake` was used here), then run
   `build/debug-gcc/tests/fix_dictionary_test/fix_dictionary_test`.
-* FIX 5.0 SP2 scratch check: passed, both with the stub and again after merging `fix/core` (GCC 13, `-Werror`, about 2m20s to compile).
-  Input `8=FIXT.1.1|...|35=D|11=SP2-1|453=1|448=DESK|447=D|452=3|55=VOD.L|54=2|...` was read,
-  written and read back, and compared equal. The output begins `8=FIX.5.0SP2`. See "Not done"
-  about FIXT.
+* FIX 5.0 SP2 scratch check (not committed: the header is 5.6 MB and takes about 2.5 min to
+  compile). It was re-run at 07:36 UTC against `fix/core` with the header flattening and FIXT
+  changes, and passed (GCC 13, `-Werror`).
+  `8=FIXT.1.1|9=92|35=D|1128=9|49=SRV|56=CLI|34=9|52=20261105-07:30:00|11=SP2-1|54=1|60=...|40=1|10=198|`
+  is read into `fix50sp2::NewOrderSingle`, header fields included, and written back byte for
+  byte. A message built from scratch, with `appl_ver_id = fix50sp2::appl_ver_id`, gives the same
+  bytes.
 
 ## Next steps
 
