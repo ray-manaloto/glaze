@@ -10,11 +10,13 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `artio.fixv` | [real-logic/artio](https://github.com/real-logic/artio) | Apache-2.0 (no NOTICE file upstream) | `licenses/artio-LICENSE` | 23 |
 | `artio_more.fixv` | [real-logic/artio](https://github.com/real-logic/artio) | Apache-2.0 (no NOTICE file upstream) | `licenses/artio-LICENSE` | 25 |
 | `crocofix.fixv` | [GaryHughes/crocofix](https://github.com/GaryHughes/crocofix) | MIT | `licenses/crocofix-LICENSE.txt` | 32 |
+| `crocofix_raw.fixv` | [GaryHughes/crocofix](https://github.com/GaryHughes/crocofix) | MIT | `licenses/crocofix-LICENSE.txt` | 9 |
 | `fefix.fixv` | [ferrumfix/ferrumfix](https://github.com/ferrumfix/ferrumfix) | MIT OR Apache-2.0 (used under Apache-2.0) | `licenses/fefix-LICENSE.txt` | 15 |
 | `fefix_crate.fixv` | [fefix crate (crates.io)](https://crates.io/crates/fefix) | MIT OR Apache-2.0 (used under Apache-2.0) | `licenses/fefix-LICENSE.txt` | 66 |
 | `philadelphia.fixv` | [paritytrading/philadelphia](https://github.com/paritytrading/philadelphia) | Apache-2.0 (no NOTICE file upstream) | `licenses/philadelphia-LICENSE.txt` | 30 |
 | `philadelphia_more.fixv` | [paritytrading/philadelphia](https://github.com/paritytrading/philadelphia) | Apache-2.0 (no NOTICE file upstream) | `licenses/philadelphia-LICENSE.txt` | 23 |
 | `simplefix.fixv` | [da4089/simplefix](https://github.com/da4089/simplefix) | MIT | `licenses/simplefix-LICENSE` | 31 |
+| `simplefix_raw.fixv` | [da4089/simplefix](https://github.com/da4089/simplefix) | MIT | `licenses/simplefix-LICENSE` | 4 |
 | `spec.fixv` | written afresh (FIX 4.4 Vol. 2 / FIX Session Layer) | part of this repository (MIT) | - | 36 |
 | `spec_more.fixv` | written afresh (FIX 4.4 Vol. 2 / FIX Session Layer) | part of this repository (MIT) | - | 78 |
 
@@ -112,6 +114,20 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `crocofix.frame.split_mid_field` | frame | len 0 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "Decode a complete message in two pieces not aligned on a field boundary": first piece ends in "55=B", incomplete |
 | `crocofix.frame.no_checksum` | frame | len 0 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "encode does not add CheckSum if it is not present": no 10 so decode is incomplete |
 | `crocofix.checksum.complete_message` | checksum | 21 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "encode a message": encode recomputes CheckSum 021 over the NewOrderSingle |
+
+## crocofix_raw.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `crocofix.raw.data_field_parse` | parse | ok | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "decode a message containing a data field": Signature(89) of 20 bytes with two SOH inside |
+| `crocofix.raw.data_field_validate` | validate | error | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | same; upstream 9=167 is wrong (body is 179 bytes) and crocofix does not check it |
+| `crocofix.raw.data_field_fixed_validate` | validate | ok | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | same message with 9 and 10 recomputed (9=179); written for glaze |
+| `crocofix.raw.data_field_fixed_frame` | frame | len 202 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | corrected message framed, SOH inside 89 does not end it |
+| `crocofix.raw.data_field_first_piece_frame` | frame | len 0 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "decode a message containing a data field in two pieces": first piece ends inside the data |
+| `crocofix.raw.encode_data_field_validate` | validate | error | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "encode a message containing a data field": correct 9 and 10, but no MsgType(35), so glz::fix::validate rejects it |
+| `crocofix.raw.encode_data_field_checksum` | checksum | 119 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | same message, CheckSum 119 |
+| `crocofix.raw.data_field_no_length_parse` | parse | ok | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "data field that has no preceeding size field": crocofix rejects it; a plain scanner reads 89=123 as an ordinary field. Ported as the scanner outcome |
+| `crocofix.raw.data_field_no_trailing_soh_parse` | parse | error | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "data field that does not have a traling field separator": 93=3 then 89=AAA is not followed by SOH |
 
 ## fefix.fixv
 
@@ -302,6 +318,15 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `simplefix.checksum_heartbeat_44` | checksum | 163 | `da4089/simplefix:test/test_message.py::test_set_session_version` | expected 10=163 from encode() |
 | `simplefix.checksum_cooked` | checksum | 48 | `da4089/simplefix:test/test_message.py::test_cooked_checksum` | expected 10=048 from encode() (two-digit value, zero-padded on the wire) |
 | `simplefix.checksum_heartbeat_42` | checksum | 161 | `da4089/simplefix:test/test_parser.py::test_parse_partial_string` | 10=161 in the reassembled message |
+
+## simplefix_raw.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `simplefix.raw_data_parse` | parse | ok | `da4089/simplefix:test/test_parser.py::test_raw_data` | RawData(96) holds an SOH; RawDataLength(95)=8 tells the scanner to take 8 bytes |
+| `simplefix.raw_data_validate` | validate | ok | `da4089/simplefix:test/test_parser.py::test_raw_data` | same message with 9 and 10 computed for SOH; BodyLength counts the raw bytes |
+| `simplefix.raw_data_frame` | frame | len 62 | `da4089/simplefix:test/test_parser.py::test_raw_data` | framing trusts 9, so the SOH inside 96 does not end the message early |
+| `simplefix.raw_data_all_soh_parse` | parse | ok | `da4089/simplefix:test/test_parser.py::test_raw_data` | variant: raw value made only of SOH bytes (4 of them); written for glaze, not in simplefix |
 
 ## spec.fixv
 
