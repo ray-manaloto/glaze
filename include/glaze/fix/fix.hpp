@@ -7,4 +7,5 @@
 
 #include "glaze/fix/opts.hpp"
 #include "glaze/fix/scan.hpp"
+#include "glaze/fix/types.hpp"
 #include "glaze/fix/codec.hpp"

@@ -114,6 +114,38 @@ struct glz::meta<ExecView>
    static constexpr auto value = glz::object("37", &T::order_id, "39", &T::ord_status, "150", &T::exec_type);
 };
 
+// Raw-data fields: 95 RawDataLength announces the byte count of 96 RawData, which may hold SOH.
+struct RawNote
+{
+   std::string headline{};
+   std::string raw{}; // 96; its length tag 95 is written and consumed automatically
+   std::vector<Party> parties{};
+};
+
+template <>
+struct glz::meta<RawNote>
+{
+   using T = RawNote;
+   static constexpr auto fix_msg_type = "B";
+   static constexpr auto value = glz::object("148", &T::headline, "96", &T::raw, "453", &T::parties);
+};
+
+// Typed values: UTCTimestamp and exact decimals.
+struct Quote
+{
+   glz::fix::utc_timestamp sending_time{};
+   glz::fix::decimal bid_px{};
+   std::optional<glz::fix::decimal> offer_px{};
+};
+
+template <>
+struct glz::meta<Quote>
+{
+   using T = Quote;
+   static constexpr auto fix_msg_type = "S";
+   static constexpr auto value = glz::object("52", &T::sending_time, "132", &T::bid_px, "133", &T::offer_px);
+};
+
 static constexpr glz::fix_opts pipe = glz::fix::pipe_opts;
 
 // Builds a pipe-delimited message with correct 9 and 10 around "35=...|body".
@@ -361,6 +393,130 @@ suite struct_mapping = [] {
          Multileg r{};
          expect(bool(glz::read<pipe>(r, bad))) << i; // the checksum catches every single-byte change
       }
+   };
+   "raw_data_scanner"_test = [] {
+      // 96 holds the delimiter and an '=' ; 95 says it is 7 bytes long
+      auto r = glz::fix::parse_fields("35=B|95=7|96=a|b=c|d|58=x|", '|');
+      expect(r.has_value());
+      expect(r->size() == 4u);
+      expect((*r)[2].tag == 96u && (*r)[2].value == "a|b=c|d");
+      expect((*r)[3].tag == 58u);
+      expect(glz::fix::raw_data_tag_for(95) == 96u && glz::fix::raw_length_tag_for(96) == 95u);
+      expect(glz::fix::raw_data_tag_for(212) == 213u && glz::fix::raw_data_tag_for(55) == 0u);
+      // length disagrees with the data: byte 7 after "96=" is not the delimiter
+      expect(!glz::fix::parse_fields("95=3|96=a|b=c|", '|').has_value());
+      // length runs past the end
+      expect(!glz::fix::parse_fields("95=30|96=abc|", '|').has_value());
+      // length is not a number
+      expect(!glz::fix::parse_fields("95=x|96=abc|", '|').has_value());
+      // a length field not followed by its data field is an ordinary field
+      r = glz::fix::parse_fields("95=3|58=abc|", '|');
+      expect(r.has_value() && r->size() == 2u);
+   };
+   "raw_data_validate_and_frame"_test = [] {
+      const auto m = make_msg("FIX.4.4", "35=B|95=5|96=1|2|3|");
+      expect(!glz::fix::validate(m, '|')) << m;
+      expect(glz::fix::frame(m + "8=FIX", '|') == m.size());
+   };
+   "raw_data_roundtrip"_test = [] {
+      RawNote n{"News", std::string("bin\x01ary|with=delims\0end", 26), {{"P", 'D', 1}}};
+      std::string buf;
+      expect(!glz::write<pipe>(n, buf));
+      expect(buf.find("|95=26|96=bin") != std::string::npos) << buf;
+      expect(!glz::fix::validate(buf, '|'));
+      RawNote r{};
+      auto ec = glz::read<pipe>(r, buf);
+      expect(!ec) << glz::format_error(ec, buf);
+      expect(r.raw == n.raw);
+      expect(r.headline == "News" && r.parties.size() == 1u);
+      // also with the real SOH delimiter
+      buf.clear();
+      expect(!glz::write<glz::fix_opts{}>(n, buf));
+      RawNote r2{};
+      expect(!glz::read<glz::fix_opts{}>(r2, buf));
+      expect(r2.raw == n.raw);
+      // a strict reader accepts the automatic length field
+      static constexpr glz::fix_opts strict{{}, glz::FIX, '|', true, true, true};
+      RawNote r3{};
+      expect(!glz::read<strict>(r3, make_msg("FIX.4.4", "35=B|95=3|96=a|b|")));
+      expect(r3.raw == "a|b");
+   };
+   "utc_timestamp"_test = [] {
+      using namespace std::chrono;
+      glz::fix::utc_timestamp t{};
+      expect(glz::fix::parse_utc_timestamp("20261105-07:30:59.123456789", t));
+      expect(t.precision == 9);
+      const auto day = sys_days{year{2026} / November / 5};
+      expect(t.time == day + 7h + 30min + 59s + 123456789ns);
+      std::string out;
+      glz::fix::append_utc_timestamp(out, t);
+      expect(out == "20261105-07:30:59.123456789") << out;
+      t.precision = 3;
+      out.clear();
+      glz::fix::append_utc_timestamp(out, t);
+      expect(out == "20261105-07:30:59.123") << out; // truncated, not rounded
+      t.precision = 0;
+      out.clear();
+      glz::fix::append_utc_timestamp(out, t);
+      expect(out == "20261105-07:30:59");
+      expect(glz::fix::parse_utc_timestamp("20240229-00:00:00", t) && t.precision == 0); // leap day
+      expect(glz::fix::parse_utc_timestamp("19691231-23:59:59.5", t) && t.precision == 1); // before epoch
+      out.clear();
+      glz::fix::append_utc_timestamp(out, t);
+      expect(out == "19691231-23:59:59.5") << out;
+      expect(!glz::fix::parse_utc_timestamp("20230229-00:00:00", t)); // not a leap year
+      expect(!glz::fix::parse_utc_timestamp("20261305-00:00:00", t));
+      expect(!glz::fix::parse_utc_timestamp("20261105-24:00:00", t));
+      expect(!glz::fix::parse_utc_timestamp("20261105 07:30:59", t));
+      expect(!glz::fix::parse_utc_timestamp("20261105-07:30:59.", t));
+      expect(!glz::fix::parse_utc_timestamp("20261105-07:30:59.1234567890", t));
+      expect(!glz::fix::parse_utc_timestamp("20261105-07:30", t));
+   };
+   "decimal"_test = [] {
+      glz::fix::decimal d{};
+      expect(glz::fix::parse_decimal("123.4500", d));
+      expect(d.mantissa == 1234500 && d.exponent == -4);
+      expect(d.to_double() == 123.45);
+      auto text = [](glz::fix::decimal x) {
+         std::string s;
+         glz::fix::append_decimal(s, x);
+         return s;
+      };
+      expect(text(d) == "123.4500");
+      expect(glz::fix::parse_decimal("-0.001", d) && d.mantissa == -1 && d.exponent == -3);
+      expect(text(d) == "-0.001") << text(d);
+      expect(glz::fix::parse_decimal("42", d) && d.exponent == 0 && text(d) == "42");
+      expect(glz::fix::parse_decimal(".5", d) && text(d) == "0.5");
+      expect(glz::fix::parse_decimal("5.", d) && d.mantissa == 5 && d.exponent == 0);
+      expect(text({15, 2}) == "1500");
+      expect(text({0, -2}) == "0.00");
+      expect(text({INT64_MIN, -1}) == "-922337203685477580.8");
+      expect(glz::fix::parse_decimal("999999999999999999", d)); // 18 digits
+      expect(!glz::fix::parse_decimal("1234567890123456789", d)); // 19 digits
+      expect(!glz::fix::parse_decimal("1.2.3", d));
+      expect(!glz::fix::parse_decimal("-", d));
+      expect(!glz::fix::parse_decimal("+1", d));
+      expect(!glz::fix::parse_decimal("1e5", d));
+      expect(!glz::fix::parse_decimal("", d));
+   };
+   "typed_values_roundtrip"_test = [] {
+      Quote q{};
+      expect(glz::fix::parse_utc_timestamp("20261105-07:30:00.250", q.sending_time));
+      q.bid_px = {10025, -2};
+      std::string buf;
+      expect(!glz::write<pipe>(q, buf));
+      expect(buf.find("|52=20261105-07:30:00.250|132=100.25|") != std::string::npos) << buf;
+      expect(buf.find("133=") == std::string::npos);
+      Quote r{};
+      auto ec = glz::read<pipe>(r, buf);
+      expect(!ec) << glz::format_error(ec, buf);
+      expect(r.sending_time == q.sending_time);
+      expect(r.bid_px == q.bid_px);
+      expect(!r.offer_px.has_value());
+      expect(glz::read<pipe>(r, std::string_view{"133=1.0|"}) == glz::error_code::none);
+      expect(r.offer_px && r.offer_px->mantissa == 10 && r.offer_px->exponent == -1);
+      expect(glz::read<pipe>(r, std::string_view{"132=1,5|"}) == glz::error_code::parse_number_failure);
+      expect(glz::read<pipe>(r, std::string_view{"52=2026-11-05|"}) == glz::error_code::syntax_error);
    };
    "value_errors"_test = [] {
       NewOrderSingle r{};
