@@ -159,7 +159,6 @@ namespace
    constexpr glz::fix_opts lenient()
    {
       glz::fix_opts o{};
-      o.error_on_unknown_keys = false;
       return o;
    }
 }
@@ -389,4 +388,123 @@ suite hffix_more_roundtrip = [] {
    };
 
    skip("writer01_byte_identical", "hffix zero-pads BodyLength (9=000063); glaze writes 9=63, so the bytes differ");
+};
+
+// FIXT.1.1 messages from test/data/fix.5.0.set.2 (a CME iLink style session)
+struct hffix_t_order
+{
+   int msg_seq_num{};
+   std::string sender_comp_id{};
+   std::string sending_time{};
+   std::string target_comp_id{};
+   std::string account{};
+   std::string cl_ord_id{};
+   int order_qty{};
+   char ord_type{};
+   std::optional<double> price{};
+   char side{};
+   std::string symbol{};
+   char time_in_force{};
+   std::string transact_time{};
+   std::string security_desc{};
+   std::string security_type{};
+   std::string security_exchange{};
+};
+
+template <>
+struct glz::meta<hffix_t_order>
+{
+   using T = hffix_t_order;
+   static constexpr auto fix_msg_type = "D";
+   static constexpr auto fix_begin_string = "FIXT.1.1";
+   static constexpr auto value = glz::object(
+      "34", &T::msg_seq_num, "49", &T::sender_comp_id, "52", &T::sending_time, "56", &T::target_comp_id, "1",
+      &T::account, "11", &T::cl_ord_id, "38", &T::order_qty, "40", &T::ord_type, "44", &T::price, "54", &T::side,
+      "55", &T::symbol, "59", &T::time_in_force, "60", &T::transact_time, "107", &T::security_desc, "167",
+      &T::security_type, "207", &T::security_exchange);
+};
+
+struct hffix_t_logon
+{
+   int msg_seq_num{};
+   int encrypt_method{};
+   int heart_bt_int{};
+   std::string default_appl_ver_id{};
+};
+
+template <>
+struct glz::meta<hffix_t_logon>
+{
+   using T = hffix_t_logon;
+   static constexpr auto fix_msg_type = "A";
+   static constexpr auto fix_begin_string = "FIXT.1.1";
+   static constexpr auto value = glz::object("34", &T::msg_seq_num, "98", &T::encrypt_method, "108", &T::heart_bt_int,
+                                             "1137", &T::default_appl_ver_id);
+};
+
+struct hffix_t_resend
+{
+   int msg_seq_num{};
+   int begin_seq_no{};
+   int end_seq_no{};
+};
+
+template <>
+struct glz::meta<hffix_t_resend>
+{
+   using T = hffix_t_resend;
+   static constexpr auto fix_msg_type = "2";
+   static constexpr auto fix_begin_string = "FIXT.1.1";
+   static constexpr auto value =
+      glz::object("34", &T::msg_seq_num, "7", &T::begin_seq_no, "16", &T::end_seq_no);
+};
+
+suite hffix_more_fixt = [] {
+   "fixt_orders_read_and_roundtrip"_test = [] {
+      const auto data = read_data("fix.5.0.set.2");
+      size_t orders = 0, ok = 0, rt = 0;
+      for (auto m : split_messages(data)) {
+         if (msg_type(m) != "D") continue;
+         ++orders;
+         hffix_t_order o{};
+         if (glz::read<glz::fix_opts{}>(o, m)) continue;
+         if (o.security_type == "FUT" && o.security_exchange == "XLOF" && o.cl_ord_id.size() == 36 && o.order_qty > 0 &&
+             o.price.has_value())
+            ++ok;
+         std::string buf;
+         hffix_t_order back{};
+         if (!glz::write<glz::fix_opts{}>(o, buf) && buf.starts_with("8=FIXT.1.1\x01") &&
+             !glz::read<glz::fix_opts{}>(back, buf) && back.cl_ord_id == o.cl_ord_id && back.price == o.price &&
+             back.security_desc == o.security_desc && back.msg_seq_num == o.msg_seq_num)
+            ++rt;
+      }
+      expect(orders == 15u);
+      expect(ok == orders);
+      expect(rt == orders);
+   };
+
+   "fixt_logons"_test = [] {
+      const auto data = read_data("fix.5.0.set.2");
+      size_t logons = 0, ok = 0;
+      for (auto m : split_messages(data)) {
+         if (msg_type(m) != "A") continue;
+         ++logons;
+         hffix_t_logon l{};
+         if (!glz::read<glz::fix_opts{}>(l, m) && l.default_appl_ver_id == "7" && l.heart_bt_int == 60) ++ok;
+      }
+      expect(logons == 16u && ok == logons);
+   };
+
+   "fixt_resend_request"_test = [] {
+      const auto data = read_data("fix.5.0.set.2");
+      size_t n = 0;
+      for (auto m : split_messages(data)) {
+         if (msg_type(m) != "2") continue;
+         hffix_t_resend r{};
+         expect(!glz::read<glz::fix_opts{}>(r, m));
+         expect(r.msg_seq_num == 49 && r.begin_seq_no == 48 && r.end_seq_no == 0);
+         ++n;
+      }
+      expect(n == 1u);
+   };
 };

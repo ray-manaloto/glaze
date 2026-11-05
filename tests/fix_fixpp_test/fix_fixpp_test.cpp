@@ -452,7 +452,6 @@ namespace
    {
       glz::fix_opts o{};
       o.soh = '|';
-      o.error_on_unknown_keys = false;
       return o;
    }
 }
@@ -485,7 +484,7 @@ suite fixpp_struct_mapping = [] {
 
 #else
    skip("should_visit_snapshot_frame_struct (unknown tag 9063 in group)",
-        "fix/core ends a group at an unknown tag even with error_on_unknown_keys = false; "
+        "fix/core ends a group at an unknown tag (unknown tags are otherwise skipped by default); "
         "build with -DGLZ_FIX_KNOWN_FAILURES to run");
 #endif
 
@@ -524,10 +523,17 @@ suite fixpp_struct_mapping = [] {
       constexpr auto strict = [] {
          glz::fix_opts o{};
          o.soh = '|';
+         o.error_on_unknown_tags = true; // fix/core's strict switch
          return o;
       }();
+      // fixpp's frame is a Heartbeat (35=0); use 35=A so the failure comes from the unknown tag 221,
+      // not from a MsgType mismatch.
+      std::string f(strict_unknown_frame);
+      f.replace(f.find("35=0"), 4, "35=A");
       logon l{};
-      expect(bool(glz::read<strict>(l, repair(strict_unknown_frame))));
+      expect(glz::read<strict>(l, repair(f)).ec == glz::error_code::unknown_key);
+      logon lenient{};
+      expect(!glz::read<pipe_opts()>(lenient, repair(f)));
    };
 
 #ifdef GLZ_FIX_KNOWN_FAILURES
