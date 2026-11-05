@@ -2,15 +2,10 @@
 
 ## Status
 
-### Push blocked
-`git push -u origin fix/core` failed during this session with HTTP 403 from the session's git
-proxy: *"ray-manaloto/glaze is not in this session's authorized repository set"*. The clone also
-had no `origin` remote (one was added pointing at `https://github.com/ray-manaloto/glaze.git`).
-All work below is committed **locally** on `fix/core`, and a patch series and a git bundle were
-saved to the session scratchpad. To publish it, add the repository to the session's sources and
-run `git push -u origin fix/core`, or apply the patches/bundle locally. Until that happens the
-other five sessions keep their local stubs of `include/glaze/fix/fix.hpp`. The real header matches
-the contract signatures, so the stubs should be drop-in replaceable.
+### Push history
+The first pushes failed with HTTP 403 because `ray-manaloto/glaze` was not attached to the
+session. The clone also had no `origin` remote, so one was added. After the repository was
+attached (07:11 UTC), `fix/core` was pushed with all commits.
 
 ### Done
 * `include/glaze/fix/opts.hpp`: `glz::FIX`, `glz::fix_opts` (contract members plus
@@ -57,8 +52,7 @@ cmake --build build --target fix_test && ./build/tests/fix_test/fix_test
 ```
 
 ## Next steps
-1. Push `fix/core` once the repository is authorised for the session, so other branches can merge it.
-2. Add raw-data field support (length tag declares the next field's byte count, which may hold SOH).
-3. Add an optional typed UTCTimestamp (chrono) and a fixed-point decimal member type.
-4. Offer a no-allocation field iterator (`for_each_field`) and use it in the reader.
-5. Check with Clang + libc++ and MSVC.
+1. Add raw-data field support (length tag declares the next field's byte count, which may hold SOH).
+2. Add an optional typed UTCTimestamp (chrono) and a fixed-point decimal member type.
+3. Offer a no-allocation field iterator (`for_each_field`) and use it in the reader.
+4. Check with Clang + libc++ and MSVC.
