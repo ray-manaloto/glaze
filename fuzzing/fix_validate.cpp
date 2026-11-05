@@ -22,6 +22,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* Data, size_t Size)
       // keeps looking for other bugs; regression input: fuzzing/regressions/fix_validate/.
       if (input.size() >= 7 && input.substr(input.size() - 7, 3) != "10=") return 0;
       if (input.size() >= 8 && input[input.size() - 8] != soh) return 0;
+      // Same gap for the header: "08=" / "09=" read as BeginString / BodyLength.
+      if (!input.starts_with("8=")) return 0;
+      if (const auto e = input.find(soh); e == std::string_view::npos || input.substr(e + 1, 2) != "9=") return 0;
 #endif
       if (n != input.size()) std::abort();
       const auto pos = input.size() - 7;
