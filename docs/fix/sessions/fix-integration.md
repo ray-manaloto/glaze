@@ -72,11 +72,17 @@ gaps (not run, not counted in "run").
 | fix_property_test    | 35 | 35 | 0 | 0 | 35 | 35 | 0 | 0 |
 | Clang 18.1.3         | —   | —   | — | —  | does not compile (see above) | | | |
 
+## Fuzz targets (Clang 19, libFuzzer)
+
+`fuzz_fix_validate`, `fuzz_fix_read`, `fuzz_fix_parse_fields` and `fuzz_fix_frame` build in the
+Clang 19 tree (`cmake --build build-clang19 --target fuzz_fix_...`). Each was run for 20 s
+(`-max_total_time=20`) from a copy of `fuzzing/corpus/fix`: no crash, sanitizer report or leak.
+The three files under `fuzzing/regressions/fix_*` run cleanly through their targets.
+
 ## What is left
 
 - The skipped cases are the known `fix/core` gaps that the test branches recorded (for example
   floats written with an exponent, an unknown tag inside a group ending the group, BeginString
   checks). Build with `-DGLZ_FIX_KNOWN_FAILURES` to run the guarded ones.
-- The fuzz targets in `fuzzing/fix_*.cpp` were merged but not built or run here.
 - Clang 18 support would need either libc++ or a fallback `expected` in glaze, plus fixes to core
   glaze code; out of scope for this branch.
