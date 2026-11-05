@@ -419,10 +419,10 @@ suite struct_mapping = [] {
       expect(glz::fix::frame(m + "8=FIX", '|') == m.size());
    };
    "raw_data_roundtrip"_test = [] {
-      RawNote n{"News", std::string("bin\x01ary|with=delims\0end", 26), {{"P", 'D', 1}}};
+      RawNote n{"News", std::string("bin\x01" "ary|with=delims\0end", 23), {{"P", 'D', 1}}};
       std::string buf;
       expect(!glz::write<pipe>(n, buf));
-      expect(buf.find("|95=26|96=bin") != std::string::npos) << buf;
+      expect(buf.find("|95=23|96=bin") != std::string::npos) << buf;
       expect(!glz::fix::validate(buf, '|'));
       RawNote r{};
       auto ec = glz::read<pipe>(r, buf);
