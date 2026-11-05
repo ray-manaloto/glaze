@@ -1,0 +1,34 @@
+# Raw-data (length-prefixed) vectors from simplefix (https://github.com/da4089/simplefix), MIT,
+# Copyright (C) 2016-2026, David Arnold (see licenses/simplefix-LICENSE). The message contents
+# come from test_raw_data; 9 and 10 are computed here because simplefix encodes them at run time.
+# '|' is SOH, including inside raw values.
+
+id = simplefix.raw_data_parse
+source = da4089/simplefix:test/test_parser.py::test_raw_data
+kind = parse
+msg = 8=FIX.4.2|9=40|35=D|95=8|96=raw|data|20000=private tag|10=225|
+expect = ok
+fields = 8=FIX.4.2|9=40|35=D|95=8|96=raw|data|20000=private tag|10=225|
+note = RawData(96) holds an SOH; RawDataLength(95)=8 tells the scanner to take 8 bytes
+
+id = simplefix.raw_data_validate
+source = da4089/simplefix:test/test_parser.py::test_raw_data
+kind = validate
+msg = 8=FIX.4.2|9=40|35=D|95=8|96=raw|data|20000=private tag|10=225|
+expect = ok
+note = same message with 9 and 10 computed for SOH; BodyLength counts the raw bytes
+
+id = simplefix.raw_data_frame
+source = da4089/simplefix:test/test_parser.py::test_raw_data
+kind = frame
+stream = 8=FIX.4.2|9=40|35=D|95=8|96=raw|data|20000=private tag|10=225|8=FIX.4.2|9=
+frame_len = 62
+note = framing trusts 9, so the SOH inside 96 does not end the message early
+
+id = simplefix.raw_data_all_soh_parse
+source = da4089/simplefix:test/test_parser.py::test_raw_data
+kind = parse
+msg = 8=FIX.4.2|9=26|35=D|95=4|96=|||||20000=x|10=033|
+expect = ok
+count = 7
+note = variant: raw value made only of SOH bytes (4 of them); written for glaze, not in simplefix

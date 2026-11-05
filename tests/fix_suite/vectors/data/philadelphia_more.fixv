@@ -1,0 +1,177 @@
+# More test vectors ported from Philadelphia (https://github.com/paritytrading/philadelphia).
+# Copyright 2015 Philadelphia authors. Licensed under the Apache License, Version 2.0
+# (see licenses/philadelphia-LICENSE.txt). Upstream has no NOTICE file.
+# Complements philadelphia.fixv: the remaining exact wire messages asserted in FIXInitiatorTest
+# (Reject, ResendRequest, SequenceReset-GapFill, Logout, Heartbeat variants) and the bare message
+# bodies the tests feed to the initiator. '|' is SOH. Every validate vector's BodyLength and
+# CheckSum and every frame length was recomputed with python3.
+# Not ported: upstream has no FIXAcceptorTest in this checkout; FIXInitiatorTest messages that
+# the existing file already covers are not repeated.
+
+id = philadelphia.test_request_heartbeat_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest
+kind = validate
+msg = 8=FIX.4.2|9=60|35=0|49=initiator|56=acceptor|34=1|52=19700101-00:00:32.500|10=225|
+expect = ok
+note = Heartbeat at 32.500 s sent before the TestRequest; SendingTime with non-zero millis, CheckSum 225
+
+id = philadelphia.test_request_two_message_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest
+kind = frame
+stream = 8=FIX.4.2|9=60|35=0|49=initiator|56=acceptor|34=1|52=19700101-00:00:32.500|10=225|8=FIX.4.2|9=86|35=1|49=initiator|56=acceptor|34=2|52=19700101-00:00:35.000|112=19700101-00:00:35.000|10=213|
+frame_len = 82
+note = Heartbeat followed by TestRequest on the wire; first frame is the 82-byte Heartbeat
+
+id = philadelphia.test_request_second_message_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest
+kind = frame
+stream = 8=FIX.4.2|9=86|35=1|49=initiator|56=acceptor|34=2|52=19700101-00:00:35.000|112=19700101-00:00:35.000|10=213|
+frame_len = 108
+note = the TestRequest alone frames at its full length (86-byte body)
+
+id = philadelphia.receive_test_request_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveTestRequest
+kind = validate
+msg = 8=FIX.4.2|9=68|35=0|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|112=foo|10=245|
+expect = ok
+note = Heartbeat answering TestRequest, echoes TestReqID(112)=foo
+
+id = philadelphia.resend_request_end_seq_no_equal_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithEndSeqNoEqualToLastMsgSeqNum
+kind = validate
+msg = 8=FIX.4.2|9=71|35=4|49=initiator|56=acceptor|34=2|52=19700101-00:00:00.000|123=Y|36=5|10=231|
+expect = ok
+note = SequenceReset-GapFill with NewSeqNo 5
+
+id = philadelphia.resend_request_end_seq_no_larger_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithEndSeqNoLargerThanLastMsgSeqNum
+kind = validate
+msg = 8=FIX.4.2|9=71|35=4|49=initiator|56=acceptor|34=2|52=19700101-00:00:00.000|123=Y|36=5|10=231|
+expect = ok
+note = SequenceReset-GapFill with NewSeqNo 5 (EndSeqNo larger than last sent)
+
+id = philadelphia.resend_request_zero_end_seq_no_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithZeroEndSeqNo
+kind = validate
+msg = 8=FIX.4.2|9=71|35=4|49=initiator|56=acceptor|34=2|52=19700101-00:00:00.000|123=Y|36=3|10=229|
+expect = ok
+note = SequenceReset-GapFill with NewSeqNo 3 (EndSeqNo 0 = infinity)
+
+id = philadelphia.resend_request_too_high_end_seq_no_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithTooHighEndSeqNo
+kind = validate
+msg = 8=FIX.4.2|9=71|35=4|49=initiator|56=acceptor|34=2|52=19700101-00:00:00.000|123=Y|36=3|10=229|
+expect = ok
+note = SequenceReset-GapFill with NewSeqNo 3 (EndSeqNo beyond last sent)
+
+id = philadelphia.resend_request_without_begin_seq_no_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithoutBeginSeqNo
+kind = validate
+msg = 8=FIX.4.2|9=98|35=3|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|45=1|373=1|58=BeginSeqNo(7) not found|10=116|
+expect = ok
+note = session Reject, SessionRejectReason 1, Text with spaces and parentheses
+
+id = philadelphia.resend_request_without_end_seq_no_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithoutEndSeqNo
+kind = validate
+msg = 8=FIX.4.2|9=97|35=3|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|45=1|373=1|58=EndSeqNo(16) not found|10=213|
+expect = ok
+note = session Reject for missing EndSeqNo
+
+id = philadelphia.resend_request_too_high_begin_seq_no_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithTooHighBeginSeqNo
+kind = validate
+msg = 8=FIX.4.2|9=97|35=3|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|45=1|373=5|58=BeginSeqNo(7) too high|10=252|
+expect = ok
+note = session Reject, SessionRejectReason 5 (value out of range)
+
+id = philadelphia.sequence_reset_without_new_seq_no_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveSequenceResetResetWithoutNewSeqNo
+kind = validate
+msg = 8=FIX.4.2|9=97|35=3|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|45=1|373=1|58=NewSeqNo(36) not found|10=234|
+expect = ok
+note = session Reject for SequenceReset without NewSeqNo
+
+id = philadelphia.logon_too_low_msg_seq_num_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveLogonWithTooLowMsgSeqNum
+kind = validate
+msg = 8=FIX.4.2|9=85|35=5|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|58=MsgSeqNum(34) too low|10=170|
+expect = ok
+note = Logout sent when Logon MsgSeqNum is too low
+
+id = philadelphia.logout_too_high_msg_seq_num_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveLogoutWithTooHighMsgSeqNum
+kind = validate
+msg = 8=FIX.4.2|9=69|35=2|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|7=1|16=0|10=093|
+expect = ok
+note = ResendRequest sent when Logout MsgSeqNum is too high
+
+id = philadelphia.send_logout_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendLogout
+kind = validate
+msg = 8=FIX.4.2|9=60|35=5|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|10=220|
+expect = ok
+note = plain Logout with no Text
+
+id = philadelphia.body_without_msg_type_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveMessageWithoutMsgType
+kind = parse
+msg = 34=1|
+expect = ok
+count = 1
+note = one-field body (MsgType missing); tag=value scan succeeds
+
+id = philadelphia.body_sequence_reset_gap_fill_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveSequenceResetGapFill
+kind = parse
+msg = 35=4|34=1|123=Y|36=5|
+expect = ok
+count = 4
+note = SequenceReset-GapFill body fields
+
+id = philadelphia.body_resend_request_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithEndSeqNoSmallerThanLastMsgSeqNum
+kind = parse
+msg = 35=2|34=1|7=2|16=3|
+expect = ok
+count = 4
+note = ResendRequest body fields
+
+id = philadelphia.body_logon_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveLogon
+kind = parse
+msg = 35=A|49=acceptor|56=initiator|34=1|
+expect = ok
+count = 4
+note = Logon body with CompIDs
+
+id = philadelphia.body_test_request_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveTestRequest
+kind = parse
+msg = 35=1|34=1|112=foo|
+expect = ok
+count = 3
+note = TestRequest body with TestReqID
+
+id = philadelphia.body_full_buffer_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveFullBuffer
+kind = parse
+msg = 35=5|34=1|58=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA|
+expect = ok
+count = 3
+note = Logout body with a 512-byte Text value
+
+id = philadelphia.body_too_long_unterminated_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveTooLongMessage
+kind = parse
+msg = 35=5|34=1|58=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+expect = error
+note = 1024-byte Text with no closing SOH; last field is unterminated
+
+id = philadelphia.exceed_max_capacity_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageTest.java::exceedMaxCapacityOnGet
+kind = parse
+msg = 11=123|21=1|55=FOO|54=1|60=20150924-09:30:05.250|38=100|40=2|44=150.25|1=main|
+expect = ok
+count = 9
+note = nine fields incl. tag 1 (Account); upstream overflows the FIXMessage field capacity, plain tag=value scan succeeds
