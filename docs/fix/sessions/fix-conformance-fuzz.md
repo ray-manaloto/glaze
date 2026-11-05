@@ -42,7 +42,9 @@ Earlier 60-second bursts:
 
 ## Known gaps in fix/core (found by these tests and fuzzers)
 
-The tests that check these run only with `-DGLZ_FIX_KNOWN_GAPS=1`; the default build passes.
+The tests that check these run only with `-DGLZ_FIX_KNOWN_GAPS=1`; the default build passes
+(36/36). With the flag, 9 tests fail (P2, R11 x2, R14 x2, R15, R16, R19 x2), one for each gap below,
+which is the expected result until core fixes them.
 
 1. **Corrupted BeginString skips all checks.** If byte 0 (`8`) is changed, `glz::read` treats the
    input as a body fragment and runs no BodyLength or CheckSum check, so a corrupted message reads
