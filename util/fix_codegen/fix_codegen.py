@@ -262,9 +262,15 @@ class Gen:
     def field_type(self, fid: int) -> str:
         _, t = self.r.fields[fid]
         if t in self.r.codesets and t in self.enum_names:
-            if self.enum_kind[t] == "multi":
-                return "std::string"
-            return self.enum_names[t]
+            # Only char and int code sets are enum members: the fix/core codec writes an enum as
+            # its underlying value. Boolean code sets are bool; String/multi-value code sets stay
+            # std::string (the enum and its fix_values are still emitted for reference).
+            kind = self.enum_kind[t]
+            if kind in ("char", "int"):
+                return self.enum_names[t]
+            if self.r.codesets[t][0] == "Boolean":
+                return "bool"
+            return "std::string"
         if t in INT_TYPES:
             return "int64_t"
         if t in FLOAT_TYPES:

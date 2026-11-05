@@ -1450,8 +1450,8 @@ namespace glz::fix::fix42
       std::optional<std::string> relatd_sym{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -1507,8 +1507,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -1526,7 +1526,7 @@ namespace glz::fix::fix42
       std::optional<double> prev_close_px{};
       Side side{};
       std::optional<SideValueInd> side_value_ind{};
-      std::optional<LocateReqd> locate_reqd{};
+      std::optional<bool> locate_reqd{};
       std::optional<std::string> transact_time{};
       std::optional<double> order_qty{};
       std::optional<double> cash_order_qty{};
@@ -1535,7 +1535,7 @@ namespace glz::fix::fix42
       std::optional<double> stop_px{};
       std::optional<std::string> currency{};
       std::optional<std::string> compliance_id{};
-      std::optional<SolicitedFlag> solicited_flag{};
+      std::optional<bool> solicited_flag{};
       std::optional<std::string> ioiid{};
       std::optional<std::string> quote_id{};
       std::optional<TimeInForce> time_in_force{};
@@ -1546,7 +1546,7 @@ namespace glz::fix::fix42
       std::optional<double> commission{};
       std::optional<CommType> comm_type{};
       std::optional<Rule80A> rule80_a{};
-      std::optional<ForexReq> forex_req{};
+      std::optional<bool> forex_req{};
       std::optional<std::string> settl_currency{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
@@ -1595,7 +1595,7 @@ namespace glz::fix::fix42
       double alloc_shares{};
       std::optional<ProcessCode> process_code{};
       std::optional<std::string> broker_of_credit{};
-      std::optional<NotifyBrokerOfCredit> notify_broker_of_credit{};
+      std::optional<bool> notify_broker_of_credit{};
       std::optional<AllocHandlInst> alloc_handl_inst{};
       std::optional<std::string> alloc_text{};
       std::optional<int64_t> encoded_alloc_text_len{};
@@ -1634,8 +1634,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -1674,8 +1674,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -1737,8 +1737,8 @@ namespace glz::fix::fix42
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -1792,8 +1792,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -1817,8 +1817,8 @@ namespace glz::fix::fix42
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -1894,8 +1894,8 @@ namespace glz::fix::fix42
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2005,8 +2005,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2037,7 +2037,7 @@ namespace glz::fix::fix42
    {
       std::string begin_string{};
       int64_t body_length{};
-      MsgType msg_type{};
+      std::string msg_type{};
       std::string sender_comp_id{};
       std::string target_comp_id{};
       std::optional<std::string> on_behalf_of_comp_id{};
@@ -2053,13 +2053,13 @@ namespace glz::fix::fix42
       std::optional<std::string> on_behalf_of_location_id{};
       std::optional<std::string> deliver_to_sub_id{};
       std::optional<std::string> deliver_to_location_id{};
-      std::optional<PossDupFlag> poss_dup_flag{};
-      std::optional<PossResend> poss_resend{};
+      std::optional<bool> poss_dup_flag{};
+      std::optional<bool> poss_resend{};
       std::string sending_time{};
       std::optional<std::string> orig_sending_time{};
       std::optional<int64_t> xml_data_len{};
       std::optional<std::string> xml_data{};
-      std::optional<MessageEncoding> message_encoding{};
+      std::optional<std::string> message_encoding{};
       std::optional<int64_t> last_msg_seq_num_processed{};
       std::optional<std::string> on_behalf_of_sending_time{};
       bool operator==(const StandardHeader&) const = default;
@@ -2102,7 +2102,7 @@ namespace glz::fix::fix42
    };
    struct SequenceReset
    {
-      std::optional<GapFillFlag> gap_fill_flag{};
+      std::optional<bool> gap_fill_flag{};
       int64_t new_seq_no{};
       bool operator==(const SequenceReset&) const = default;
    };
@@ -2121,8 +2121,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2138,12 +2138,12 @@ namespace glz::fix::fix42
       std::optional<int64_t> encoded_security_desc_len{};
       std::optional<std::string> encoded_security_desc{};
       Side side{};
-      IOIShares ioi_shares{};
+      std::string ioi_shares{};
       std::optional<double> price{};
       std::optional<std::string> currency{};
       std::optional<std::string> valid_until_time{};
       std::optional<IOIQltyInd> ioi_qlty_ind{};
-      std::optional<IOINaturalFlag> ioi_natural_flag{};
+      std::optional<bool> ioi_natural_flag{};
       std::vector<IOIQualGrp> no_ioi_qualifiers{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
@@ -2158,13 +2158,13 @@ namespace glz::fix::fix42
    struct Advertisement
    {
       std::string adv_id{};
-      AdvTransType adv_trans_type{};
+      std::string adv_trans_type{};
       std::optional<std::string> adv_ref_id{};
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2216,8 +2216,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2243,7 +2243,7 @@ namespace glz::fix::fix42
       std::optional<double> discretion_offset{};
       std::optional<std::string> currency{};
       std::optional<std::string> compliance_id{};
-      std::optional<SolicitedFlag> solicited_flag{};
+      std::optional<bool> solicited_flag{};
       std::optional<TimeInForce> time_in_force{};
       std::optional<std::string> effective_time{};
       std::optional<std::string> expire_date{};
@@ -2266,7 +2266,7 @@ namespace glz::fix::fix42
       std::optional<GTBookingInst> gt_booking_inst{};
       std::optional<std::string> trade_date{};
       std::optional<std::string> transact_time{};
-      std::optional<ReportToExch> report_to_exch{};
+      std::optional<bool> report_to_exch{};
       std::optional<double> commission{};
       std::optional<CommType> comm_type{};
       std::optional<double> gross_trade_amt{};
@@ -2314,7 +2314,7 @@ namespace glz::fix::fix42
       int64_t heart_bt_int{};
       std::optional<int64_t> raw_data_length{};
       std::optional<std::string> raw_data{};
-      std::optional<ResetSeqNumFlag> reset_seq_num_flag{};
+      std::optional<bool> reset_seq_num_flag{};
       std::optional<int64_t> max_message_size{};
       std::vector<MsgTypeGrp> no_msg_types{};
       bool operator==(const Logon&) const = default;
@@ -2370,8 +2370,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2388,7 +2388,7 @@ namespace glz::fix::fix42
       std::optional<std::string> encoded_security_desc{};
       std::optional<double> prev_close_px{};
       Side side{};
-      std::optional<LocateReqd> locate_reqd{};
+      std::optional<bool> locate_reqd{};
       std::string transact_time{};
       std::optional<double> order_qty{};
       std::optional<double> cash_order_qty{};
@@ -2397,7 +2397,7 @@ namespace glz::fix::fix42
       std::optional<double> stop_px{};
       std::optional<std::string> currency{};
       std::optional<std::string> compliance_id{};
-      std::optional<SolicitedFlag> solicited_flag{};
+      std::optional<bool> solicited_flag{};
       std::optional<std::string> ioiid{};
       std::optional<std::string> quote_id{};
       std::optional<TimeInForce> time_in_force{};
@@ -2408,7 +2408,7 @@ namespace glz::fix::fix42
       std::optional<double> commission{};
       std::optional<CommType> comm_type{};
       std::optional<Rule80A> rule80_a{};
-      std::optional<ForexReq> forex_req{};
+      std::optional<bool> forex_req{};
       std::optional<std::string> settl_currency{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
@@ -2454,8 +2454,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2475,7 +2475,7 @@ namespace glz::fix::fix42
       std::optional<double> order_qty{};
       std::optional<double> cash_order_qty{};
       std::optional<std::string> compliance_id{};
-      std::optional<SolicitedFlag> solicited_flag{};
+      std::optional<bool> solicited_flag{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
@@ -2502,8 +2502,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2529,7 +2529,7 @@ namespace glz::fix::fix42
       std::optional<DiscretionInst> discretion_inst{};
       std::optional<double> discretion_offset{};
       std::optional<std::string> compliance_id{};
-      std::optional<SolicitedFlag> solicited_flag{};
+      std::optional<bool> solicited_flag{};
       std::optional<std::string> currency{};
       std::optional<TimeInForce> time_in_force{};
       std::optional<std::string> effective_time{};
@@ -2539,7 +2539,7 @@ namespace glz::fix::fix42
       std::optional<double> commission{};
       std::optional<CommType> comm_type{};
       std::optional<Rule80A> rule80_a{};
-      std::optional<ForexReq> forex_req{};
+      std::optional<bool> forex_req{};
       std::optional<std::string> settl_currency{};
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
@@ -2550,7 +2550,7 @@ namespace glz::fix::fix42
       std::optional<CoveredOrUncovered> covered_or_uncovered{};
       std::optional<CustomerOrFirm> customer_or_firm{};
       std::optional<double> max_show{};
-      std::optional<LocateReqd> locate_reqd{};
+      std::optional<bool> locate_reqd{};
       std::optional<std::string> clearing_firm{};
       std::optional<std::string> clearing_account{};
       bool operator==(const OrderCancelReplaceRequest&) const = default;
@@ -2565,8 +2565,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2597,8 +2597,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2699,8 +2699,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2740,8 +2740,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2781,13 +2781,13 @@ namespace glz::fix::fix42
       SettlInstMode settl_inst_mode{};
       SettlInstSource settl_inst_source{};
       std::string alloc_account{};
-      std::optional<SettlLocation> settl_location{};
+      std::optional<std::string> settl_location{};
       std::optional<std::string> trade_date{};
       std::optional<std::string> alloc_id{};
       std::optional<std::string> last_mkt{};
       std::optional<std::string> trading_session_id{};
       std::optional<Side> side{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> effective_time{};
       std::string transact_time{};
       std::optional<std::string> client_id{};
@@ -2819,7 +2819,7 @@ namespace glz::fix::fix42
       SubscriptionRequestType subscription_request_type{};
       int64_t market_depth{};
       std::optional<MDUpdateType> md_update_type{};
-      std::optional<AggregatedBook> aggregated_book{};
+      std::optional<bool> aggregated_book{};
       std::vector<MDReqGrp> no_md_entry_types{};
       std::vector<InstrmtMDReqGrp> no_related_sym{};
       bool operator==(const MarketDataRequest&) const = default;
@@ -2830,8 +2830,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2883,8 +2883,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2922,8 +2922,8 @@ namespace glz::fix::fix42
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2955,8 +2955,8 @@ namespace glz::fix::fix42
       std::optional<std::string> symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -2985,8 +2985,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -3012,8 +3012,8 @@ namespace glz::fix::fix42
       std::string symbol{};
       std::optional<std::string> symbol_sfx{};
       std::optional<std::string> security_id{};
-      std::optional<IDSource> id_source{};
-      std::optional<SecurityType> security_type{};
+      std::optional<std::string> id_source{};
+      std::optional<std::string> security_type{};
       std::optional<std::string> maturity_month_year{};
       std::optional<int64_t> maturity_day{};
       std::optional<PutOrCall> put_or_call{};
@@ -3030,13 +3030,13 @@ namespace glz::fix::fix42
       std::optional<std::string> encoded_security_desc{};
       std::optional<std::string> currency{};
       std::optional<std::string> trading_session_id{};
-      std::optional<UnsolicitedIndicator> unsolicited_indicator{};
+      std::optional<bool> unsolicited_indicator{};
       std::optional<SecurityTradingStatus> security_trading_status{};
       std::optional<FinancialStatus> financial_status{};
       std::optional<CorporateAction> corporate_action{};
       std::optional<HaltReason> halt_reason{};
-      std::optional<InViewOfCommon> in_view_of_common{};
-      std::optional<DueToRelated> due_to_related{};
+      std::optional<bool> in_view_of_common{};
+      std::optional<bool> due_to_related{};
       std::optional<double> buy_volume{};
       std::optional<double> sell_volume{};
       std::optional<double> high_px{};
@@ -3061,7 +3061,7 @@ namespace glz::fix::fix42
       std::string trading_session_id{};
       std::optional<TradSesMethod> trad_ses_method{};
       std::optional<TradSesMode> trad_ses_mode{};
-      std::optional<UnsolicitedIndicator> unsolicited_indicator{};
+      std::optional<bool> unsolicited_indicator{};
       TradSesStatus trad_ses_status{};
       std::optional<std::string> trad_ses_start_time{};
       std::optional<std::string> trad_ses_open_time{};
@@ -3111,13 +3111,13 @@ namespace glz::fix::fix42
       std::vector<BidCompReqGrp> no_bid_components{};
       std::optional<LiquidityIndType> liquidity_ind_type{};
       std::optional<double> wt_average_liquidity{};
-      std::optional<ExchangeForPhysical> exchange_for_physical{};
+      std::optional<bool> exchange_for_physical{};
       std::optional<double> out_main_cntry_u_index{};
       std::optional<double> cross_percent{};
       std::optional<ProgRptReqs> prog_rpt_reqs{};
       std::optional<int64_t> prog_period_interval{};
       std::optional<IncTaxInd> inc_tax_ind{};
-      std::optional<ForexReq> forex_req{};
+      std::optional<bool> forex_req{};
       std::optional<int64_t> num_bidders{};
       std::optional<std::string> trade_date{};
       TradeType trade_type{};
