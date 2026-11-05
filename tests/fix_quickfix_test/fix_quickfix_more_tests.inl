@@ -904,3 +904,182 @@ suite quickfix_more_nested = [] {
       expect(m.trade_date == "20170317");
    };
 };
+
+// Typed reads of the long wire-valid QuickFIX/J vectors (verbatim, from qfj_qfn_vectors.inl).
+// Top-level tags not mapped are skipped (fix/core default); groups must be mapped in full.
+namespace qf_more
+{
+   inline std::string_view qfjn_vector(std::string_view method, size_t nth = 0)
+   {
+      for (const auto& v : qfjn_vectors::all) {
+         const std::string_view src = v.source;
+         if (src.size() >= method.size() && src.substr(src.size() - method.size()) == method) {
+            if (nth == 0) return v.msg;
+            --nth;
+         }
+      }
+      return {};
+   }
+
+   struct ExecReportParties
+   {
+      std::string exec_id; // 17
+      char exec_type{}; // 150
+      std::string symbol; // 55
+      double price{}; // 44
+      std::vector<CrossParty> parties; // 453
+      std::string transact_time; // 60
+   };
+   struct CrossSideSum
+   {
+      std::string symbol; // 55
+      std::string cross_id; // 548
+      int32_t cross_type{}; // 549
+      int32_t cross_prioritization{-1}; // 550
+      std::vector<CrossSide> sides; // 552
+   };
+   struct TcrSideParty
+   {
+      std::string party_id; // 448
+      char party_id_source{}; // 447
+      int32_t party_role{}; // 452
+   };
+   struct ClearingInstr
+   {
+      int32_t clearing_instruction{-1}; // 577
+   };
+   struct TcrSide
+   {
+      char side{}; // 54
+      std::vector<TcrSideParty> parties; // 453
+      std::string account; // 1
+      std::vector<ClearingInstr> clearing; // 576
+      std::string cl_ord_id; // 11
+   };
+   struct TradeCaptureReport
+   {
+      int32_t msg_seq_num{}; // 34
+      std::string sender_comp_id; // 49
+      std::string on_behalf_of_comp_id; // 115
+      std::vector<AllocHop> hops; // 627
+      std::string symbol; // 55
+      double last_px{}; // 31
+      double last_qty{}; // 32
+      std::vector<TcrSide> sides; // 552
+   };
+}
+template <>
+struct glz::meta<qf_more::ExecReportParties>
+{
+   using T = qf_more::ExecReportParties;
+   static constexpr auto fix_msg_type = "8";
+   static constexpr auto value = glz::object("17", &T::exec_id, "150", &T::exec_type, "55", &T::symbol, "44",
+                                             &T::price, "453", &T::parties, "60", &T::transact_time);
+};
+template <>
+struct glz::meta<qf_more::CrossSideSum>
+{
+   using T = qf_more::CrossSideSum;
+   static constexpr auto fix_msg_type = "s";
+   static constexpr auto value = glz::object("55", &T::symbol, "548", &T::cross_id, "549", &T::cross_type, "550",
+                                             &T::cross_prioritization, "552", &T::sides);
+};
+template <>
+struct glz::meta<qf_more::TcrSideParty>
+{
+   using T = qf_more::TcrSideParty;
+   static constexpr auto value = glz::object("448", &T::party_id, "447", &T::party_id_source, "452", &T::party_role);
+};
+template <>
+struct glz::meta<qf_more::ClearingInstr>
+{
+   using T = qf_more::ClearingInstr;
+   static constexpr auto value = glz::object("577", &T::clearing_instruction);
+};
+template <>
+struct glz::meta<qf_more::TcrSide>
+{
+   using T = qf_more::TcrSide;
+   static constexpr auto value = glz::object("54", &T::side, "453", &T::parties, "1", &T::account, "576",
+                                             &T::clearing, "11", &T::cl_ord_id);
+};
+template <>
+struct glz::meta<qf_more::TradeCaptureReport>
+{
+   using T = qf_more::TradeCaptureReport;
+   static constexpr auto fix_msg_type = "AE";
+   static constexpr auto value =
+      glz::object("34", &T::msg_seq_num, "49", &T::sender_comp_id, "115", &T::on_behalf_of_comp_id, "627", &T::hops,
+                  "55", &T::symbol, "31", &T::last_px, "32", &T::last_qty, "552", &T::sides);
+};
+
+suite quickfixj_long_vectors = [] {
+   using namespace qf_more;
+
+   "quickfixj MessageTest.java / testValidation (ExecutionReport, 453 Parties=3)"_test = [] {
+      const auto msg = qfjn_vector("testValidation");
+      expect(not msg.empty() and is_valid(msg));
+      ExecReportParties m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.exec_id == "X-B-WOW-1494E9A0:58BD3F9D-1109" and m.exec_type == 'D' and m.symbol == "WOW");
+      expect(m.price == 15.0);
+      expect(m.transact_time == "20060320-03:34:29"); // after the group
+      expect(m.parties.size() == 3u);
+      if (m.parties.size() == 3u) {
+         expect(m.parties[0].party_id == "AAA35791" and m.parties[0].party_role == 3);
+         expect(m.parties[1].party_id == "8" and m.parties[1].party_role == 4);
+         expect(m.parties[2].party_id == "FIX11" and m.parties[2].party_role == 36);
+      }
+      // error_on_unknown_tags: the unmapped top-level tags are now errors.
+      constexpr auto strict = [] {
+         glz::fix_opts o{};
+         o.error_on_unknown_tags = true;
+         return o;
+      }();
+      ExecReportParties m2{};
+      expect(bool(glz::read<strict>(m2, msg)));
+   };
+
+   "quickfixj MessageTest.java / testCalculateStringWithNestedGroups (552 Sides, nested 453)"_test = [] {
+      const auto msg = qfjn_vector("testCalculateStringWithNestedGroups");
+      expect(not msg.empty() and is_valid(msg));
+      CrossSideSum m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.symbol == "ABC" and m.cross_id == "184214" and m.cross_type == 2 and m.cross_prioritization == 0);
+      expect(m.sides.size() == 2u);
+      if (m.sides.size() == 2u) {
+         expect(m.sides[0].side == '1' and m.sides[0].order_qty == 9.0 and m.sides[0].parties.size() == 2u);
+         expect(m.sides[1].side == '2' and m.sides[1].parties.size() == 2u);
+         if (m.sides[1].parties.size() == 2u) expect(m.sides[1].parties[1].party_id == "aaa");
+      }
+   };
+
+   "quickfixj MessageTest.java / testValidateFieldsOutOfOrderFIXT11 (orderedData)"_test = [] {
+      const auto msg = qfjn_vector("testValidateFieldsOutOfOrderFIXT11", 0);
+      expect(not msg.empty() and is_valid(msg));
+      TradeCaptureReport m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.msg_seq_num == 545 and m.sender_comp_id == "SENDER" and m.on_behalf_of_comp_id == "ON_BHEHALF");
+      expect(m.hops.size() == 2u);
+      expect(m.symbol == "ANZ" and m.last_px == 27.0 and m.last_qty == 5000.0);
+      expect(m.sides.size() == 2u);
+      if (m.sides.size() == 2u) {
+         expect(m.sides[0].side == '1' and m.sides[0].account == "1040445");
+         expect(m.sides[0].parties.size() == 1u and m.sides[0].clearing.size() == 1u);
+         expect(m.sides[0].cl_ord_id == "7533509260093758035");
+         expect(m.sides[1].side == '2' and m.sides[1].cl_ord_id == "7533509260093757876");
+      }
+   };
+
+   "quickfixj MessageTest.java / testValidateFieldsOutOfOrderFIXT11 (unorderedData: header tags after body)"_test = [] {
+      // QuickFIX/J rejects this with validateFieldsOutOfOrder=true. fix/core has no header/body
+      // split and reads it; the wire framing (8, 9, 35 ... 10) is still valid.
+      const auto msg = qfjn_vector("testValidateFieldsOutOfOrderFIXT11", 1);
+      expect(not msg.empty() and is_valid(msg));
+      TradeCaptureReport m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.sides.size() == 2u and m.hops.size() == 2u and m.msg_seq_num == 545);
+      skip("quickfixj MessageTest.java / testValidateFieldsOutOfOrderFIXT11 (header field after body rejected)",
+           "needs a data dictionary of header tags; the contract checks only 8, 9, 35 and 10");
+   };
+};

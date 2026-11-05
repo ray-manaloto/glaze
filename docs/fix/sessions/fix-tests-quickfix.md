@@ -8,8 +8,8 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
 
 * `fix/core` was merged at `e5babf6e`. Its `include/glaze/fix/fix.hpp` replaced my local stub.
 * `tests/fix_quickfix_test/` is registered in `tests/CMakeLists.txt`. Against `fix/core`, built with GCC 13
-  under the `gcc-debug` preset (`-fno-exceptions -fno-rtti -Werror`), it gives **159 tests and 632 asserts,
-  all passing, with 19 groups skipped** (final run, 07:36 UTC). Build and run it with
+  under the `gcc-debug` preset (`-fno-exceptions -fno-rtti -Werror`), it gives **163 tests and 662 asserts,
+  all passing, with 20 groups skipped** (final run, 07:37 UTC). Build and run it with
   `cmake --build build/debug-gcc --target fix_quickfix_test && build/debug-gcc/tests/fix_quickfix_test/fix_quickfix_test`.
   * `fix_quickfix_test.cpp` covers `validate`, `checksum`, `frame` and `parse_fields`, plus the
     QuickFIX/J and QuickFIX/n vectors.
@@ -40,6 +40,8 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
     MassQuote 364/365, and XmlData 212/213 (`ReadXmlDataTest`).
   * Skipped because fix/core lets a repeated top-level tag overwrite instead of reporting it
     (QuickFIX/n `RepeatedTagDetection`).
+  * Skipped because a data dictionary is needed: rejecting header tags that come after the body
+    (QuickFIX/J `testValidateFieldsOutOfOrderFIXT11`, unorderedData).
   * Not a divergence: fix/core frames `8=!@#$%8=FIX.4.2...` as one message, because a value may
     contain `=`. The test only requires that the framed bytes fail `validate()`. Resyncing on garbage
     is the caller's job, as it is in QuickFIX/J's decoder.
@@ -106,7 +108,10 @@ repo and file, then the test method:
 
 * QuickFIX/J `quickfixj-core/src/test/java/quickfix/MessageTest.java`: `testParsing`, `testHeaderGroupParsing`,
   `testParsing2`, `testNestedRepeatingGroup`, `testFieldWithEqualsCharacter`, `testFirstFieldInGroupIsDelimiter`,
-  `testMessageBytesField`.
+  `testMessageBytesField`, `testValidation`, `testCalculateStringWithNestedGroups`,
+  `testValidateFieldsOutOfOrderFIXT11`. The last three are read verbatim, and only a subset of their
+  fields is mapped. The unordered variant is skipped, because a dictionary is needed to reject header
+  fields that come after the body.
 * QuickFIX/J `.../RepeatingGroupTest.java`: `testWrongGroupCount`. `.../MessageUtilsTest.java`: `testParse`,
   `testParseMessageWithoutChecksumValidation`.
 * QuickFIX/J `.../mina/message/FIXMessageDecoderTest.java`: `testSimpleMessage`, `testGarbageAtStart`,
