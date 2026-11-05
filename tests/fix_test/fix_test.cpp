@@ -194,6 +194,60 @@ suite scanner = [] {
       auto r = glz::fix::parse_fields("58=a=b|", '|');
       expect(r.has_value() && (*r)[0].value == "a=b");
    };
+   "swar find_byte"_test = [] {
+      using glz::fix::detail::find_byte;
+      constexpr auto npos = std::string_view::npos;
+      // delimiter at every offset 0..17 of an 18-byte buffer (crosses 8-byte blocks and the tail)
+      for (size_t at = 0; at < 18; ++at) {
+         std::string buf(18, 'x');
+         buf[at] = '\x01';
+         const std::string_view sv{buf};
+         expect(find_byte(sv, 0, '\x01') == at) << "offset " << at;
+         // searching from past the hit finds nothing; from the hit finds it
+         expect(find_byte(sv, at, '\x01') == at);
+         expect(find_byte(sv, at + 1, '\x01') == npos);
+         expect(sv.find('\x01') == at); // agrees with string_view::find
+      }
+      // no delimiter
+      expect(find_byte(std::string_view{"xxxxxxxxxxxxxxxxxx"}, 0, '\x01') == npos);
+      expect(find_byte(std::string_view{}, 0, '\x01') == npos);
+      expect(find_byte(std::string_view{"abc"}, 5, 'a') == npos);
+      // buffers shorter than 8
+      for (size_t n = 1; n < 8; ++n) {
+         for (size_t at = 0; at < n; ++at) {
+            std::string buf(n, 'z');
+            buf[at] = '|';
+            expect(find_byte(std::string_view{buf}, 0, '|') == at) << "n=" << n << " at=" << at;
+         }
+         expect(find_byte(std::string_view{std::string(n, 'z')}, 0, '|') == npos);
+      }
+      // bytes with the high bit set must not false-positive
+      expect(find_byte(std::string_view{"\x80\xff\x81\x7f\xfe\x01"}, 0, '\x01') == 5);
+      expect(find_byte(std::string_view{"\x80\xff\x81\x7f\xfe\x00\x02\x03\x04\x01", 10}, 0, '\x01') == 9);
+      // constexpr path agrees
+      static_assert(find_byte("ab=cd\x01" "ef", 0, '\x01') == 5);
+      static_assert(find_byte("ab=cd", 0, '\x01') == npos);
+   };
+
+   "swar byte_sum"_test = [] {
+      using glz::fix::detail::byte_sum;
+      auto scalar = [](std::string_view s) {
+         uint32_t sum = 0;
+         for (const char c : s) sum += uint8_t(c);
+         return sum;
+      };
+      for (size_t n = 0; n < 40; ++n) {
+         std::string buf(n, '\0');
+         for (size_t i = 0; i < n; ++i) buf[i] = char(0xF0 + i * 7);
+         expect(byte_sum(buf) == scalar(buf)) << "n=" << n;
+      }
+      // long runs of 0xFF: 16-bit lanes would overflow without blocking
+      const std::string ff(8 * 128 * 3 + 5, '\xff');
+      expect(byte_sum(ff) == scalar(ff));
+      expect(glz::fix::checksum(ff) == uint8_t(scalar(ff) & 0xFF));
+      static_assert(byte_sum("8=FIX.4.4\x01") == 'F' + 'I' + 'X' + '8' + '=' + '.' + '4' + '.' + '4' + 1);
+   };
+
    "checksum"_test = [] {
       expect(glz::fix::checksum("") == 0);
       expect(glz::fix::checksum("A") == 65);
