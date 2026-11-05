@@ -114,6 +114,22 @@ struct glz::meta<ExecView>
    static constexpr auto value = glz::object("37", &T::order_id, "39", &T::ord_status, "150", &T::exec_type);
 };
 
+// Raw-data fields: 95 RawDataLength announces the byte count of 96 RawData, which may hold SOH.
+struct RawNote
+{
+   std::string headline{};
+   std::string raw{}; // 96; its length tag 95 is written and consumed automatically
+   std::vector<Party> parties{};
+};
+
+template <>
+struct glz::meta<RawNote>
+{
+   using T = RawNote;
+   static constexpr auto fix_msg_type = "B";
+   static constexpr auto value = glz::object("148", &T::headline, "96", &T::raw, "453", &T::parties);
+};
+
 static constexpr glz::fix_opts pipe = glz::fix::pipe_opts;
 
 // Builds a pipe-delimited message with correct 9 and 10 around "35=...|body".
@@ -361,6 +377,53 @@ suite struct_mapping = [] {
          Multileg r{};
          expect(bool(glz::read<pipe>(r, bad))) << i; // the checksum catches every single-byte change
       }
+   };
+   "raw_data_scanner"_test = [] {
+      // 96 holds the delimiter and an '=' ; 95 says it is 7 bytes long
+      auto r = glz::fix::parse_fields("35=B|95=7|96=a|b=c|d|58=x|", '|');
+      expect(r.has_value());
+      expect(r->size() == 4u);
+      expect((*r)[2].tag == 96u && (*r)[2].value == "a|b=c|d");
+      expect((*r)[3].tag == 58u);
+      expect(glz::fix::raw_data_tag_for(95) == 96u && glz::fix::raw_length_tag_for(96) == 95u);
+      expect(glz::fix::raw_data_tag_for(212) == 213u && glz::fix::raw_data_tag_for(55) == 0u);
+      // length disagrees with the data: byte 7 after "96=" is not the delimiter
+      expect(!glz::fix::parse_fields("95=3|96=a|b=c|", '|').has_value());
+      // length runs past the end
+      expect(!glz::fix::parse_fields("95=30|96=abc|", '|').has_value());
+      // length is not a number
+      expect(!glz::fix::parse_fields("95=x|96=abc|", '|').has_value());
+      // a length field not followed by its data field is an ordinary field
+      r = glz::fix::parse_fields("95=3|58=abc|", '|');
+      expect(r.has_value() && r->size() == 2u);
+   };
+   "raw_data_validate_and_frame"_test = [] {
+      const auto m = make_msg("FIX.4.4", "35=B|95=5|96=1|2|3|");
+      expect(!glz::fix::validate(m, '|')) << m;
+      expect(glz::fix::frame(m + "8=FIX", '|') == m.size());
+   };
+   "raw_data_roundtrip"_test = [] {
+      RawNote n{"News", std::string("bin\x01ary|with=delims\0end", 26), {{"P", 'D', 1}}};
+      std::string buf;
+      expect(!glz::write<pipe>(n, buf));
+      expect(buf.find("|95=26|96=bin") != std::string::npos) << buf;
+      expect(!glz::fix::validate(buf, '|'));
+      RawNote r{};
+      auto ec = glz::read<pipe>(r, buf);
+      expect(!ec) << glz::format_error(ec, buf);
+      expect(r.raw == n.raw);
+      expect(r.headline == "News" && r.parties.size() == 1u);
+      // also with the real SOH delimiter
+      buf.clear();
+      expect(!glz::write<glz::fix_opts{}>(n, buf));
+      RawNote r2{};
+      expect(!glz::read<glz::fix_opts{}>(r2, buf));
+      expect(r2.raw == n.raw);
+      // a strict reader accepts the automatic length field
+      static constexpr glz::fix_opts strict{{}, glz::FIX, '|', true, true, true};
+      RawNote r3{};
+      expect(!glz::read<strict>(r3, make_msg("FIX.4.4", "35=B|95=3|96=a|b|")));
+      expect(r3.raw == "a|b");
    };
    "value_errors"_test = [] {
       NewOrderSingle r{};

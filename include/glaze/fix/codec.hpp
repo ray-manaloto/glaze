@@ -89,6 +89,14 @@ namespace glz::fix::detail
       return -1;
    }
 
+   // True when `tag` is the length field of a raw-data field that T maps.
+   template <class T>
+   constexpr bool is_raw_length_of_mapped(uint32_t tag) noexcept
+   {
+      const uint32_t data_tag = raw_data_tag_for(tag);
+      return data_tag != 0 && member_index<T>(data_tag) >= 0;
+   }
+
    constexpr bool is_session_envelope_tag(uint32_t tag) noexcept
    {
       return tag == 8 || tag == 9 || tag == 35 || tag == 10;
@@ -208,6 +216,10 @@ namespace glz::fix::detail
       while (idx < fields.size()) {
          const auto& f = fields[idx];
          const int m = member_index<T>(f.tag);
+         if (m < 0 && is_raw_length_of_mapped<T>(f.tag)) {
+            ++idx; // the scanner already used it to size the data field
+            continue;
+         }
          if (m < 0) {
             if (!top) return; // an unknown tag ends the group entry
             if (is_session_envelope_tag(f.tag) || !Opts.error_on_unknown_tags) {
@@ -305,6 +317,29 @@ namespace glz::fix::detail
       out.push_back(Opts.soh);
    }
 
+   // Writes "tag=value<soh>". A raw-data field (e.g. 96) gets its length field (e.g. 95) written in
+   // front of it from the value's byte count, and may contain the delimiter.
+   template <auto Opts, uint32_t Tag, class V>
+   void encode_field(std::string& out, const V& v, context& ctx)
+   {
+      if constexpr (raw_length_tag_for(Tag) != 0) {
+         using T = std::remove_cvref_t<V>;
+         static_assert(std::same_as<T, std::string> || std::same_as<T, std::string_view>,
+                       "glz::fix: a raw-data field must be std::string or std::string_view");
+         put_tag<Opts>(out, raw_length_tag_for(Tag));
+         encode_scalar(out, v.size());
+         out.push_back(Opts.soh);
+         put_tag<Opts>(out, Tag);
+         out.append(v.data(), v.size());
+         out.push_back(Opts.soh);
+         (void)ctx;
+      }
+      else {
+         put_tag<Opts>(out, Tag);
+         encode_checked<Opts>(out, v, ctx);
+      }
+   }
+
    template <auto Opts, class T>
    void encode_struct(std::string& out, const T& value, context& ctx)
    {
@@ -313,7 +348,10 @@ namespace glz::fix::detail
          static constexpr uint32_t tag = tags<T>[I];
          const auto& member = get_member(value, glz::get<I>(reflect<T>::values));
          using M = std::remove_cvref_t<decltype(member)>;
-         if constexpr (group_t<M>) {
+         if constexpr (is_raw_length_of_mapped<T>(tag)) {
+            return; // written automatically in front of its data field
+         }
+         else if constexpr (group_t<M>) {
             if (member.empty()) return;
             put_tag<Opts>(out, tag);
             encode_scalar(out, member.size());
@@ -325,14 +363,12 @@ namespace glz::fix::detail
          }
          else if constexpr (is_std_optional<M>::value) {
             if (!member || value_is_empty(*member)) return;
-            put_tag<Opts>(out, tag);
-            encode_checked<Opts>(out, *member, ctx);
+            encode_field<Opts, tag>(out, *member, ctx);
          }
          else {
             // FIX forbids empty values, so an empty string is treated as "not present"
             if (value_is_empty(member)) return;
-            put_tag<Opts>(out, tag);
-            encode_checked<Opts>(out, member, ctx);
+            encode_field<Opts, tag>(out, member, ctx);
          }
       });
    }

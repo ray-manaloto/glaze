@@ -26,6 +26,41 @@ namespace glz::fix
    // Returned by frame() when the bytes at the front of the stream cannot start a FIX message.
    inline constexpr size_t frame_error = (std::numeric_limits<size_t>::max)();
 
+   // Standard FIX length/data field pairs (Length type followed by a data field that may hold SOH).
+   // Returns the data tag for a length tag, or 0 if `length_tag` is not a standard length field.
+   constexpr uint32_t raw_data_tag_for(uint32_t length_tag) noexcept
+   {
+      switch (length_tag) {
+      case 90: return 91; // SecureDataLen -> SecureData
+      case 93: return 89; // SignatureLength -> Signature
+      case 95: return 96; // RawDataLength -> RawData
+      case 212: return 213; // XmlDataLen -> XmlData
+      case 348: return 349; // EncodedIssuerLen
+      case 350: return 351; // EncodedSecurityDescLen
+      case 352: return 353; // EncodedListExecInstLen
+      case 354: return 355; // EncodedTextLen
+      case 356: return 357; // EncodedSubjectLen
+      case 358: return 359; // EncodedHeadlineLen
+      case 360: return 361; // EncodedAllocTextLen
+      case 362: return 363; // EncodedUnderlyingIssuerLen
+      case 364: return 365; // EncodedUnderlyingSecurityDescLen
+      case 445: return 446; // EncodedListStatusTextLen
+      case 618: return 619; // EncodedLegIssuerLen
+      case 621: return 622; // EncodedLegSecurityDescLen
+      default: return 0;
+      }
+   }
+
+   // The length tag that announces `data_tag`, or 0.
+   constexpr uint32_t raw_length_tag_for(uint32_t data_tag) noexcept
+   {
+      constexpr uint32_t lens[] = {90, 93, 95, 212, 348, 350, 352, 354, 356, 358, 360, 362, 364, 445, 618, 621};
+      for (const auto l : lens) {
+         if (raw_data_tag_for(l) == data_tag) return l;
+      }
+      return 0;
+   }
+
    namespace detail
    {
       // Parses a decimal unsigned tag number. Returns false on empty, non-digit or overflow.
@@ -55,12 +90,39 @@ namespace glz::fix
          return true;
       }
 
+      // Carries a pending raw-data length from a length field (e.g. 95) to its data field (e.g. 96).
+      struct scan_state
+      {
+         uint32_t raw_tag{};
+         size_t raw_len{};
+      };
+
       // Scans one field starting at pos. On success sets f, advances pos past the SOH, and returns none.
-      constexpr error_code next_field(std::string_view msg, size_t& pos, char soh, field& f) noexcept
+      // A data field that directly follows its length field is read by byte count and may hold SOH.
+      constexpr error_code next_field(std::string_view msg, size_t& pos, char soh, field& f,
+                                      scan_state& st) noexcept
       {
          const size_t eq = msg.find('=', pos);
          if (eq == std::string_view::npos) {
             return error_code::syntax_error;
+         }
+         if (st.raw_tag != 0) {
+            const auto pending = st;
+            st = {};
+            uint32_t t{};
+            if (parse_uint(msg.substr(pos, eq - pos), t) && t == pending.raw_tag) {
+               const size_t vend = eq + 1 + pending.raw_len;
+               if (vend >= msg.size()) {
+                  return error_code::unexpected_end;
+               }
+               if (msg[vend] != soh) {
+                  return error_code::syntax_error; // the length field disagrees with the data
+               }
+               f.tag = t;
+               f.value = msg.substr(eq + 1, pending.raw_len);
+               pos = vend + 1;
+               return error_code::none;
+            }
          }
          const size_t end = msg.find(soh, eq + 1);
          if (end == std::string_view::npos) {
@@ -76,7 +138,20 @@ namespace glz::fix
             return error_code::syntax_error; // FIX forbids empty values
          }
          pos = end + 1;
+         if (const uint32_t data_tag = raw_data_tag_for(f.tag); data_tag != 0) {
+            size_t len{};
+            if (!parse_size(f.value, len)) {
+               return error_code::syntax_error; // a length field must be a number
+            }
+            st = {data_tag, len};
+         }
          return error_code::none;
+      }
+
+      constexpr error_code next_field(std::string_view msg, size_t& pos, char soh, field& f) noexcept
+      {
+         scan_state st{};
+         return next_field(msg, pos, soh, f, st);
       }
    }
 
@@ -85,9 +160,10 @@ namespace glz::fix
    {
       std::vector<field> out;
       size_t pos = 0;
+      detail::scan_state st{};
       while (pos < msg.size()) {
          field f{};
-         const auto ec = detail::next_field(msg, pos, soh, f);
+         const auto ec = detail::next_field(msg, pos, soh, f, st);
          if (ec != error_code::none) {
             return glz::unexpected(error_ctx{pos, ec, "fix: malformed field"});
          }
@@ -117,6 +193,7 @@ namespace glz::fix
    {
       size_t pos = 0;
       field f{};
+      detail::scan_state st{};
       auto fail = [&](error_code ec, std::string_view what) { return error_ctx{pos, ec, what}; };
 
       if (msg.empty()) {
@@ -148,7 +225,7 @@ namespace glz::fix
       size_t trailer_start = pos;
       while (pos < msg.size()) {
          trailer_start = pos;
-         if (detail::next_field(msg, pos, soh, f) != error_code::none) {
+         if (detail::next_field(msg, pos, soh, f, st) != error_code::none) {
             return fail(error_code::syntax_error, "fix: malformed field");
          }
          if (f.tag == 10) {
