@@ -408,8 +408,7 @@ suite quickfixj_quickfixn_typed = [] {
       LogonRaw m{};
       expect(not glz::read<glz::fix_opts{}>(m, msg));
       expect(m.raw_data_length == 7 and m.raw_data == "rawdata");
-      skip("quickfixj MessageTest.java / testMessageBytesField with SOH inside RawData(96)",
-           "fix/core does not support length-prefixed raw-data fields yet (docs/fix/api.md)");
+      // RawData containing SOH: see fix_quickfix_v2_tests.inl.
    };
 
    "quickfixn MessageTests.cs / FromStringTestWithNoDataDictionary (verbatim)"_test = [] {
@@ -747,10 +746,6 @@ suite quickfix_more_groups = [] {
       expect(bool(glz::read<glz::fix_opts{}>(m, msg)));
    };
 
-   "MessagesTestCase.cpp / MessageTests / massQuoteParseGetString, massQuoteSetString"_test = [] {
-      skip("MessagesTestCase.cpp / massQuoteParseGetString / massQuoteSetString (364/365 encoded data with SOH)",
-           "fix/core does not support length-prefixed data fields yet (docs/fix/api.md)");
-   };
 };
 
 // MessagesTestCase.cpp / MessageTests / newOrderCross*, allocationInstruction* (FIX 4.4, nested and header groups)
