@@ -1,0 +1,124 @@
+# Test vectors ported from FerrumFIX / fefix (https://github.com/ferrumfix/ferrumfix).
+# Copyright Filippo Neysofu Costa and contributors. Licensed under MIT OR Apache-2.0.
+# Upstream has no NOTICE file (and the cloned snapshot has no LICENSE files at its root;
+# the license is declared in Cargo.toml). '|' is SOH; the example tests themselves use '|' as the
+# decoder separator, and their checksums are computed as if '|' were SOH.
+#
+# The snapshot (commit ca2bbe4 "Initial public release snapshot") does not contain the crates/
+# directory, so the tagvalue decoder unit tests (crates/fefix/src/tagvalue/...) are not available.
+# Only the workspace tests/ crate and the #[test] fn run() wrappers in examples/ were ported.
+# examples/10_encode_new_order_single has a message only in a comment (not asserted); skipped.
+# Upstream decoders in these tests either disable checksum verification or accept the message
+# anyway; where the CheckSum is wrong we keep the vector as validate expect=error.
+
+id = fefix.tainted_md_snapshot_parse
+source = ferrumfix/ferrumfix:tests/test_regression_tainted_decoder_fix44/src/lib.rs::decode
+kind = parse
+msg = 8=FIX.4.4|9=176|35=X|49=ERISX|56=XXXXXXXXX|34=3|52=20220714-09:26:22.518|262=TEST-220714092622-EfkcibvXPhF34SVNQYwwRz|60=20220714-09:26:22.517712684|6006=0|268=1|279=0|269=J|55=BTC/USD|15=BTC|10=157|
+expect = ok
+count = 16
+note = MarketDataSnapshot sample decodes and MsgType is readable (verify_checksum = false upstream)
+
+id = fefix.tainted_md_snapshot_validate
+source = ferrumfix/ferrumfix:tests/test_regression_tainted_decoder_fix44/src/lib.rs::decode
+kind = validate
+msg = 8=FIX.4.4|9=176|35=X|49=ERISX|56=XXXXXXXXX|34=3|52=20220714-09:26:22.518|262=TEST-220714092622-EfkcibvXPhF34SVNQYwwRz|60=20220714-09:26:22.517712684|6006=0|268=1|279=0|269=J|55=BTC/USD|15=BTC|10=157|
+expect = error
+note = BodyLength 176 correct, CheckSum 157 wrong (actual 051); upstream disables checksum verification
+
+id = fefix.tainted_security_status_parse
+source = ferrumfix/ferrumfix:tests/test_regression_tainted_decoder_fix44/src/lib.rs::decode
+kind = parse
+msg = 8=FIX.4.4|9=227|35=f|49=ERISX|56=XXXXXXXXX|34=4|52=20220714-09:26:22.518|324=TEST-220714092622-EfkcibvXPhF34SVNQYwwRz|60=20220714-09:26:22.517712684|55=BTC/USD|460=2|107=BTC/USD|6006=0|15=BTC|326=17|969=0.1|562=0.0001|1140=100000|561=0.000001|10=098|
+expect = ok
+count = 20
+note = SecurityStatus (35=f) sample decodes and MsgType is readable (verify_checksum = false upstream)
+
+id = fefix.tainted_security_status_validate
+source = ferrumfix/ferrumfix:tests/test_regression_tainted_decoder_fix44/src/lib.rs::decode
+kind = validate
+msg = 8=FIX.4.4|9=227|35=f|49=ERISX|56=XXXXXXXXX|34=4|52=20220714-09:26:22.518|324=TEST-220714092622-EfkcibvXPhF34SVNQYwwRz|60=20220714-09:26:22.517712684|55=BTC/USD|460=2|107=BTC/USD|6006=0|15=BTC|326=17|969=0.1|562=0.0001|1140=100000|561=0.000001|10=098|
+expect = error
+note = BodyLength 227 correct, CheckSum 098 wrong (actual 248); upstream disables checksum verification
+
+id = fefix.md_incremental_parse
+source = ferrumfix/ferrumfix:examples/00_decode_fix/src/main.rs::run
+kind = parse
+msg = 8=FIX.4.2|9=196|35=X|49=A|56=B|34=12|52=20100318-03:21:11.364|262=A|268=2|279=0|269=0|278=BID|55=EUR/USD|270=1.37215|15=EUR|271=2500000|346=1|279=0|269=1|278=OFFER|55=EUR/USD|270=1.37224|15=EUR|271=2503200|346=1|10=171|
+expect = ok
+fields = 8=FIX.4.2|9=196|35=X|49=A|56=B|34=12|52=20100318-03:21:11.364|262=A|268=2|279=0|269=0|278=BID|55=EUR/USD|270=1.37215|15=EUR|271=2500000|346=1|279=0|269=1|278=OFFER|55=EUR/USD|270=1.37224|15=EUR|271=2503200|346=1|10=171
+count = 26
+note = MarketDataIncrementalRefresh with two-entry NoMDEntries group; test asserts 8, 35, 49, 56, 34, 262 and both group entries, so the full ordered field list is given
+
+id = fefix.md_incremental_validate
+source = ferrumfix/ferrumfix:examples/00_decode_fix/src/main.rs::run
+kind = validate
+msg = 8=FIX.4.2|9=196|35=X|49=A|56=B|34=12|52=20100318-03:21:11.364|262=A|268=2|279=0|269=0|278=BID|55=EUR/USD|270=1.37215|15=EUR|271=2500000|346=1|279=0|269=1|278=OFFER|55=EUR/USD|270=1.37224|15=EUR|271=2503200|346=1|10=171|
+expect = ok
+note = same message: BodyLength 196 and CheckSum 171 correct
+
+id = fefix.md_incremental_checksum
+source = ferrumfix/ferrumfix:examples/00_decode_fix/src/main.rs::run
+kind = checksum
+bytes = 8=FIX.4.2|9=196|35=X|49=A|56=B|34=12|52=20100318-03:21:11.364|262=A|268=2|279=0|269=0|278=BID|55=EUR/USD|270=1.37215|15=EUR|271=2500000|346=1|279=0|269=1|278=OFFER|55=EUR/USD|270=1.37224|15=EUR|271=2503200|346=1|
+value = 171
+note = CheckSum of the message up to 10= is 171
+
+id = fefix.stream_ioi_validate
+source = ferrumfix/ferrumfix:examples/03_decode_fix_stream/src/main.rs::run
+kind = validate
+msg = 8=FIX.4.2|9=97|35=6|49=BKR|56=IM|34=14|52=20100204-09:18:42|23=115685|28=N|55=SPMI.MI|54=2|44=2200.75|27=S|25=H|10=248|
+expect = ok
+note = first stream message (35=6 IOI): BodyLength 97, CheckSum 248 correct
+
+id = fefix.stream_ioi_checksum
+source = ferrumfix/ferrumfix:examples/03_decode_fix_stream/src/main.rs::run
+kind = checksum
+bytes = 8=FIX.4.2|9=97|35=6|49=BKR|56=IM|34=14|52=20100204-09:18:42|23=115685|28=N|55=SPMI.MI|54=2|44=2200.75|27=S|25=H|
+value = 248
+note = CheckSum of the first stream message is 248
+
+id = fefix.stream_two_messages_frame
+source = ferrumfix/ferrumfix:examples/03_decode_fix_stream/src/main.rs::run
+kind = frame
+stream = 8=FIX.4.2|9=97|35=6|49=BKR|56=IM|34=14|52=20100204-09:18:42|23=115685|28=N|55=SPMI.MI|54=2|44=2200.75|27=S|25=H|10=248|8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=091|
+frame_len = 119
+note = streaming decoder over two concatenated messages; first frame is the IOI
+
+id = fefix.stream_partial_frame
+source = ferrumfix/ferrumfix:examples/03_decode_fix_stream/src/main.rs::run
+kind = frame
+stream = 8=FIX.4.2|9=97|35=6|49=BKR|56=IM|34=14|5
+frame_len = 0
+note = streaming decoder fed less than one message reports still-parsing (None)
+
+id = fefix.stream_order_parse
+source = ferrumfix/ferrumfix:examples/03_decode_fix_stream/src/main.rs::run
+kind = parse
+msg = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=091|
+expect = ok
+count = 8
+note = second stream message (NewOrderSingle) decodes; BeginString FIX.4.2
+
+id = fefix.stream_order_validate
+source = ferrumfix/ferrumfix:examples/03_decode_fix_stream/src/main.rs::run
+kind = validate
+msg = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=091|
+expect = error
+note = BodyLength 40 correct, CheckSum 091 wrong (actual 254); upstream decoder accepted it
+
+id = fefix.coinbase_exec_report_parse
+source = ferrumfix/ferrumfix:examples/05_coinbase_codegen/src/main.rs::run
+kind = parse
+msg = 8=FIX.4.2|9=21|35=8|1003=123|1057=Y|10=090|
+expect = ok
+fields = 8=FIX.4.2|9=21|35=8|1003=123|1057=Y|10=090
+count = 6
+note = custom-dictionary fields 1003=123 and 1057=Y decode
+
+id = fefix.coinbase_exec_report_validate
+source = ferrumfix/ferrumfix:examples/05_coinbase_codegen/src/main.rs::run
+kind = validate
+msg = 8=FIX.4.2|9=21|35=8|1003=123|1057=Y|10=090|
+expect = error
+note = BodyLength 21 correct, CheckSum 090 wrong (actual 211); upstream decoder accepted it
