@@ -343,6 +343,7 @@ suite conformance_tests = [] {
       expect(not glz::fix::validate(m)) << m;
       auto f = glz::fix::parse_fields(m);
       expect(f.has_value());
+      if (!f) return;
       bool found = false;
       for (auto& x : *f) {
          if (x.tag == 96) {
