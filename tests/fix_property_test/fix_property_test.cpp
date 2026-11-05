@@ -327,7 +327,7 @@ suite conformance_tests = [] {
 
    "R14 other Length/data pairs follow the same rule (354/355 EncodedText, 93/89 Signature)"_test = [] {
       expect(glz::fix::parse_fields("354=3|355=a|b|", '|').has_value());
-      expect(glz::fix::parse_fields("93=3|89=|||", '|').has_value());
+      expect(glz::fix::parse_fields("93=3|89=||||", '|').has_value());
       expect(not glz::fix::parse_fields("354=x|355=a|", '|').has_value());
    };
 
@@ -388,6 +388,21 @@ suite conformance_tests = [] {
       o.price = 1e-7;
       expect(not glz::write<pipe_opts>(o, buf));
       expect(buf.find("44=0.0000001|") != std::string::npos) << buf;
+   };
+
+   "R19 extreme doubles that read must write back (regression: fuzzing/regressions/fix_read)"_test = [] {
+      NewOrderSingle o{};
+      const std::string big = "1" + std::string(300, '0');
+      expect(not glz::read<pipe_opts>(o, make("35=D|11=a|44=" + big + "|")));
+      std::string buf;
+      expect(not glz::write<pipe_opts>(o, buf));
+      NewOrderSingle back{};
+      expect(not glz::read<pipe_opts>(back, buf));
+      expect(back.price == o.price);
+      o.price = 4.9406564584124654e-324; // smallest denormal
+      expect(not glz::write<pipe_opts>(o, buf));
+      expect(not glz::read<pipe_opts>(back, buf)) << buf;
+      expect(back.price == o.price);
    };
 
    "R20 Boolean values are Y or N"_test = [] {

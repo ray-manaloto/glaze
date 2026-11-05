@@ -318,7 +318,7 @@ namespace glz::fix::detail
    bool write_value(const V& v, std::string& out, char soh)
    {
       using T = std::remove_cvref_t<V>;
-      char buf[64];
+      char buf[512]; // fixed notation of DBL_MAX or the smallest denormal needs over 300 digits
       if constexpr (std::same_as<T, bool>) {
          out.push_back(v ? 'Y' : 'N');
       }
