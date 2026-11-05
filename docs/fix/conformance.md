@@ -33,6 +33,10 @@ FIX 4.4 specification (Volume 1, "FIX Message Format" and "Data Types") and FIX 
 | R24 | FIX 5.0 SP2 messages use BeginString `FIXT.1.1` and are framed identically. | `validate`, `frame` | `R24 ...` |
 | R25 | `fix_opts::validate_checksum` / `validate_body_length` turn the two checks off. | struct read | `R25 ...` |
 
+Against `fix/core` as merged on 2026-11-05, R11 (in part), R14, R15 (in part), R16 and R19
+(exponents) are not met yet. Their checks are guarded by `GLZ_FIX_KNOWN_GAPS`; see
+`docs/fix/sessions/fix-conformance-fuzz.md` for the list.
+
 ## Properties
 
 | Id | Property | Test |
