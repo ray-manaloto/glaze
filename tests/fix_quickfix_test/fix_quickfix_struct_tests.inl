@@ -629,3 +629,52 @@ suite quickfix_groups = [] {
       expect(m.hops.empty());
    };
 };
+
+// ---------------------------------------------------------------------------------------------
+// FieldConvertorsTestCase.cpp / UTCTimestamp, UTCTimeOnly, UTCDateOnly
+// PROPOSED mapping (not yet in the contract; guarded by GLZ_FIX_TIME_TYPES):
+//   UTCTimestamp -> std::chrono::sys_time<std::chrono::nanoseconds>  ("YYYYMMDD-HH:MM:SS[.sss[sss[sss]]]")
+//   UTCTimeOnly  -> std::chrono::nanoseconds since midnight         ("HH:MM:SS[.fraction]")
+//   UTCDateOnly  -> std::chrono::year_month_day                     ("YYYYMMDD")
+// ---------------------------------------------------------------------------------------------
+#if defined(GLZ_FIX_TIME_TYPES)
+#include <chrono>
+
+suite quickfix_time_convertors = [] {
+   using namespace qf_struct;
+   using namespace std::chrono;
+   using ts_t = sys_time<nanoseconds>;
+   const auto base = sys_days{year{2000} / April / 26} + hours{12} + minutes{5} + seconds{6};
+
+   "FieldConvertorsTestCase.cpp / FieldConvertorTests / utcTimeStampConvertFrom{Second,Milli,Micro,Nano}"_test = [&] {
+      ts_t v{};
+      expect(not read_one("20000426-12:05:06", v) and v == base);
+      expect(not read_one("20000426-12:05:06.555", v) and v == base + milliseconds{555});
+      expect(not read_one("20000426-12:05:06.555555", v) and v == base + microseconds{555555});
+      expect(not read_one("20000426-12:05:06.555555555", v) and v == base + nanoseconds{555555555});
+   };
+   "FieldConvertorsTestCase.cpp / FieldConvertorTests / utcTimeStampConvertTo (nanosecond input)"_test = [&] {
+      // QuickFIX writes the precision it is asked for; glaze is expected to keep all significant digits.
+      expect(write_one(ts_t{base}) == "20000426-12:05:06");
+      expect(write_one(ts_t{base + nanoseconds{555555555}}) == "20000426-12:05:06.555555555");
+   };
+   "FieldConvertorsTestCase.cpp / FieldConvertorTests / utcDateConvertFrom"_test = [] {
+      year_month_day v{};
+      expect(not read_one("20000426", v) and v == year_month_day{year{2000}, month{4}, day{26}});
+      expect(bool(read_one("20001526", v))); // outOfRangeMonth
+      expect(bool(read_one("20000438", v))); // outOfRangeMonthDay
+   };
+   "FieldConvertorsTestCase.cpp / FieldConvertorTests / utcDateConvertTo"_test = [] {
+      expect(write_one(year_month_day{year{2000}, month{4}, day{26}}) == "20000426");
+   };
+   "FieldConvertorsTestCase.cpp / FieldConvertorTests / utcTimeOnlyConvertFromMicro"_test = [] {
+      nanoseconds v{};
+      expect(not read_one("12:05:06.555555", v) and v == hours{12} + minutes{5} + seconds{6} + microseconds{555555});
+   };
+   "FieldConvertorsTestCase.cpp / FieldConvertorTests / utcTimeOnlyConvertTo{Second,Nano}"_test = [] {
+      expect(write_one(nanoseconds{hours{12} + minutes{5} + seconds{6}}) == "12:05:06");
+      expect(write_one(nanoseconds{hours{12} + minutes{5} + seconds{6} + nanoseconds{555555555}}) ==
+             "12:05:06.555555555");
+   };
+};
+#endif

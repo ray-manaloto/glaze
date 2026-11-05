@@ -287,6 +287,15 @@ suite quickfix_checksum = [] {
       check(parserByteMsg1, 152);
    };
 
+   // FieldConvertorsTestCase.cpp / FieldConvertorTests / checkSumConvertTo: always 3 digits.
+   "FieldConvertorsTestCase.cpp / FieldConvertorTests / checkSumConvertTo (10 must be 3 digits)"_test = [] {
+      expect(is_valid(logon)); // 10=026
+      expect(not is_valid("8=FIX.4.2\0019=12\00135=A\001108=30\00110=26\001"));
+      expect(not is_valid("8=FIX.4.2\0019=12\00135=A\001108=30\00110=0026\001"));
+      expect(is_valid(testRequest)); // 10=007
+      expect(not is_valid("8=FIX.4.2\0019=12\00135=1\001112=23\00110=7\001"));
+   };
+
    "checksum: high-bit bytes are summed as unsigned (MessagesTestCase.cpp / setStringWithHighBit)"_test = [] {
       // QuickFIX fills RawData with char(-92) == 0xA4.
       const std::string s(3, char(-92));
@@ -463,7 +472,9 @@ suite quickfix_dictionary_skipped = [] {
    skip("GroupTestCase.cpp / FieldMapTestCase.cpp (QuickFIX FieldMap/Group container API, no wire format)", "not applicable: API of QuickFIX's own containers");
 };
 
-// Contract does not define UTCTimestamp / UTCDateOnly / UTCTimeOnly types yet.
+#if !defined(GLZ_FIX_TIME_TYPES)
+// Contract does not define UTCTimestamp / UTCDateOnly / UTCTimeOnly types yet. The tests exist in
+// fix_quickfix_struct_tests.inl under GLZ_FIX_TIME_TYPES with a proposed std::chrono mapping.
 suite quickfix_time_skipped = [] {
    constexpr const char* why = "contract defines no UTCTimestamp/UTCDateOnly/UTCTimeOnly C++ type; see docs/fix/sessions/fix-tests-quickfix.md";
    skip("FieldConvertorsTestCase.cpp / utcTimeStampConvertTo{Second,Milli,Micro,Nano,PrecisionBounds}", why);
@@ -472,6 +483,7 @@ suite quickfix_time_skipped = [] {
    skip("FieldConvertorsTestCase.cpp / utcDateConvertTo / utcDateConvertFrom", why);
    skip("UtcTimeStampTestCase.cpp / UtcTimeOnlyTestCase.cpp", why);
 };
+#endif
 
 int main()
 {
