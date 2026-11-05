@@ -8,6 +8,7 @@ The FIX tag=value codec reads and writes these types (see the API contract in `d
 |----------|--------------------------------------|--------------------|---------------------------------------|
 | FIX 4.2  | `include/glaze/fix/dict/fix42.hpp`   | `glz::fix::fix42`  | `OrchestraFIX42.xml` (FIX.4.2_EP311)  |
 | FIX 4.4  | `include/glaze/fix/dict/fix44.hpp`   | `glz::fix::fix44`  | `OrchestraFIX44.xml` (FIX.4.4_EP311)  |
+| FIXT 1.1 session | `include/glaze/fix/dict/fixt11.hpp` | `glz::fix::fixt11` | `FIXTSession.xml` (FIXT, as of FIX.5.0SP2_EP247) |
 | FIX 5.0 SP2 | generated on demand (~5.6 MB), not committed | `glz::fix::fix50sp2` | `FixRepositoryUnifiedEP247.xml` (FIX.5.0SP2_EP247, Repository 2010 Unified format) |
 | FIX Latest (5.0 SP2 + later extension packs) | generated on demand (~6 MB), not committed | `glz::fix::fixlatest` | `OrchestraFIXLatest.xml` |
 
@@ -46,6 +47,8 @@ python3 util/fix_codegen/fix_codegen.py --xml "$S/OrchestraFIX44.xml" --namespac
     --out include/glaze/fix/dict/fix44.hpp
 python3 util/fix_codegen/fix_codegen.py --xml "$S/OrchestraFIX42.xml" --namespace fix42 \
     --out include/glaze/fix/dict/fix42.hpp
+python3 util/fix_codegen/fix_codegen.py --xml "$S/FIXTSession.xml" --namespace fixt11 \
+    --out include/glaze/fix/dict/fixt11.hpp
 python3 util/fix_codegen/fix_codegen.py --xml "$S/OrchestraFIXLatest.xml" --namespace fixlatest \
     --out include/glaze/fix/dict/fixlatest.hpp   # ~6 MB, not committed
 
@@ -171,8 +174,8 @@ template <> struct glz::meta<glz::fix::fix44::NewOrderSingle> {
 ## Limitations
 
 * The 5.0 SP2 file holds the application layer only. FIXT.1.1 session messages (Logon with
-  DefaultApplVerID(1137), etc.) come from `FIXTSession.xml` in orchestrations, which has not been
-  generated or tested yet. The generator accepts it like any other Orchestra file.
+  DefaultApplVerID(1137), Heartbeat, ...) are in `fixt11.hpp`, generated from `FIXTSession.xml`.
+  A FIXT session uses `fixt11` for session messages and `fix50sp2` for application messages.
 * The 2010 Unified file is EP247, so it lacks extension packs after EP247.
 * Enum values are not checked against their code set (the codec reads and writes the
   underlying value). A required enum left default-constructed is written as a NUL byte.

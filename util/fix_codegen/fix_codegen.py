@@ -181,7 +181,7 @@ class Gen:
         # FIX 5.0 and later run over the FIXT.1.1 session layer: 8=FIXT.1.1 on the wire, and the
         # application version travels in ApplVerID(1128). FIX 4.x puts its own version in 8.
         n = repo.name
-        self.wire_begin = "FIXT.1.1" if (n.startswith("FIX.5") or n.startswith("FIX.Latest")) else n
+        self.wire_begin = "FIXT.1.1" if (n.startswith(("FIX.5", "FIX.Latest", "FIXT"))) else n
         self.appl_ver_id = APPL_VER_IDS.get(n.split("_")[0], "")
         self.ns = ns
         self.used_names: set[str] = set()

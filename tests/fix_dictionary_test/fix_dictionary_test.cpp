@@ -11,6 +11,7 @@
 
 #include "glaze/fix/dict/fix42.hpp"
 #include "glaze/fix/dict/fix44.hpp"
+#include "glaze/fix/dict/fixt11.hpp"
 #include "glaze/fix/fix.hpp"
 #include "glaze/json.hpp"
 #include "ut/ut.hpp"
@@ -50,6 +51,10 @@ namespace
       "8=FIX.4.4|9=52|35=5|49=SRV|56=CLI|34=7|52=20261105-07:30:00|58=bye|10=161|";
    constexpr std::string_view logon42 =
       "8=FIX.4.2|9=57|35=A|49=SRV|56=CLI|34=1|52=20261105-07:30:00|98=0|108=30|10=083|";
+
+   // FIXT.1.1 session layer (used under FIX 5.x): DefaultApplVerID(1137)=9 selects FIX 5.0 SP2.
+   constexpr std::string_view logon_fixt =
+      "8=FIXT.1.1|9=64|35=A|49=SRV|56=CLI|34=1|52=20261105-07:30:00|98=0|108=30|1137=9|10=095|";
 
    // Reads `msg` into T, checks the header fields, writes it back and expects the same bytes.
    template <class T>
@@ -229,6 +234,15 @@ suite session_layer = [] {
       hb.sending_time = "20261105-07:30:00";
       hb.orig_sending_time = "20261105-07:29:00";
       expect(round_trip(hb) == hb);
+   };
+   "FIXT.1.1 Logon"_test = [] {
+      static_assert(glz::meta<glz::fix::fixt11::Logon>::fix_begin_string == "FIXT.1.1");
+      auto m = exact<glz::fix::fixt11::Logon>(logon_fixt, 1);
+      expect(m.default_appl_ver_id == "9");
+      expect(m.heart_bt_int == 30);
+      std::string out;
+      expect(not glz::write<pipe_opts>(m, out));
+      expect(out.starts_with("8=FIXT.1.1|"));
    };
    "FIX 4.2 Logon"_test = [] {
       auto m = exact<glz::fix::fix42::Logon>(logon42, 1);
