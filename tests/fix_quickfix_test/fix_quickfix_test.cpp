@@ -496,6 +496,7 @@ suite quickfixj_quickfixn_vectors = [] {
 
 #if defined(GLZ_FIX_STRUCT_MAPPING)
 #include "fix_quickfix_struct_tests.inl"
+#include "fix_quickfix_more_tests.inl"
 #else
 suite quickfix_struct_mapping_skipped = [] {
    constexpr const char* why = "FIX core does not define GLZ_FIX_STRUCT_MAPPING (glz::read/write<fix_opts> not available)";
