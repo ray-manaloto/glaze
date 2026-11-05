@@ -55,7 +55,7 @@ Workaround used: `apt-get install clang-19` (19.1.1 from Ubuntu noble), configur
 `clang-scan-deps-19`, so CMake's module scanning fails without that option). The Clang build uses
 the test project's `-fno-exceptions -fno-rtti -Werror` and ASan/UBSan.
 
-## Results (state at 07:43 UTC, after seven merge rounds)
+## Results (state at 07:43 UTC, final merge state)
 
 `ctest -R '^fix_'`: GCC 7/7 pass, Clang 19 7/7 pass.
 
@@ -71,7 +71,7 @@ gaps (not run, not counted in "run").
 | fix_fixpp_test       | 51 | 51 | 0 | 6 | 51 | 51 | 0 | 6 |
 | fix_quickfix_test    | 174 | 174 | 0 | 15 | 174 | 174 | 0 | 15 |
 | fix_vectors_test     | 373 | 373 | 0 | 0 | 373 | 373 | 0 | 0 |
-| fix_property_test    | 35 | 35 | 0 | 0 | 35 | 35 | 0 | 0 |
+| fix_property_test    | 36 | 36 | 0 | 0 | 36 | 36 | 0 | 0 |
 | Clang 18.1.3         | —   | —   | — | —  | does not compile (see above) | | | |
 
 ## Fuzz targets (Clang 19, libFuzzer)
