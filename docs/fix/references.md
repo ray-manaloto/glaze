@@ -56,6 +56,11 @@ There is no NOTICE file upstream.
 checksum), a garbled CheckSum, ten partial-buffer frame cases, garbled BeginString and BodyLength
 frame cases, and nine exact session messages from `FIXInitiatorTest` as validate vectors. Value
 decoder tests were not ported (they are below the tag=value layer).
+**Second pass:** 23 more in `philadelphia_more.fixv`: the remaining exact wire messages from
+`FIXInitiatorTest` (session Rejects for missing BeginSeqNo/EndSeqNo/NewSeqNo and BeginSeqNo too high,
+SequenceReset-GapFill replies, Logouts, a ResendRequest, Heartbeats, a Heartbeat+TestRequest
+two-message frame), the bare bodies the tests send, and an unterminated last field from
+`receiveTooLongMessage`. The clone has no `FIXAcceptorTest`.
 
 ## Artio (Java), real-logic/artio — Apache-2.0
 
@@ -70,6 +75,11 @@ incomplete, complete-plus-partial), invalid checksum, too-short BodyLength, head
 empty-field parse error, repeating-group messages (parse and checksum only, since their upstream
 BodyLength values are not correct and Artio's parser does not check them) and a message whose correct
 CheckSum is `000`.
+**Second pass:** 25 more in `artio_more.fixv`, from `BusinessRejectRefIdExtractorTest`,
+`PossDupFinderTest`, `PasswordCleanerTest`, `FixMessagePredicateTest`, `SessionParserTest` and three
+more `ReceiverEndPointTest` framing cases (Logon followed by an order, a split prefix, a missing final
+SOH). Many of these fixtures carry wrong 9 or 10 values because the code under test never checks
+them; they are ported as `validate` errors and each note gives the stated and actual values.
 
 ## ferrumfix / fefix (Rust), ferrumfix/ferrumfix — MIT OR Apache-2.0
 
@@ -97,7 +107,12 @@ files in the repo root (`parser_test.go` with 9 tests, `message_test.go` with 25
 `repeating_group_test.go`) and its own copy of the acceptance suite (505 `.def` files). QuickFIX/J has
 135 Java test files, including `MessageTest` and `MessageUtilsTest` in `quickfixj-base` and
 `quickfixj-core`.
-**Ported:** nothing copied. The structural cases these suites cover (bad CheckSum, BodyLength too long
+**Ported:** nothing copied. A second pass (`spec_more.fixv`, 78 vectors) took only the *categories*
+of their parser, message, validation and repeating-group tests and fix8's message tests, and wrote
+new messages for them: checksum high/low/out of range/non-digit/wrong width, BodyLength zero,
+negative, huge, signed or padded, missing or doubled SOH, `=` at the start of a field, repeated 9,
+empty 35, FIXT.1.1 messages, groups (flat, zero count, nested, followed by more fields) and frames
+cut at every header boundary or with garbage between messages. The structural cases these suites cover (bad CheckSum, BodyLength too long
 or too short, non-numeric BodyLength, 8/9/35 out of order, field after 10, missing 10, unterminated
 fields, bad tags) are written afresh from the FIX specification in `spec.fixv`. The acceptance `.def`
 categories are a good checklist for a later session-level test suite.

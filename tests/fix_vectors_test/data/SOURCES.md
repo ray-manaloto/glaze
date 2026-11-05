@@ -8,11 +8,17 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | file | upstream | licence | licence file | vectors |
 |---|---|---|---|---|
 | `artio.fixv` | [real-logic/artio](https://github.com/real-logic/artio) | Apache-2.0 (no NOTICE file upstream) | `licenses/artio-LICENSE` | 23 |
+| `artio_more.fixv` | [real-logic/artio](https://github.com/real-logic/artio) | Apache-2.0 (no NOTICE file upstream) | `licenses/artio-LICENSE` | 25 |
 | `crocofix.fixv` | [GaryHughes/crocofix](https://github.com/GaryHughes/crocofix) | MIT | `licenses/crocofix-LICENSE.txt` | 32 |
+| `crocofix_raw.fixv` | [GaryHughes/crocofix](https://github.com/GaryHughes/crocofix) | MIT | `licenses/crocofix-LICENSE.txt` | 9 |
 | `fefix.fixv` | [ferrumfix/ferrumfix](https://github.com/ferrumfix/ferrumfix) | MIT OR Apache-2.0 (used under Apache-2.0) | `licenses/fefix-LICENSE.txt` | 15 |
+| `fefix_crate.fixv` | [fefix crate (crates.io)](https://crates.io/crates/fefix) | MIT OR Apache-2.0 (used under Apache-2.0) | `licenses/fefix-LICENSE.txt` | 66 |
 | `philadelphia.fixv` | [paritytrading/philadelphia](https://github.com/paritytrading/philadelphia) | Apache-2.0 (no NOTICE file upstream) | `licenses/philadelphia-LICENSE.txt` | 30 |
+| `philadelphia_more.fixv` | [paritytrading/philadelphia](https://github.com/paritytrading/philadelphia) | Apache-2.0 (no NOTICE file upstream) | `licenses/philadelphia-LICENSE.txt` | 23 |
 | `simplefix.fixv` | [da4089/simplefix](https://github.com/da4089/simplefix) | MIT | `licenses/simplefix-LICENSE` | 31 |
+| `simplefix_raw.fixv` | [da4089/simplefix](https://github.com/da4089/simplefix) | MIT | `licenses/simplefix-LICENSE` | 4 |
 | `spec.fixv` | written afresh (FIX 4.4 Vol. 2 / FIX Session Layer) | part of this repository (MIT) | - | 36 |
+| `spec_more.fixv` | written afresh (FIX 4.4 Vol. 2 / FIX Session Layer) | part of this repository (MIT) | - | 78 |
 
 ## artio.fixv
 
@@ -41,6 +47,36 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `artio.nested_repeating_group_checksum` | checksum | 76 | `real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfNestedRepeatingGroup` | NESTED_REPEATING_GROUP CheckSum 076 is correct (OtfParser checks it, no onError) |
 | `artio.zero_checksum_parse` | parse | ok | `real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::parsesZeroChecksumMessages` | Heartbeat whose CheckSum is 000; parses without error |
 | `artio.zero_checksum_checksum` | checksum | 0 | `real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::parsesZeroChecksumMessages` | bytes sum to 0 mod 256 (CheckSum 000 is genuinely correct) |
+
+## artio_more.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `artio.ioi_parse` | parse | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/BusinessRejectRefIdExtractorTest.java::shouldExtractBusinessRejectRefId` | IOI (35=6) message; tag=value scan succeeds (15 fields) |
+| `artio.ioi_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/BusinessRejectRefIdExtractorTest.java::shouldExtractBusinessRejectRefId` | stated BodyLength 154 but actual body is 101 bytes (CheckSum 170 also wrong, actual 123); extractor does not validate |
+| `artio.possdup_second_parse` | parse | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/PossDupFinderTest.java::shouldFindLengthOfPossDupMessage` | Logout with PossDupFlag; BodyLength value written with leading zeros (0065) |
+| `artio.possdup_second_checksum` | checksum | 88 | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/PossDupFinderTest.java::shouldFindLengthOfPossDupMessage` | SECOND_MESSAGE CheckSum 088 is correct |
+| `artio.possdup_first_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/PossDupFinderTest.java::shouldOnlyReturnPossDupAtLength` | FIRST_MESSAGE is SECOND_MESSAGE without 43=Y but keeps its header and trailer: body is 60 bytes (not 65), CheckSum actual 090 (not 088) |
+| `artio.password_logon_validate` | validate | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogon` | Logon with Username/Password; BodyLength 99 and CheckSum 062 both correct |
+| `artio.password_logon_frame` | frame | len 121 | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogon` | Logon with password frames at its full length |
+| `artio.password_logon_checksum` | checksum | 62 | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogon` | Logon CheckSum 062 |
+| `artio.no_password_logon_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldNotChangeLogonWithoutPassword` | BodyLength 78 correct but the fixture reuses CheckSum 062 (actual 081) |
+| `artio.short_password_logon_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogonWithShortNamePassword` | stated BodyLength 98 but actual body is 100 bytes (and CheckSum 062 is stale) |
+| `artio.empty_password_logon_parse` | parse | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogonWithEmptyPassword` | Password field 554 has an empty value; parse_fields rejects empty values |
+| `artio.user_request_parse` | parse | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordsFromUserRequest` | UserRequest (35=BE, two-character MsgType) parses as 13 fields |
+| `artio.user_request_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordsFromUserRequest` | BodyLength 116 correct, CheckSum 062 stale (actual 185) |
+| `artio.header_eg_parse` | parse | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/logger/FixMessagePredicateTest.java::shouldMatchHeader` | Logon with five-digit custom tags 35002 and 35003 |
+| `artio.header_eg_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/logger/FixMessagePredicateTest.java::shouldMatchHeader` | BodyLength 110 correct, CheckSum 047 wrong (actual 168) |
+| `artio.header_eg_checksum` | checksum | 168 | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/logger/FixMessagePredicateTest.java::shouldMatchHeader` | actual CheckSum of HEADER_EG is 168 |
+| `artio.missing_msg_seq_num_parse` | parse | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfMissingMsgSeqNum` | header-only News message, no BodyLength and no CheckSum; tag=value scan succeeds |
+| `artio.missing_msg_seq_num_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfMissingMsgSeqNum` | second field is 35, not 9 (no BodyLength, no CheckSum) |
+| `artio.unknown_msg_type_parse` | parse | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfUnknownMessageType` | MsgType value * is a legal tag=value value |
+| `artio.unknown_msg_type_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfUnknownMessageType` | no BodyLength and no CheckSum |
+| `artio.wrong_comp_id_validate` | validate | error | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldValidateCompId` | EG_MESSAGE with CompIDs replaced by WRONG keeps BodyLength 146 (actual 143) and CheckSum 195 (actual 116) |
+| `artio.wrong_comp_id_parse` | parse | ok | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldValidateCompId` | same message parses as 19 fields |
+| `artio.frame_logon_then_eg` | frame | len 86 | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameLogonMessageWhenLoggerBehind` | LOGON_MESSAGE followed by EG_MESSAGE; first frame is the 86-byte Logon |
+| `artio.frame_split_prefix` | frame | len 0 | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameSplitFixMessage` | a prefix of EG_MESSAGE ending after 11=NF 0542/03232009 (as when the message arrives split) is incomplete |
+| `artio.frame_eg_without_final_soh` | frame | len 0 | `real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldOnlyFrameCompleteFixMessage` | EG_MESSAGE missing only its final SOH is incomplete |
 
 ## crocofix.fixv
 
@@ -79,6 +115,20 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `crocofix.frame.no_checksum` | frame | len 0 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "encode does not add CheckSum if it is not present": no 10 so decode is incomplete |
 | `crocofix.checksum.complete_message` | checksum | 21 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "encode a message": encode recomputes CheckSum 021 over the NewOrderSingle |
 
+## crocofix_raw.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `crocofix.raw.data_field_parse` | parse | ok | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "decode a message containing a data field": Signature(89) of 20 bytes with two SOH inside |
+| `crocofix.raw.data_field_validate` | validate | error | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | same; upstream 9=167 is wrong (body is 179 bytes) and crocofix does not check it |
+| `crocofix.raw.data_field_fixed_validate` | validate | ok | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | same message with 9 and 10 recomputed (9=179); written for glaze |
+| `crocofix.raw.data_field_fixed_frame` | frame | len 202 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | corrected message framed, SOH inside 89 does not end it |
+| `crocofix.raw.data_field_first_piece_frame` | frame | len 0 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "decode a message containing a data field in two pieces": first piece ends inside the data |
+| `crocofix.raw.encode_data_field_validate` | validate | error | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "encode a message containing a data field": correct 9 and 10, but no MsgType(35), so glz::fix::validate rejects it |
+| `crocofix.raw.encode_data_field_checksum` | checksum | 119 | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | same message, CheckSum 119 |
+| `crocofix.raw.data_field_no_length_parse` | parse | ok | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "data field that has no preceeding size field": crocofix rejects it; a plain scanner reads 89=123 as an ordinary field. Ported as the scanner outcome |
+| `crocofix.raw.data_field_no_trailing_soh_parse` | parse | error | `GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message` | SECTION "data field that does not have a traling field separator": 93=3 then 89=AAA is not followed by SOH |
+
 ## fefix.fixv
 
 | id | kind | expect | source | what it checks |
@@ -98,6 +148,77 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `fefix.stream_order_validate` | validate | error | `ferrumfix/ferrumfix:examples/03_decode_fix_stream/src/main.rs::run` | BodyLength 40 correct, CheckSum 091 wrong (actual 254); upstream decoder accepted it |
 | `fefix.coinbase_exec_report_parse` | parse | ok | `ferrumfix/ferrumfix:examples/05_coinbase_codegen/src/main.rs::run` | custom-dictionary fields 1003=123 and 1057=Y decode |
 | `fefix.coinbase_exec_report_validate` | validate | error | `ferrumfix/ferrumfix:examples/05_coinbase_codegen/src/main.rs::run` | BodyLength 21 correct, CheckSum 090 wrong (actual 211); upstream decoder accepted it |
+
+## fefix_crate.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `fefix.crate_raw_sample_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid` | upstream asserts begin string FIX.4.2 and payload 35=D..59=0 (checksum not verified) |
+| `fefix.crate_raw_sample_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid` | BodyLength 40 correct; 091 was summed over literal '\|' bytes, with SOH the sum is 254 |
+| `fefix.crate_raw_sample_soh_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid` | same message with CheckSum recomputed over SOH separators |
+| `fefix.crate_raw_sample_checksum` | checksum | 254 | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid` |  |
+| `fefix.crate_raw_msg_type_only_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid` |  |
+| `fefix.crate_raw_msg_type_only_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid` | BodyLength 5 correct; CheckSum 183 is the '\|' sum, SOH sum is 070 |
+| `fefix.crate_raw_msg_type_only_soh_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid` | minimal message: 8, 9, 35 and 10 only; CheckSum recomputed over SOH |
+| `fefix.crate_raw_msg_type_only_frame` | frame | len 20 | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid` |  |
+| `fefix.crate_raw_empty_payload_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_empty_payload_is_invalid` | well-formed fields; the invalidity is structural (see validate) |
+| `fefix.crate_raw_empty_payload_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_empty_payload_is_invalid` | no MsgType (35) third; upstream DecodeError::Invalid |
+| `fefix.crate_raw_bad_checksum_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_bad_checksum_is_invalid` | BodyLength correct, CheckSum 000 wrong (actual 254); upstream DecodeError::CheckSum |
+| `fefix.crate_raw_edge_empty_begin_string_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | empty value for tag 8; upstream only requires no panic |
+| `fefix.crate_raw_edge_empty_checksum_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | empty values for tags 8 and 10 |
+| `fefix.crate_raw_edge_equals_run_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | 8 has value "===" (allowed) but 10 is empty |
+| `fefix.crate_raw_edge_leading_separators_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | empty fields at the front |
+| `fefix.crate_raw_edge_leading_separators_frame` | frame | len error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | front is SOH, cannot start a message |
+| `fefix.crate_raw_edge_digits_no_equals_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | no '=' and no SOH |
+| `fefix.crate_raw_edge_digits_no_equals_frame` | frame | len error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | front is '9', not "8=" |
+| `fefix.crate_raw_edge_negative_digits_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` |  |
+| `fefix.crate_raw_edge_negative_digits_frame` | frame | len error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` |  |
+| `fefix.crate_raw_edge_all_equals_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | empty tag |
+| `fefix.crate_raw_edge_all_equals_frame` | frame | len error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` |  |
+| `fefix.crate_raw_edge_digits_soh_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | field without '=' |
+| `fefix.crate_raw_edge_digits_soh_frame` | frame | len error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` |  |
+| `fefix.crate_raw_edge_huge_tag_empty_value_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | empty first field, then a 12-digit tag (> 999999999) with empty value |
+| `fefix.crate_raw_edge_huge_value_trailing_equals_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` | empty first field and a trailing "=" with no tag, value or SOH |
+| `fefix.crate_raw_edge_huge_value_trailing_equals_frame` | frame | len error | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic` |  |
+| `fefix.crate_raw_buffered_repeated_frame` | frame | len 62 | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder` | upstream streams 42 back-to-back copies (CheckSum 091 there; 254 here, the SOH sum); 3 copies kept |
+| `fefix.crate_raw_buffered_partial_header_frame` | frame | len 0 | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder` | buffered decoder has no frame until enough bytes are supplied |
+| `fefix.crate_raw_buffered_missing_last_soh_frame` | frame | len 0 | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder` | 61 of 62 bytes: trailer SOH not yet arrived |
+| `fefix.crate_raw_buffered_begin_only_frame` | frame | len 0 | `fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder_has_no_current_frame` | only BeginString received |
+| `fefix.crate_dec_simple_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::can_parse_simple_message` | checksum verification off in the upstream test decoder |
+| `fefix.crate_dec_foobar_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::skip_checksum_verification` | unknown BeginString, accepted upstream with checksum verification off |
+| `fefix.crate_dec_foobar_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::no_skip_checksum_verification` | BodyLength 5 correct; CheckSum 000 wrong (actual 198); upstream errors with verification on |
+| `fefix.crate_dec_foobar_soh_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::no_skip_checksum_verification` | same message with correct CheckSum; validate does not check the BeginString value |
+| `fefix.crate_dec_group_entries_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::repeating_group_entries` | NoMDEntries (268) = 2; upstream asserts group length 2 and entry 0 has 278=BID |
+| `fefix.crate_dec_empty_group_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::top_level_tag_after_empty_group` | 268=0 (empty group) followed by top-level 346=1 |
+| `fefix.crate_dec_empty_group_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::top_level_tag_after_empty_group` | BodyLength 17 correct; CheckSum 171 wrong (actual 024) |
+| `fefix.crate_dec_empty_group_soh_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::top_level_tag_after_empty_group` | same message with CheckSum recomputed |
+| `fefix.crate_dec_random_heartbeat_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::heartbeat_message_fields_are_ok` | upstream asserts 35=0, 8=FIX.4.2, 34=12 |
+| `fefix.crate_dec_random_heartbeat_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[0] Heartbeat; 9 and 10 correct |
+| `fefix.crate_dec_random_heartbeat_checksum` | checksum | 185 | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` |  |
+| `fefix.crate_dec_random_trading_session_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[1] IOI (35=6); 9 and 10 correct |
+| `fefix.crate_dec_random_trade_capture_req_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[2] TradeCaptureReportRequest (two-character MsgType AD) |
+| `fefix.crate_dec_random_trade_capture_req_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` |  |
+| `fefix.crate_dec_random_reject_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[3] Reject (35=3) |
+| `fefix.crate_dec_random_reject_checksum` | checksum | 58 | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` |  |
+| `fefix.crate_dec_random_seq_reset_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[4] SequenceReset (35=4) |
+| `fefix.crate_dec_random_new_order_validate` | validate | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[5] NewOrderSingle |
+| `fefix.crate_dec_random_new_order_checksum` | checksum | 72 | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` |  |
+| `fefix.crate_dec_random_md_incremental_frame` | frame | len 219 | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[6] (219 bytes) followed by RANDOM_MESSAGES[0] |
+| `fefix.crate_dec_random_pair_second_frame` | frame | len 64 | `fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok` | RANDOM_MESSAGES[0] (64 bytes) followed by a partial second message |
+| `fefix.crate_dec_no_final_separator_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_final_separator` | last field has no SOH |
+| `fefix.crate_dec_no_final_separator_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_final_separator` | otherwise correct 9 and 10; only the trailing SOH is missing |
+| `fefix.crate_dec_no_final_separator_frame` | frame | len 0 | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_final_separator` | 144 of 145 bytes; the frame is incomplete until the final SOH arrives |
+| `fefix.crate_dec_must_end_with_separator_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_must_end_with_separator` | no trailing SOH (BodyLength 41 is correct; CheckSum 127 is the '\|' sum, SOH sum is 115) |
+| `fefix.crate_dec_must_end_with_separator_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_must_end_with_separator` |  |
+| `fefix.crate_dec_without_checksum_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_checksum` | no CheckSum (10) field |
+| `fefix.crate_dec_without_checksum_parse` | parse | ok | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_checksum` | fields are well formed; only validate rejects it |
+| `fefix.crate_dec_without_header_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_standard_header` | no BeginString (8) / BodyLength (9) |
+| `fefix.crate_dec_without_header_frame` | frame | len error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_standard_header` | front is "35=", cannot start a message |
+| `fefix.crate_dec_incorrect_body_length_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/decoder.rs::detect_incorrect_checksum` | despite the test name, BodyLength 43 is wrong (actual 40); CheckSum 146 also wrong (actual 001) |
+| `fefix.crate_utils_checksum_digits_letters_validate` | validate | error | `fefix crate 0.7.0:src/tagvalue/utils.rs::correct_retrieval_of_checksum_digits` | upstream only extracts the last three bytes; "..." has no '=' and 10=ABC is not digits |
+| `fefix.crate_utils_checksum_digits_parse` | parse | error | `fefix crate 0.7.0:src/tagvalue/utils.rs::correct_retrieval_of_checksum_digits` | field "..." has no '=' |
+| `fefix.crate_checksum_single_soh` | checksum | 1 | `fefix crate 0.7.0:src/fix_values/checksum.rs::edges_cases` | CheckSum::compute(&[1]) == 1 (byte 0x01 is SOH) |
+| `fefix.crate_checksum_two_soh` | checksum | 2 | `fefix crate 0.7.0:src/fix_values/checksum.rs::edges_cases` | derived from the [1] case: sum of two 0x01 bytes |
 
 ## philadelphia.fixv
 
@@ -134,6 +255,34 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `philadelphia.send_application_message_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendApplicationMessage` | NewOrderSingle, 3-digit BodyLength; exact wire bytes asserted by the test |
 | `philadelphia.send_application_message_frame` | frame | len 94 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendApplicationMessage` | Logon followed by NewOrderSingle on the wire; first frame is the Logon |
 
+## philadelphia_more.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `philadelphia.test_request_heartbeat_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest` | Heartbeat at 32.500 s sent before the TestRequest; SendingTime with non-zero millis, CheckSum 225 |
+| `philadelphia.test_request_two_message_frame` | frame | len 82 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest` | Heartbeat followed by TestRequest on the wire; first frame is the 82-byte Heartbeat |
+| `philadelphia.test_request_second_message_frame` | frame | len 108 | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest` | the TestRequest alone frames at its full length (86-byte body) |
+| `philadelphia.receive_test_request_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveTestRequest` | Heartbeat answering TestRequest, echoes TestReqID(112)=foo |
+| `philadelphia.resend_request_end_seq_no_equal_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithEndSeqNoEqualToLastMsgSeqNum` | SequenceReset-GapFill with NewSeqNo 5 |
+| `philadelphia.resend_request_end_seq_no_larger_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithEndSeqNoLargerThanLastMsgSeqNum` | SequenceReset-GapFill with NewSeqNo 5 (EndSeqNo larger than last sent) |
+| `philadelphia.resend_request_zero_end_seq_no_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithZeroEndSeqNo` | SequenceReset-GapFill with NewSeqNo 3 (EndSeqNo 0 = infinity) |
+| `philadelphia.resend_request_too_high_end_seq_no_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithTooHighEndSeqNo` | SequenceReset-GapFill with NewSeqNo 3 (EndSeqNo beyond last sent) |
+| `philadelphia.resend_request_without_begin_seq_no_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithoutBeginSeqNo` | session Reject, SessionRejectReason 1, Text with spaces and parentheses |
+| `philadelphia.resend_request_without_end_seq_no_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithoutEndSeqNo` | session Reject for missing EndSeqNo |
+| `philadelphia.resend_request_too_high_begin_seq_no_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithTooHighBeginSeqNo` | session Reject, SessionRejectReason 5 (value out of range) |
+| `philadelphia.sequence_reset_without_new_seq_no_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveSequenceResetResetWithoutNewSeqNo` | session Reject for SequenceReset without NewSeqNo |
+| `philadelphia.logon_too_low_msg_seq_num_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveLogonWithTooLowMsgSeqNum` | Logout sent when Logon MsgSeqNum is too low |
+| `philadelphia.logout_too_high_msg_seq_num_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveLogoutWithTooHighMsgSeqNum` | ResendRequest sent when Logout MsgSeqNum is too high |
+| `philadelphia.send_logout_validate` | validate | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendLogout` | plain Logout with no Text |
+| `philadelphia.body_without_msg_type_parse` | parse | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveMessageWithoutMsgType` | one-field body (MsgType missing); tag=value scan succeeds |
+| `philadelphia.body_sequence_reset_gap_fill_parse` | parse | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveSequenceResetGapFill` | SequenceReset-GapFill body fields |
+| `philadelphia.body_resend_request_parse` | parse | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithEndSeqNoSmallerThanLastMsgSeqNum` | ResendRequest body fields |
+| `philadelphia.body_logon_parse` | parse | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveLogon` | Logon body with CompIDs |
+| `philadelphia.body_test_request_parse` | parse | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveTestRequest` | TestRequest body with TestReqID |
+| `philadelphia.body_full_buffer_parse` | parse | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveFullBuffer` | Logout body with a 512-byte Text value |
+| `philadelphia.body_too_long_unterminated_parse` | parse | error | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveTooLongMessage` | 1024-byte Text with no closing SOH; last field is unterminated |
+| `philadelphia.exceed_max_capacity_parse` | parse | ok | `paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageTest.java::exceedMaxCapacityOnGet` | nine fields incl. tag 1 (Account); upstream overflows the FIXMessage field capacity, plain tag=value scan succeeds |
+
 ## simplefix.fixv
 
 | id | kind | expect | source | what it checks |
@@ -169,6 +318,15 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `simplefix.checksum_heartbeat_44` | checksum | 163 | `da4089/simplefix:test/test_message.py::test_set_session_version` | expected 10=163 from encode() |
 | `simplefix.checksum_cooked` | checksum | 48 | `da4089/simplefix:test/test_message.py::test_cooked_checksum` | expected 10=048 from encode() (two-digit value, zero-padded on the wire) |
 | `simplefix.checksum_heartbeat_42` | checksum | 161 | `da4089/simplefix:test/test_parser.py::test_parse_partial_string` | 10=161 in the reassembled message |
+
+## simplefix_raw.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `simplefix.raw_data_parse` | parse | ok | `da4089/simplefix:test/test_parser.py::test_raw_data` | RawData(96) holds an SOH; RawDataLength(95)=8 tells the scanner to take 8 bytes |
+| `simplefix.raw_data_validate` | validate | ok | `da4089/simplefix:test/test_parser.py::test_raw_data` | same message with 9 and 10 computed for SOH; BodyLength counts the raw bytes |
+| `simplefix.raw_data_frame` | frame | len 62 | `da4089/simplefix:test/test_parser.py::test_raw_data` | framing trusts 9, so the SOH inside 96 does not end the message early |
+| `simplefix.raw_data_all_soh_parse` | parse | ok | `da4089/simplefix:test/test_parser.py::test_raw_data` | variant: raw value made only of SOH bytes (4 of them); written for glaze, not in simplefix |
 
 ## spec.fixv
 
@@ -210,3 +368,86 @@ upstream code is included. See `docs/fix/references.md` for the survey and `FORM
 | `spec.checksum_heartbeat` | checksum | 119 | `spec` | sum of all bytes before 10= mod 256 |
 | `spec.checksum_empty` | checksum | 0 | `spec` | empty input sums to 0 |
 | `spec.checksum_wraps` | checksum | 0 | `spec` | 256 bytes of 0x01 wrap to 0 |
+
+## spec_more.fixv
+
+| id | kind | expect | source | what it checks |
+|---|---|---|---|---|
+| `spec.cks_plus_one` | validate | error | `spec` | category from quickfixgo validation_test: CheckSum one above the true sum |
+| `spec.cks_minus_one` | validate | error | `spec` | category from quickfixgo validation_test: CheckSum one below the true sum |
+| `spec.cks_above_255` | validate | error | `spec` | category from quickfixgo validation_test: CheckSum value 256..999 can never match |
+| `spec.cks_zero_mismatch` | validate | error | `spec` | category from quickfixgo validation_test: CheckSum 000 when the sum is not zero |
+| `spec.cks_non_digit` | validate | error | `spec` | category from quickfixgo parser_test: CheckSum with a non-digit character |
+| `spec.cks_four_digits` | validate | error | `spec` | category from fix8 utests/message_test: CheckSum written with four digits (leading zero) |
+| `spec.cks_one_digit` | validate | error | `spec` | category from fix8 utests/message_test: CheckSum with a single digit (three are required) |
+| `spec.cks_missing_value` | validate | error | `spec` | category from quickfixgo parser_test: CheckSum tag present with empty value |
+| `spec.cks_trailer_absent` | validate | error | `spec` | category from quickfixgo parser_test: message ends without the CheckSum trailer |
+| `spec.cks_signed` | validate | error | `spec` | category from quickfixgo validation_test: CheckSum with a leading plus sign |
+| `spec.cks_bytes_logout` | checksum | 252 | `spec` | checksum over a Logout prefix (sum mod 256) |
+| `spec.cks_bytes_soh_only` | checksum | 1 | `spec` | checksum of a single SOH byte is 1 |
+| `spec.cks_bytes_wrap_exact` | checksum | 0 | `spec` | four 0x40 bytes sum to 256, which wraps to 0 |
+| `spec.bl_zero` | validate | error | `spec` | category from quickfixgo validation_test: BodyLength 0 while a body is present |
+| `spec.bl_negative` | validate | error | `spec` | category from quickfixgo parser_test: negative BodyLength |
+| `spec.bl_huge` | validate | error | `spec` | category from quickfixgo parser_test: BodyLength larger than any real message |
+| `spec.bl_ten_digits` | validate | error | `spec` | category from quickfixgo parser_test: BodyLength with ten digits (overflow range) |
+| `spec.bl_leading_plus` | validate | error | `spec` | category from quickfixgo parser_test: BodyLength with a leading plus sign |
+| `spec.bl_leading_space` | validate | error | `spec` | category from quickfixgo parser_test: BodyLength with a leading space |
+| `spec.bl_trailing_space` | validate | error | `spec` | category from quickfixgo parser_test: BodyLength with a trailing space |
+| `spec.bl_empty` | validate | error | `spec` | category from quickfixgo parser_test: BodyLength tag with empty value |
+| `spec.soh_missing_after_9` | validate | error | `spec` | category from quickfixgo parser_test: SOH missing between BodyLength and MsgType |
+| `spec.parse_soh_missing` | parse | ok | `spec` | category from quickfixgo parser_test: SOH missing between fields: the second field becomes part of the first value |
+| `spec.double_soh` | validate | error | `spec` | category from quickfixgo parser_test: two SOH in a row (empty field) in the body |
+| `spec.equals_first` | validate | error | `spec` | category from quickfixgo parser_test: a field that starts with '=' (no tag) |
+| `spec.body_length_repeated` | validate | error | `spec` | category from quickfixgo validation_test: BodyLength (9) appears twice in the header |
+| `spec.msgtype_missing` | validate | error | `spec` | category from quickfixgo validation_test: MsgType (35) absent; 49 comes third |
+| `spec.msgtype_empty` | validate | error | `spec` | category from quickfixgo validation_test: MsgType (35) present with empty value |
+| `spec.begin_string_empty` | validate | error | `spec` | category from quickfixgo validation_test: BeginString (8) with empty value |
+| `spec.value_with_spaces_ok` | validate | ok | `spec` | category from fix8 utests/message_test: free text value containing spaces is legal |
+| `spec.fixt_heartbeat_ok` | validate | ok | `spec` | category from quickfix test/definitions/server/fix44 (FIXT.1.1 session): FIXT.1.1 Heartbeat with TestReqID |
+| `spec.fixt_exec_report_ok` | validate | ok | `spec` | category from quickfix test/definitions/server/fix44 (FIXT.1.1 app): FIXT.1.1 ExecutionReport with ApplVerID 1128 |
+| `spec.fixt_bad_checksum` | validate | error | `spec` | category from quickfix test/definitions/server/fix44 (FIXT.1.1 session): FIXT.1.1 Logon with corrupted CheckSum |
+| `spec.parse_value_spaces` | parse | ok | `spec` | category from fix8 utests/message_test: value with embedded and edge spaces is kept verbatim |
+| `spec.parse_tag_leading_space` | parse | error | `spec` | category from quickfixgo parser_test: tag with a leading space |
+| `spec.parse_tag_trailing_space` | parse | error | `spec` | category from quickfixgo parser_test: tag with a trailing space before = |
+| `spec.parse_tag_inner_space` | parse | error | `spec` | category from quickfixgo parser_test: tag with a space between digits |
+| `spec.parse_double_soh` | parse | error | `spec` | category from quickfixgo parser_test: empty field between two SOH |
+| `spec.parse_leading_soh` | parse | error | `spec` | category from quickfixgo parser_test: message starts with SOH |
+| `spec.parse_empty_value` | parse | error | `spec` | category from quickfixgo message_test: tag with empty value |
+| `spec.parse_max_tag` | parse | ok | `spec` | largest accepted tag number 999999999 |
+| `spec.parse_body_length_repeated` | parse | ok | `spec` | category from quickfixgo validation_test: repeated 9 is not a scan error (structure is validate's job) |
+| `spec.rg_md_snapshot_valid` | validate | ok | `spec` | category from quickfixgo repeating_group_test: NoMDEntries=3 with three entries starting at 269 |
+| `spec.rg_md_snapshot_fields` | parse | ok | `spec` | category from quickfixgo repeating_group_test: NoMDEntries=3 with three entries starting at 269; exact field list in wire order |
+| `spec.rg_zero_count_valid` | validate | ok | `spec` | category from quickfixgo repeating_group_test: NoPartyIDs=0 with no entries |
+| `spec.rg_zero_count_fields` | parse | ok | `spec` | category from quickfixgo repeating_group_test: NoPartyIDs=0 with no entries; exact field list in wire order |
+| `spec.rg_nested_valid` | validate | ok | `spec` | category from quickfixgo repeating_group_test: nested group NoPartyIDs=2, second party with NoPartySubIDs=2 |
+| `spec.rg_nested_fields` | parse | ok | `spec` | category from quickfixgo repeating_group_test: nested group NoPartyIDs=2, second party with NoPartySubIDs=2; exact field list in wire order |
+| `spec.rg_fixt_alloc_valid` | validate | ok | `spec` | category from quickfixgo repeating_group_test: FIXT.1.1 message with NoAllocs=2 then fields after the group |
+| `spec.rg_fixt_alloc_fields` | parse | ok | `spec` | category from quickfixgo repeating_group_test: FIXT.1.1 message with NoAllocs=2 then fields after the group; exact field list in wire order |
+| `spec.rg_body_length_off` | validate | error | `spec` | category from quickfixgo repeating_group_test: otherwise valid group message whose BodyLength misses one entry byte |
+| `spec.frame_garbage_before` | frame | len error | `spec` | category from quickfixgo parser_test: garbage bytes before the first message |
+| `spec.frame_garbage_between` | frame | len 69 | `spec` | category from quickfixgo parser_test: garbage between messages does not affect the first frame |
+| `spec.frame_garbage_after_first` | frame | len error | `spec` | category from quickfixgo parser_test: stream positioned at garbage left between two messages |
+| `spec.frame_soh_before` | frame | len error | `spec` | category from quickfixgo parser_test: stray SOH before the message |
+| `spec.frame_split_after_begin` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 10 |
+| `spec.frame_split_mid_9_tag` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 11 |
+| `spec.frame_split_after_9_eq` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 12 |
+| `spec.frame_split_mid_9_value` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 13 |
+| `spec.frame_split_after_body_length` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 15 |
+| `spec.frame_split_after_msgtype` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 20 |
+| `spec.frame_split_before_trailer` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 62 |
+| `spec.frame_split_after_10_eq` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 65 |
+| `spec.frame_split_before_last_soh` | frame | len 0 | `spec` | category from quickfixgo parser_test: message split across reads, first read ends at byte 68 |
+| `spec.frame_split_then_complete` | frame | len 69 | `spec` | category from quickfixgo parser_test: message split across reads, second read completes it |
+| `spec.frame_body_length_past_end` | frame | len 0 | `spec` | category from quickfixgo parser_test: BodyLength points past the end of the available bytes |
+| `spec.frame_body_length_short` | frame | len error | `spec` | category from quickfixgo parser_test: BodyLength too small so 10= is not where it says |
+| `spec.frame_body_length_plus` | frame | len error | `spec` | category from quickfixgo parser_test: BodyLength with leading plus cannot frame |
+| `spec.frame_body_length_space` | frame | len error | `spec` | category from quickfixgo parser_test: BodyLength with leading space cannot frame |
+| `spec.frame_body_length_negative` | frame | len error | `spec` | category from quickfixgo parser_test: negative BodyLength cannot frame |
+| `spec.frame_body_length_empty` | frame | len error | `spec` | category from quickfixgo parser_test: empty BodyLength cannot frame |
+| `spec.frame_body_length_huge_unterminated` | frame | len error | `spec` | category from quickfixgo parser_test: BodyLength digits run past nine bytes without SOH |
+| `spec.frame_body_length_huge` | frame | len 0 | `spec` | category from quickfixgo parser_test: nine-digit BodyLength waits for more bytes |
+| `spec.frame_second_not_9` | frame | len error | `spec` | category from quickfixgo parser_test: second field is 35 instead of 9 |
+| `spec.frame_first_not_8` | frame | len error | `spec` | category from quickfixgo parser_test: stream starts with tag 9 |
+| `spec.frame_fixt_one` | frame | len 79 | `spec` | FIXT.1.1 message frames on BodyLength |
+| `spec.frame_group_message` | frame | len 223 | `spec` | category from quickfixgo repeating_group_test: message with nested repeating groups frames whole |
+| `spec.frame_two_digit_checksum` | frame | len error | `spec` | category from fix8 utests/message_test: trailer "10=" with two digits misplaces the final SOH |

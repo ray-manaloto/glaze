@@ -1,0 +1,566 @@
+# More vectors written afresh from the FIX specification (FIX 4.4 / FIXT.1.1 message format,
+# BodyLength and CheckSum rules, repeating group layout). The CATEGORIES of malformed input,
+# checksum and repeating-group cases are inspired by the test inventories of QuickFIX/Go
+# (parser_test.go, message_test.go, validation_test.go, repeating_group_test.go) and fix8
+# (utests/message_test.cpp), and by quickfix test/definitions/server/fix44 file names.
+# Nothing is copied: every message, field value, symbol, ID and timestamp here is new.
+# Expected outcomes follow include/glaze/fix/scan.hpp (parse_fields / validate / frame / checksum).
+
+id = spec.cks_plus_one
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=213|
+expect = error
+note = category from quickfixgo validation_test: CheckSum one above the true sum
+
+id = spec.cks_minus_one
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=211|
+expect = error
+note = category from quickfixgo validation_test: CheckSum one below the true sum
+
+id = spec.cks_above_255
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=999|
+expect = error
+note = category from quickfixgo validation_test: CheckSum value 256..999 can never match
+
+id = spec.cks_zero_mismatch
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=000|
+expect = error
+note = category from quickfixgo validation_test: CheckSum 000 when the sum is not zero
+
+id = spec.cks_non_digit
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=1A7|
+expect = error
+note = category from quickfixgo parser_test: CheckSum with a non-digit character
+
+id = spec.cks_four_digits
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=0212|
+expect = error
+note = category from fix8 utests/message_test: CheckSum written with four digits (leading zero)
+
+id = spec.cks_one_digit
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=2|
+expect = error
+note = category from fix8 utests/message_test: CheckSum with a single digit (three are required)
+
+id = spec.cks_missing_value
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=|
+expect = error
+note = category from quickfixgo parser_test: CheckSum tag present with empty value
+
+id = spec.cks_trailer_absent
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|
+expect = error
+note = category from quickfixgo parser_test: message ends without the CheckSum trailer
+
+id = spec.cks_signed
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=+12|
+expect = error
+note = category from quickfixgo validation_test: CheckSum with a leading plus sign
+
+id = spec.cks_bytes_logout
+source = spec
+kind = checksum
+bytes = 8=FIX.4.4|9=58|35=5|49=NODEA|56=NODEB|34=90|52=20261105-17:00:01|58=bye|
+value = 252
+note = checksum over a Logout prefix (sum mod 256)
+
+id = spec.cks_bytes_soh_only
+source = spec
+kind = checksum
+bytes = |
+value = 1
+note = checksum of a single SOH byte is 1
+
+id = spec.cks_bytes_wrap_exact
+source = spec
+kind = checksum
+bytes = @@@@
+value = 0
+note = four 0x40 bytes sum to 256, which wraps to 0
+
+id = spec.bl_zero
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=0|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=155|
+expect = error
+note = category from quickfixgo validation_test: BodyLength 0 while a body is present
+
+id = spec.bl_negative
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=-54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=001|
+expect = error
+note = category from quickfixgo parser_test: negative BodyLength
+
+id = spec.bl_huge
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=987654321|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=072|
+expect = error
+note = category from quickfixgo parser_test: BodyLength larger than any real message
+
+id = spec.bl_ten_digits
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=4000000000|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=079|
+expect = error
+note = category from quickfixgo parser_test: BodyLength with ten digits (overflow range)
+
+id = spec.bl_leading_plus
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=+54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=255|
+expect = error
+note = category from quickfixgo parser_test: BodyLength with a leading plus sign
+
+id = spec.bl_leading_space
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9= 54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=244|
+expect = error
+note = category from quickfixgo parser_test: BodyLength with a leading space
+
+id = spec.bl_trailing_space
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54 |35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=244|
+expect = error
+note = category from quickfixgo parser_test: BodyLength with a trailing space
+
+id = spec.bl_empty
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=107|
+expect = error
+note = category from quickfixgo parser_test: BodyLength tag with empty value
+
+id = spec.soh_missing_after_9
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=5435=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=212|
+expect = error
+note = category from quickfixgo parser_test: SOH missing between BodyLength and MsgType
+
+id = spec.parse_soh_missing
+source = spec
+kind = parse
+msg = 55=QQ54=1|
+expect = ok
+fields = 55=QQ54=1|
+count = 1
+note = category from quickfixgo parser_test: SOH missing between fields: the second field becomes part of the first value
+
+id = spec.double_soh
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=55|35=0|49=NODEA||56=NODEB|34=17|52=20261105-08:15:30.250|10=214|
+expect = error
+note = category from quickfixgo parser_test: two SOH in a row (empty field) in the body
+
+id = spec.equals_first
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=52|35=0|49=NODEA|=NODEB|34=17|52=20261105-08:15:30.250|10=103|
+expect = error
+note = category from quickfixgo parser_test: a field that starts with '=' (no tag)
+
+id = spec.body_length_repeated
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=54|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=180|
+expect = error
+note = category from quickfixgo validation_test: BodyLength (9) appears twice in the header
+
+id = spec.msgtype_missing
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=49|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=002|
+expect = error
+note = category from quickfixgo validation_test: MsgType (35) absent; 49 comes third
+
+id = spec.msgtype_empty
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=53|35=|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=163|
+expect = error
+note = category from quickfixgo validation_test: MsgType (35) present with empty value
+
+id = spec.begin_string_empty
+source = spec
+kind = validate
+msg = 8=|9=54|35=0|49=NODEA|56=NODEB|34=17|52=20261105-08:15:30.250|10=041|
+expect = error
+note = category from quickfixgo validation_test: BeginString (8) with empty value
+
+id = spec.value_with_spaces_ok
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=74|35=1|49=NODEB|56=NODEA|34=18|52=20261105-08:15:31|112=probe at desk seven|10=251|
+expect = ok
+note = category from fix8 utests/message_test: free text value containing spaces is legal
+
+id = spec.fixt_heartbeat_ok
+source = spec
+kind = validate
+msg = 8=FIXT.1.1|9=68|35=0|49=VENUE9|56=FIRM3|34=402|52=20261105-14:02:11.008|112=PING-77|10=055|
+expect = ok
+note = category from quickfix test/definitions/server/fix44 (FIXT.1.1 session): FIXT.1.1 Heartbeat with TestReqID
+
+id = spec.fixt_exec_report_ok
+source = spec
+kind = validate
+msg = 8=FIXT.1.1|9=170|35=8|1128=9|49=VENUE9|56=FIRM3|34=403|52=20261105-14:02:12.511|37=X55901|11=CL-2026-0042|17=EX-3301|150=F|39=2|55=ZEBR|54=2|38=250|32=250|31=33.125|151=0|14=250|6=33.125|10=055|
+expect = ok
+note = category from quickfix test/definitions/server/fix44 (FIXT.1.1 app): FIXT.1.1 ExecutionReport with ApplVerID 1128
+
+id = spec.fixt_bad_checksum
+source = spec
+kind = validate
+msg = 8=FIXT.1.1|9=69|35=A|49=FIRM3|56=VENUE9|34=1|52=20261105-07:59:58|98=0|108=45|1137=9|10=000|
+expect = error
+note = category from quickfix test/definitions/server/fix44 (FIXT.1.1 session): FIXT.1.1 Logon with corrupted CheckSum
+
+id = spec.parse_value_spaces
+source = spec
+kind = parse
+msg = 58=  two  words |55=QQ|
+expect = ok
+fields = 58=  two  words |55=QQ|
+note = category from fix8 utests/message_test: value with embedded and edge spaces is kept verbatim
+
+id = spec.parse_tag_leading_space
+source = spec
+kind = parse
+msg =  55=QQ|
+expect = error
+note = category from quickfixgo parser_test: tag with a leading space
+
+id = spec.parse_tag_trailing_space
+source = spec
+kind = parse
+msg = 55 =QQ|
+expect = error
+note = category from quickfixgo parser_test: tag with a trailing space before =
+
+id = spec.parse_tag_inner_space
+source = spec
+kind = parse
+msg = 5 5=QQ|
+expect = error
+note = category from quickfixgo parser_test: tag with a space between digits
+
+id = spec.parse_double_soh
+source = spec
+kind = parse
+msg = 55=QQ||54=1|
+expect = error
+note = category from quickfixgo parser_test: empty field between two SOH
+
+id = spec.parse_leading_soh
+source = spec
+kind = parse
+msg = |55=QQ|
+expect = error
+note = category from quickfixgo parser_test: message starts with SOH
+
+id = spec.parse_empty_value
+source = spec
+kind = parse
+msg = 55=QQ|58=|54=1|
+expect = error
+note = category from quickfixgo message_test: tag with empty value
+
+id = spec.parse_max_tag
+source = spec
+kind = parse
+msg = 999999999=Z|
+expect = ok
+fields = 999999999=Z|
+note = largest accepted tag number 999999999
+
+id = spec.parse_body_length_repeated
+source = spec
+kind = parse
+msg = 8=FIX.4.4|9=5|9=5|
+expect = ok
+fields = 8=FIX.4.4|9=5|9=5|
+note = category from quickfixgo validation_test: repeated 9 is not a scan error (structure is validate's job)
+
+id = spec.rg_md_snapshot_valid
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=139|35=W|49=FEED2|56=CLNT8|34=55|52=20261105-09:30:00.001|55=KIWI|268=3|269=0|270=12.40|271=500|269=1|270=12.45|271=300|269=2|270=12.42|271=75|10=170|
+expect = ok
+note = category from quickfixgo repeating_group_test: NoMDEntries=3 with three entries starting at 269
+
+id = spec.rg_md_snapshot_fields
+source = spec
+kind = parse
+msg = 8=FIX.4.4|9=139|35=W|49=FEED2|56=CLNT8|34=55|52=20261105-09:30:00.001|55=KIWI|268=3|269=0|270=12.40|271=500|269=1|270=12.45|271=300|269=2|270=12.42|271=75|10=170|
+expect = ok
+fields = 8=FIX.4.4|9=139|35=W|49=FEED2|56=CLNT8|34=55|52=20261105-09:30:00.001|55=KIWI|268=3|269=0|270=12.40|271=500|269=1|270=12.45|271=300|269=2|270=12.42|271=75|10=170|
+count = 19
+note = category from quickfixgo repeating_group_test: NoMDEntries=3 with three entries starting at 269; exact field list in wire order
+
+id = spec.rg_zero_count_valid
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=109|35=D|49=CLNT8|56=BRKR1|34=56|52=20261105-09:30:01|11=Q-77|453=0|55=KIWI|54=1|38=40|40=1|60=20261105-09:30:01|10=124|
+expect = ok
+note = category from quickfixgo repeating_group_test: NoPartyIDs=0 with no entries
+
+id = spec.rg_zero_count_fields
+source = spec
+kind = parse
+msg = 8=FIX.4.4|9=109|35=D|49=CLNT8|56=BRKR1|34=56|52=20261105-09:30:01|11=Q-77|453=0|55=KIWI|54=1|38=40|40=1|60=20261105-09:30:01|10=124|
+expect = ok
+fields = 8=FIX.4.4|9=109|35=D|49=CLNT8|56=BRKR1|34=56|52=20261105-09:30:01|11=Q-77|453=0|55=KIWI|54=1|38=40|40=1|60=20261105-09:30:01|10=124|
+count = 15
+note = category from quickfixgo repeating_group_test: NoPartyIDs=0 with no entries; exact field list in wire order
+
+id = spec.rg_nested_valid
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=200|35=D|49=CLNT8|56=BRKR1|34=57|52=20261105-09:30:02|11=Q-78|453=2|448=DESK4|447=D|452=24|448=TRDR9|447=D|452=11|802=2|523=north|803=4|523=t-9|803=25|55=PLUM|54=2|38=60|40=2|44=7.75|60=20261105-09:30:02|10=083|
+expect = ok
+note = category from quickfixgo repeating_group_test: nested group NoPartyIDs=2, second party with NoPartySubIDs=2
+
+id = spec.rg_nested_fields
+source = spec
+kind = parse
+msg = 8=FIX.4.4|9=200|35=D|49=CLNT8|56=BRKR1|34=57|52=20261105-09:30:02|11=Q-78|453=2|448=DESK4|447=D|452=24|448=TRDR9|447=D|452=11|802=2|523=north|803=4|523=t-9|803=25|55=PLUM|54=2|38=60|40=2|44=7.75|60=20261105-09:30:02|10=083|
+expect = ok
+fields = 8=FIX.4.4|9=200|35=D|49=CLNT8|56=BRKR1|34=57|52=20261105-09:30:02|11=Q-78|453=2|448=DESK4|447=D|452=24|448=TRDR9|447=D|452=11|802=2|523=north|803=4|523=t-9|803=25|55=PLUM|54=2|38=60|40=2|44=7.75|60=20261105-09:30:02|10=083|
+count = 27
+note = category from quickfixgo repeating_group_test: nested group NoPartyIDs=2, second party with NoPartySubIDs=2; exact field list in wire order
+
+id = spec.rg_fixt_alloc_valid
+source = spec
+kind = validate
+msg = 8=FIXT.1.1|9=145|35=J|49=BRKR1|56=CLNT8|34=58|52=20261105-16:45:00|70=AL-61|71=0|626=1|54=1|55=PLUM|53=90|6=7.70|78=2|79=ACCT-A|80=50|79=ACCT-B|80=40|75=20261105|10=252|
+expect = ok
+note = category from quickfixgo repeating_group_test: FIXT.1.1 message with NoAllocs=2 then fields after the group
+
+id = spec.rg_fixt_alloc_fields
+source = spec
+kind = parse
+msg = 8=FIXT.1.1|9=145|35=J|49=BRKR1|56=CLNT8|34=58|52=20261105-16:45:00|70=AL-61|71=0|626=1|54=1|55=PLUM|53=90|6=7.70|78=2|79=ACCT-A|80=50|79=ACCT-B|80=40|75=20261105|10=252|
+expect = ok
+fields = 8=FIXT.1.1|9=145|35=J|49=BRKR1|56=CLNT8|34=58|52=20261105-16:45:00|70=AL-61|71=0|626=1|54=1|55=PLUM|53=90|6=7.70|78=2|79=ACCT-A|80=50|79=ACCT-B|80=40|75=20261105|10=252|
+count = 21
+note = category from quickfixgo repeating_group_test: FIXT.1.1 message with NoAllocs=2 then fields after the group; exact field list in wire order
+
+id = spec.rg_body_length_off
+source = spec
+kind = validate
+msg = 8=FIX.4.4|9=138|35=W|49=FEED2|56=CLNT8|34=55|52=20261105-09:30:00.001|55=KIWI|268=3|269=0|270=12.40|271=500|269=1|270=12.45|271=300|269=2|270=12.42|271=75|10=169|
+expect = error
+note = category from quickfixgo repeating_group_test: otherwise valid group message whose BodyLength misses one entry byte
+
+id = spec.frame_garbage_before
+source = spec
+kind = frame
+stream = xyz8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: garbage bytes before the first message
+
+id = spec.frame_garbage_between
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|noise!8=FIXT.1.1|9=56|35=1|49=GW2|56=GW1|34=302|52=20261105-11:11:12|112=T302|10=014|
+frame_len = 69
+note = category from quickfixgo parser_test: garbage between messages does not affect the first frame
+
+id = spec.frame_garbage_after_first
+source = spec
+kind = frame
+stream = noise!8=FIXT.1.1|9=56|35=1|49=GW2|56=GW1|34=302|52=20261105-11:11:12|112=T302|10=014|
+frame_len = error
+note = category from quickfixgo parser_test: stream positioned at garbage left between two messages
+
+id = spec.frame_soh_before
+source = spec
+kind = frame
+stream = |8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: stray SOH before the message
+
+id = spec.frame_split_after_begin
+source = spec
+kind = frame
+stream = 8=FIX.4.4|
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 10
+
+id = spec.frame_split_mid_9_tag
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 11
+
+id = spec.frame_split_after_9_eq
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 12
+
+id = spec.frame_split_mid_9_value
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=4
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 13
+
+id = spec.frame_split_after_body_length
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 15
+
+id = spec.frame_split_after_msgtype
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|35=0|
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 20
+
+id = spec.frame_split_before_trailer
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 62
+
+id = spec.frame_split_after_10_eq
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 65
+
+id = spec.frame_split_before_last_soh
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002
+frame_len = 0
+note = category from quickfixgo parser_test: message split across reads, first read ends at byte 68
+
+id = spec.frame_split_then_complete
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|8=FIXT.1.
+frame_len = 69
+note = category from quickfixgo parser_test: message split across reads, second read completes it
+
+id = spec.frame_body_length_past_end
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=87|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = 0
+note = category from quickfixgo parser_test: BodyLength points past the end of the available bytes
+
+id = spec.frame_body_length_short
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=44|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|8=FIXT.1.1|9=56|35=1|49=GW2|56=GW1|34=302|52=20261105-11:11:12|112=T302|10=014|
+frame_len = error
+note = category from quickfixgo parser_test: BodyLength too small so 10= is not where it says
+
+id = spec.frame_body_length_plus
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=+47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: BodyLength with leading plus cannot frame
+
+id = spec.frame_body_length_space
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9= 47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: BodyLength with leading space cannot frame
+
+id = spec.frame_body_length_negative
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=-47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: negative BodyLength cannot frame
+
+id = spec.frame_body_length_empty
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: empty BodyLength cannot frame
+
+id = spec.frame_body_length_huge_unterminated
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=1234567890
+frame_len = error
+note = category from quickfixgo parser_test: BodyLength digits run past nine bytes without SOH
+
+id = spec.frame_body_length_huge
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=900000000|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = 0
+note = category from quickfixgo parser_test: nine-digit BodyLength waits for more bytes
+
+id = spec.frame_second_not_9
+source = spec
+kind = frame
+stream = 8=FIX.4.4|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: second field is 35 instead of 9
+
+id = spec.frame_first_not_8
+source = spec
+kind = frame
+stream = 9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = error
+note = category from quickfixgo parser_test: stream starts with tag 9
+
+id = spec.frame_fixt_one
+source = spec
+kind = frame
+stream = 8=FIXT.1.1|9=56|35=1|49=GW2|56=GW1|34=302|52=20261105-11:11:12|112=T302|10=014|8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=002|
+frame_len = 79
+note = FIXT.1.1 message frames on BodyLength
+
+id = spec.frame_group_message
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=200|35=D|49=CLNT8|56=BRKR1|34=57|52=20261105-09:30:02|11=Q-78|453=2|448=DESK4|447=D|452=24|448=TRDR9|447=D|452=11|802=2|523=north|803=4|523=t-9|803=25|55=PLUM|54=2|38=60|40=2|44=7.75|60=20261105-09:30:02|10=083|
+frame_len = 223
+note = category from quickfixgo repeating_group_test: message with nested repeating groups frames whole
+
+id = spec.frame_two_digit_checksum
+source = spec
+kind = frame
+stream = 8=FIX.4.4|9=47|35=0|49=GW1|56=GW2|34=301|52=20261105-11:11:11|10=02|8=FIXT.1.1|9=56|35=1|49=GW2|56=GW1|34=302|52=20261105-11:11:12|112=T302|10=014|
+frame_len = error
+note = category from fix8 utests/message_test: trailer "10=" with two digits misplaces the final SOH

@@ -13,16 +13,21 @@ Session 4 of 6. Goal: port parsing test vectors from more open-source FIX tag=va
   `checksum`. It also checks that every vector has an id, source and kind and that ids are unique.
 - `data/FORMAT.md`: the `.fixv` format (blocks of `key = value`, `|` stands for SOH). It is meant to be
   reusable by other sessions and by other languages.
-- 167 vectors (166 asserted, 1 `pending`, `spec.parse_leading_zero_tag`):
+- 359 vectors (358 asserted, 1 `pending`, `spec.parse_leading_zero_tag`); the runner reports 360 tests
+  (358 vectors plus two metadata checks), all passing:
 
   | file | vectors | origin |
   |---|---|---|
   | `simplefix.fixv` | 31 | da4089/simplefix, MIT |
   | `crocofix.fixv` | 32 | GaryHughes/crocofix, MIT |
   | `philadelphia.fixv` | 30 | paritytrading/philadelphia, Apache-2.0 |
+  | `philadelphia_more.fixv` | 23 | same; remaining `FIXInitiatorTest` wire messages |
   | `artio.fixv` | 23 | real-logic/artio, Apache-2.0 |
-  | `fefix.fixv` | 15 | ferrumfix/ferrumfix, MIT OR Apache-2.0 |
+  | `artio_more.fixv` | 25 | same; five more test classes and more framing cases |
+  | `fefix.fixv` | 15 | ferrumfix/ferrumfix git snapshot, MIT OR Apache-2.0 |
+  | `fefix_crate.fixv` | 66 | `fefix` 0.7.0 crate from crates.io (decoder unit tests), same licence |
   | `spec.fixv` | 36 | written afresh from the FIX specification |
+  | `spec_more.fixv` | 78 | written afresh; categories taken from QuickFIX/Go and fix8 test inventories, nothing copied |
 
 - `data/SOURCES.md`: one row per vector with its repository, file, test name and what it checks.
   It is generated from the `.fixv` files by `tests/fix_vectors_test/tools/gen_sources.py`; rerun it
@@ -57,6 +62,11 @@ The `source` key of every vector in `tests/fix_vectors_test/data/*.fixv` gives
   readGarbledBeginString, readGarbledBodyLength}`, `FIXInitiatorTest::{heartbeat, testRequest, sendLogon, ...}`.
 - Artio (Apache-2.0): `artio-codecs/.../otf/OtfParserTest.java` and
   `artio-core/.../engine/framer/ReceiverEndPointTest.java`, messages from `util/TestMessages.java`.
+- fefix crate 0.7.0 (MIT OR Apache-2.0, used under Apache-2.0): `src/tagvalue/raw_decoder.rs`,
+  `src/tagvalue/decoder.rs`, `src/tagvalue/utils.rs`, `src/fix_values/checksum.rs` (`#[test]` fns).
+- Second-pass Artio: `BusinessRejectRefIdExtractorTest`, `PossDupFinderTest`, `PasswordCleanerTest`,
+  `FixMessagePredicateTest`, `SessionParserTest`, more `ReceiverEndPointTest`. Second-pass
+  Philadelphia: the rest of `FIXInitiatorTest`.
 - ferrumfix (MIT OR Apache-2.0, used under Apache-2.0): `tests/test_regression_tainted_decoder_fix44/src/lib.rs::decode`,
   `examples/00_decode_fix`, `examples/03_decode_fix_stream`, `examples/05_coinbase_codegen` (`run`).
 
@@ -75,7 +85,11 @@ Corrections made while porting (each is also in the vector's `note`):
 - No struct-mapping vectors (`glz::read<fix_opts{}>` into structs); this branch covers the scanner layer only.
 - clang: clang 18 on this image cannot compile glaze tests against libstdc++ 13 (`std::expected` is
   missing for it), so only GCC was checked.
-- ferrumfix: only a snapshot without `crates/` was available; its decoder unit tests were not reached.
+- ferrumfix: the git snapshot lacks `crates/`; the decoder unit tests were taken from the published
+  `fefix` 0.7.0 crate instead. Newer unreleased tests (if any) were not reached.
+- Repeating groups are covered only at the scanner level (validate-ok and exact field lists for flat,
+  zero-count and nested groups). Struct-level group decoding through `glz::read<fix_opts{}>` is
+  tested in `fix/core`'s own `tests/fix_test`, not here.
 - QuickFIX (C++/J/Go) and fix8: not copied (QuickFIX licence has extra conditions; fix8 is LGPL-3.0).
   Their structural cases are written afresh in `spec.fixv`.
 - NexusFix: no public repository located.
@@ -89,5 +103,8 @@ Corrections made while porting (each is also in the vector's `note`):
 3. Port the QuickFIX acceptance categories (`test/definitions/server/fix44/*.def` names such as
    `14g_HeaderBodyTrailerFieldsOutOfOrder`, `14h_RepeatedTag`, `14i_RepeatingGroupCountNotEqual`) as
    fresh struct-level vectors once struct mapping exists.
-4. Fetch ferrumfix's full history (or the `fefix` crate from crates.io, same licence) for the
-   tagvalue decoder unit tests.
+4. Add a struct-level vector kind (message string + expected decoded group entries) once a few
+   shared test structs exist, so the group cases in `spec_more.fixv` and `fefix_crate.fixv` also
+   exercise `glz::read<fix_opts{}>`.
+5. Vectors that need bytes outside printable ASCII (fefix's 127/128 checksum cases) or raw-data
+   fields need an escape syntax in `FORMAT.md`.
