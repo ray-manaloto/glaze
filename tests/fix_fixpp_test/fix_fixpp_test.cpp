@@ -360,7 +360,7 @@ suite fixpp_samples = [] {
       size_t got = 0, valid = 0;
       for (size_t pos = 0; pos < stream.size(); pos += 13) {
          buffer.append(stream, pos, 13);
-         while (size_t n = glz::fix::frame(buffer, sep)) {
+         for (size_t n; (n = glz::fix::frame(buffer, sep)) != 0 && n != glz::fix::frame_error;) {
             ++got;
             if (!glz::fix::validate(std::string_view(buffer).substr(0, n), sep)) ++valid;
             buffer.erase(0, n);

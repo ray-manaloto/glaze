@@ -96,7 +96,7 @@ namespace
       std::vector<std::string_view> msgs;
       while (true) {
          const size_t n = glz::fix::frame(stream);
-         if (n == 0) break;
+         if (n == 0 || n == glz::fix::frame_error) break;
          msgs.push_back(stream.substr(0, n));
          stream.remove_prefix(n);
       }
@@ -189,16 +189,14 @@ suite hffix_basic = [] {
       expect(bool(glz::fix::validate(make_msg("FIX.4.2", soh("49=X|35=A|")))));
    };
 
-   // unit_tests.cpp: null_field_value - an empty field value must not break iteration
+   // unit_tests.cpp: null_field_value - hffix iterates over an empty value (37=). The glaze contract
+   // (docs/fix/api.md) requires non-empty values, so the message is rejected as a malformed field.
    "null_field_value"_test = [] {
       const auto msg = make_msg("FIX.4.2", soh("35=A|37=|38=whatever|"));
       auto fields = glz::fix::parse_fields(msg);
-      expect(fields.has_value());
-      if (!fields) return;
-      const auto* f37 = find(*fields, 37);
-      const auto* f38 = find(*fields, 38);
-      expect(f37 != nullptr && f37->value.empty());
-      expect(f38 != nullptr && f38->value == "whatever");
+      expect(!fields.has_value());
+      if (!fields) expect(fields.error().ec == glz::error_code::syntax_error);
+      expect(bool(glz::fix::validate(msg)));
    };
 
    // unit_tests.cpp: data_length - RawDataLength(95)/RawData(96) and
@@ -345,7 +343,7 @@ suite hffix_samples = [] {
          while (pos < data.size()) {
             buffer.append(data, pos, chunk);
             pos += chunk;
-            while (size_t n = glz::fix::frame(buffer)) {
+            for (size_t n; (n = glz::fix::frame(buffer)) != 0 && n != glz::fix::frame_error;) {
                if (count >= whole.size() || buffer.compare(0, n, whole[count]) != 0) same = false;
                ++count;
                buffer.erase(0, n);
