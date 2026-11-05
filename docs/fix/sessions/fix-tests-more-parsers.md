@@ -13,13 +13,15 @@ Session 4 of 6. Goal: port parsing test vectors from more open-source FIX tag=va
   `checksum`. It also checks that every vector has an id, source and kind and that ids are unique.
 - `data/FORMAT.md`: the `.fixv` format (blocks of `key = value`, `|` stands for SOH). It is meant to be
   reusable by other sessions and by other languages.
-- 359 vectors (358 asserted, 1 `pending`, `spec.parse_leading_zero_tag`); the runner reports 360 tests
-  (358 vectors plus two metadata checks), all passing:
+- 372 vectors (371 asserted, 1 `pending`, `spec.parse_leading_zero_tag`); the runner reports 373 tests
+  (371 vectors plus two metadata checks), all passing against `fix/core` at 5d28957 (merged last at 07:36 UTC):
 
   | file | vectors | origin |
   |---|---|---|
   | `simplefix.fixv` | 31 | da4089/simplefix, MIT |
   | `crocofix.fixv` | 32 | GaryHughes/crocofix, MIT |
+  | `crocofix_raw.fixv` | 9 | same; data-field (93/89) sections of `message_tests.cpp` |
+  | `simplefix_raw.fixv` | 4 | simplefix `test_raw_data` (95/96), 9 and 10 computed here |
   | `philadelphia.fixv` | 30 | paritytrading/philadelphia, Apache-2.0 |
   | `philadelphia_more.fixv` | 23 | same; remaining `FIXInitiatorTest` wire messages |
   | `artio.fixv` | 23 | real-logic/artio, Apache-2.0 |
@@ -38,7 +40,8 @@ Session 4 of 6. Goal: port parsing test vectors from more open-source FIX tag=va
   covering the five above plus QuickFIX C++/J/Go and fix8, which were surveyed but not copied from.
 - `docs/fix/api-questions.md`: open questions for `fix/core` (Q1 leading junk in `frame`, Q2 malformed
   headers in `frame`, Q3 empty values, Q4 tag syntax).
-- Merged `fix/core` (e5babf6); its `include/glaze/fix/fix.hpp` replaced the local stub this branch
+- Merged `fix/core` (e5babf6, then again at 69fcbd3 with raw-data fields, typed timestamps and
+  `field_cursor`; no conflicts, `fix/core` itself untouched); its `include/glaze/fix/fix.hpp` replaced the local stub this branch
   used until then. All 168 tests pass against it (GCC 13.3 Debug, `-Werror`). Four vectors were
   adjusted to the settled contract: three frame vectors now expect `frame_error` (`frame_len = error`),
   and `simplefix.leading_junk_pairs` expects `frame_error` because glaze does not skip junk before `8=`.
@@ -93,7 +96,9 @@ Corrections made while porting (each is also in the vector's `note`):
 - QuickFIX (C++/J/Go) and fix8: not copied (QuickFIX licence has extra conditions; fix8 is LGPL-3.0).
   Their structural cases are written afresh in `spec.fixv`.
 - NexusFix: no public repository located.
-- Raw-data fields (95/96, 89/93) whose value contains SOH: not expressible in the `|` format; skipped.
+- Raw-data fields: since `fix/core` 6ac4668 the scanner honours length/data pairs, and `|` inside a
+  raw value is simply SOH, so `simplefix_raw.fixv` and `crocofix_raw.fixv` cover them. simplefix's
+  custom-pair tests (`test_raw_data_tags`, non-standard tag pairs) are still skipped.
 
 ## Next steps
 
