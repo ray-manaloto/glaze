@@ -46,9 +46,6 @@ The tests that check these run only with `-DGLZ_FIX_KNOWN_GAPS=1`; the default b
 
 - Fixing the known gaps below in `fix/core` (that branch owns the code). When one is fixed, remove
   its `if constexpr (known_gaps)` guard in the test.
-- Built through CMake: the container had CMake 3.28 and glaze needs 3.31, so targets were compiled
-  directly with g++ / clang++-19 using the same flags. Check `cmake --build build --target
-  fix_property_test fuzz_fix_read ...` locally.
 - Repeating groups and the other items listed under "Not yet covered" in `docs/fix/conformance.md`.
 - clang 18 cannot compile glaze here (an existing consteval issue in `get_name.hpp`); use clang 19+.
 
@@ -57,7 +54,20 @@ The tests that check these run only with `-DGLZ_FIX_KNOWN_GAPS=1`; the default b
 No tests were ported from other projects. Reference repositories were not fetched; every test
 vector was written from scratch from the FIX 4.4 and FIX 5.0 SP2 / FIXT.1.1 specifications.
 
-## Reproduce
+## Reproduce through CMake (verified 07:33 UTC with CMake 4.4 from `pip install cmake`)
+
+    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++
+    cmake --build build --target fix_property_test fix_test
+    ctest --test-dir build -R fix_ --output-on-failure        # 2/2 pass
+
+    # clang 19 (apt install clang-19 libclang-rt-19-dev). Module scanning is off because the
+    # container has no clang-scan-deps-19; that flag is not needed where it is installed.
+    cmake -B build-fuzz -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=Off \
+          -DCMAKE_CXX_COMPILER=clang++-19 -DCMAKE_CXX_SCAN_FOR_MODULES=OFF
+    cmake --build build-fuzz --target fuzz_fix_frame fuzz_fix_parse_fields fuzz_fix_read fuzz_fix_validate
+    build-fuzz/fuzzing/fuzz_fix_read -max_total_time=600 fuzzing/corpus/fix
+
+## Reproduce without CMake
 
     g++ -std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -pedantic -Werror -Iinclude -Itests \
         tests/fix_property_test/fix_property_test.cpp -o fpt && ./fpt
