@@ -441,6 +441,31 @@ suite quickfix_parse_fields = [] {
 };
 
 // ---------------------------------------------------------------------------------------------
+// QuickFIX/J and QuickFIX/n vectors (qfj_qfn_vectors.inl): validate() must agree with wire_valid,
+// and every wire-valid message must frame to its full length and scan cleanly.
+// ---------------------------------------------------------------------------------------------
+
+#include "qfj_qfn_vectors.inl"
+
+suite quickfixj_quickfixn_vectors = [] {
+   for (const auto& v : qfjn_vectors::all) {
+      const std::string_view src = v.source;
+      if (src.find("ReadXmlDataTest") != std::string_view::npos) {
+         skip(v.source, "212/213 XmlData value contains SOH; the contract has no length-prefixed data fields yet");
+         continue;
+      }
+      test(std::string{src}) = [v] {
+         const bool ok = is_valid(v.msg);
+         expect(ok == v.wire_valid) << v.note;
+         if (v.wire_valid) {
+            expect(glz::fix::frame(v.msg) == v.msg.size());
+            expect(glz::fix::parse_fields(v.msg).has_value());
+         }
+      };
+   }
+};
+
+// ---------------------------------------------------------------------------------------------
 // Struct mapping: field conversion, typed read/write, repeating groups.
 // ---------------------------------------------------------------------------------------------
 

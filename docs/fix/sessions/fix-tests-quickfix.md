@@ -12,7 +12,7 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
   `fix.hpp` and drop this stub.**
 * `tests/fix_quickfix_test/` is registered in `tests/CMakeLists.txt`.
   * `fix_quickfix_test.cpp` runs the low-level tests. Built with GCC 13 under the `gcc-debug`
-    preset (`-fno-exceptions -fno-rtti -Werror`): **35 tests, 207 asserts, all passing** against
+    preset (`-fno-exceptions -fno-rtti -Werror`): **77 tests, 275 asserts, all passing** against
     the stub.
   * `fix_quickfix_struct_tests.inl` holds the struct-mapping tests: field conversion, typed messages,
     groups, and the `fix_opts` switches. They are compiled only when the core defines
@@ -21,7 +21,7 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
     passed a GCC syntax check but have never been compiled against a real core. Expect some
     mechanical fixes, for example in how `glz::write` picks BeginString (the tests sidestep this by
     comparing only the bytes from `35=` to `10=` and requiring that `validate` passes).
-  * Tests that can't run print `SKIPPED: <source> -- <reason>` (19 groups when neither macro is set).
+  * Tests that can't run print `SKIPPED: <source> -- <reason>` (20 groups when neither macro is set).
 * Toolchain notes: the CMake in the image is 3.28, but glaze needs 3.31 or later, so I used
   `pip install --user cmake` and put `~/.local/bin` on `PATH`. Clang 18 with libstdc++ 13 lacks
   `std::expected` here, so only GCC was used.
@@ -60,7 +60,30 @@ The tests do not copy QuickFIX's code. They reuse its message vectors and the in
 
 Tests marked `glaze-original` or `derived` were written for this suite. They are not from QuickFIX.
 
-The QuickFIX/J and QuickFIX/n vectors are listed below if they were added in this session.
+### QuickFIX/J and QuickFIX/n vectors
+
+`tests/fix_quickfix_test/qfj_qfn_vectors.inl` holds 43 raw message vectors: 14 are valid on the
+wire and 29 are not. A script extracted them from the test sources, with Java and C# escapes
+decoded and `|`-joined messages converted to SOH. Each one records its source in `source`, given as
+`<repo>/<path> / <class> / <test method>`. BodyLength and CheckSum were recomputed for every
+vector, and the `note` field says which one is wrong. The suite `quickfixj_quickfixn_vectors`
+requires `validate()` to agree with `wire_valid`, and requires every wire-valid vector to `frame`
+to its full length. All of them pass against the stub except `ReadXmlDataTest`, which is skipped:
+its 213 value contains SOH, and the contract has no length-prefixed data fields yet.
+
+* QuickFIX/J: <https://github.com/quickfix-j/quickfixj>, commit `9ac173b2a69ef2305258330d88685eccad80512d`,
+  `quickfixj-core/src/test/java/quickfix/{MessageTest,RepeatingGroupTest,MessageUtilsTest}.java`
+  and `.../mina/message/FIXMessageDecoderTest.java`. Licence: QuickFIX Software License 1.0, kept as
+  `QUICKFIXJ_LICENSE`.
+* QuickFIX/n: <https://github.com/connamara/quickfixn>, commit `df6e1000feb7683123f71a87ce11f465970117d7`,
+  `UnitTests/ParserTest.cs` and `UnitTests/MessageTests.cs`. Licence: QuickFIX Software License 1.0,
+  kept as `QUICKFIXN_LICENSE`.
+
+Points to note from these vectors: many of their "good" messages have the wrong checksum (the
+decoders frame only), and two use correct checksums written with only 1 or 2 digits. These are
+marked invalid here because FIX requires exactly 3 digits. Also, in `RepeatedTagDetection`,
+validation up to the *first* `10=` gives a correct 9 and 10, so a parser that stops at the first
+`10=` would accept it.
 
 ## What is not done
 

@@ -1,8 +1,8 @@
 # QuickFIX-derived tests for the FIX format
 
 `tests/fix_quickfix_test/` holds unit tests ported from QuickFIX's C++ test suite
-(<https://github.com/quickfix/quickfix>, `src/C++/test/`). QuickFIX/J and QuickFIX/n vectors may be
-added to the same directory later. These are tests of the glaze FIX API contract (`glaze/fix/fix.hpp`).
+(<https://github.com/quickfix/quickfix>, `src/C++/test/`). `qfj_qfn_vectors.inl` adds 43 message vectors from the
+QuickFIX/J and QuickFIX/n test suites (licences `QUICKFIXJ_LICENSE`, `QUICKFIXN_LICENSE`). These are tests of the glaze FIX API contract (`glaze/fix/fix.hpp`).
 Each test is meant to pass once the FIX core is finished.
 
 This product includes software developed by quickfixengine.org (http://www.quickfixengine.org/).
