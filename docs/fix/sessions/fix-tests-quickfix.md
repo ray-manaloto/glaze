@@ -8,11 +8,18 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
 
 * `fix/core` was merged at `e5babf6e`. Its `include/glaze/fix/fix.hpp` replaced my local stub.
 * `tests/fix_quickfix_test/` is registered in `tests/CMakeLists.txt`. Against `fix/core`, built with GCC 13
-  under the `gcc-debug` preset (`-fno-exceptions -fno-rtti -Werror`), it gives **119 tests and 476 asserts,
-  all passing, with 16 groups skipped**. Build and run it with
+  under the `gcc-debug` preset (`-fno-exceptions -fno-rtti -Werror`), it gives **159 tests and 632 asserts,
+  all passing, with 19 groups skipped** (final run, 07:36 UTC). Build and run it with
   `cmake --build build/debug-gcc --target fix_quickfix_test && build/debug-gcc/tests/fix_quickfix_test/fix_quickfix_test`.
   * `fix_quickfix_test.cpp` covers `validate`, `checksum`, `frame` and `parse_fields`, plus the
     QuickFIX/J and QuickFIX/n vectors.
+  * `fix_quickfix_more_tests.inl` (added in the second half of the session) has typed QuickFIX/J and
+    QuickFIX/n cases (nested and header groups, wrong group counts, delimiter-first rule, `=` inside values,
+    empty values, missing 35, ISO-8859-1 bytes, the `validate_checksum=false` read, decoder framing of
+    garbage and bad lengths). It also has more QuickFIX C++ `*GetString`/`*SetString` pairs
+    (ExecutionReport, DontKnowTrade, OrderCancelReplaceRequest, OrderCancelRequest, NewOrderList,
+    NewOrderCross, AllocationInstruction). Writes are compared **byte for byte** with QuickFIX's
+    expected strings, using `meta<T>::fix_begin_string`.
   * `fix_quickfix_struct_tests.inl` covers field conversion, typed messages, repeating groups and the
     `fix_opts` switches. The test file now defines `GLZ_FIX_STRUCT_MAPPING` itself, because the core
     always provides struct mapping. The time-type tests are still behind `GLZ_FIX_TIME_TYPES`; the core
@@ -27,6 +34,15 @@ the shared glaze FIX API contract, so they form a suite the FIX core must pass i
      `setStringWithGroupWithoutDelimiter` leaves out 11. The test checks that the strict mapping
      rejects it, and that a mapping with 67 first reads it.
   4. An empty input is an error in `parse_fields` (`no_read_input`). My stub had allowed it.
+
+  These are recorded too, but are not counted among the four:
+  * Skipped because the contract has no length-prefixed data fields yet: RawData 96 with SOH inside,
+    MassQuote 364/365, and XmlData 212/213 (`ReadXmlDataTest`).
+  * Skipped because fix/core lets a repeated top-level tag overwrite instead of reporting it
+    (QuickFIX/n `RepeatedTagDetection`).
+  * Not a divergence: fix/core frames `8=!@#$%8=FIX.4.2...` as one message, because a value may
+    contain `=`. The test only requires that the framed bytes fail `validate()`. Resyncing on garbage
+    is the caller's job, as it is in QuickFIX/J's decoder.
 * Toolchain: the image's CMake is 3.28 but glaze needs 3.31 or later, so I used
   `pip install --user cmake` and put `~/.local/bin` on `PATH`. Clang 18 with libstdc++ 13 lacks
   `std::expected` here, so only GCC was used.
@@ -54,6 +70,8 @@ The tests do not copy QuickFIX's code. They reuse its message vectors and the in
 | `logon/testRequest/resendRequest/reject/sequenceReset/logout/newOrderSingle Get/SetString` | same names in `MessagesTestCase.cpp / MessageTests` |
 | `setString_TrailerStructureInvalid` | `MessagesTestCase.cpp / MessageTests / setString_TrailerStructureInvalid_MessageStructureInvalid` |
 | `setStringAndValidate_IncorrectBodyLength` | `MessagesTestCase.cpp / MessageTests / setStringAndValidate_IncorrectBodyLength_InvalidException` |
+| `executionReport/dontKnowTrade/orderCancelReplace/orderCancelRequest/newOrderList/newOrderCross Get/SetString`, `allocationInstructionParseGetString`, `allocationInstructionString` | same names in `MessagesTestCase.cpp / MessageTests` (in `fix_quickfix_more_tests.inl`) |
+| `massQuoteParseGetString`, `massQuoteSetString` (skipped: data fields) | `MessagesTestCase.cpp / MessageTests` |
 | `checkSum`, `checkSum of ported vectors` | `MessagesTestCase.cpp / MessageTests / checkSum` (+ declared 10= of the vectors above) |
 | `high-bit bytes` | `MessagesTestCase.cpp / MessageTests / setStringWithHighBit` (byte value -92) |
 | `extractLength`, `readFixMessage`, `readPartialFixMessage`, `readMessagesByteByByte`, `readMessageWithBadLength` | `ParserTestCase.cpp / ParserTests / <same>` |
@@ -82,6 +100,28 @@ its 213 value contains SOH, and the contract has no length-prefixed data fields 
   `UnitTests/ParserTest.cs` and `UnitTests/MessageTests.cs`. Licence: QuickFIX Software License 1.0,
   kept as `QUICKFIXN_LICENSE`.
 
+
+Typed QuickFIX/J and QuickFIX/n cases in `fix_quickfix_more_tests.inl`. Each ut name starts with the
+repo and file, then the test method:
+
+* QuickFIX/J `quickfixj-core/src/test/java/quickfix/MessageTest.java`: `testParsing`, `testHeaderGroupParsing`,
+  `testParsing2`, `testNestedRepeatingGroup`, `testFieldWithEqualsCharacter`, `testFirstFieldInGroupIsDelimiter`,
+  `testMessageBytesField`.
+* QuickFIX/J `.../RepeatingGroupTest.java`: `testWrongGroupCount`. `.../MessageUtilsTest.java`: `testParse`,
+  `testParseMessageWithoutChecksumValidation`.
+* QuickFIX/J `.../mina/message/FIXMessageDecoderTest.java`: `testSimpleMessage`, `testGarbageAtStart`,
+  `testLengthFormatError`, `testLengthFormatError2`, `testBadLengthTooLong`, `testBadLengthTooShort`,
+  `testBogusMessageLength`, `testFailedPatternMatchAtEndOfBuffer`, `testWesternEuropeanDecoding`.
+* QuickFIX/n `UnitTests/MessageTests.cs`: `ConstructStringTest`, `TripleNestedGroups_Issue95`,
+  `FromStringTestWithNoDataDictionary`, `RepeatedTagDetection`, `GetInvalidMsgTypeTest`, `IdentifyTypeTest`.
+  `UnitTests/ParserTest.cs`: `ReadFixMessageWithMissingValues`, `ReadFixMessageWithNonAscii`.
+
+Many of those originals carry a wrong 9 or 10. Where that happens the test keeps the body,
+recomputes 9 and 10 with `make_msg()`, and says so in a comment. Some bodies were cut down to the
+fields under test (`testNestedRepeatingGroup`, `testFieldWithEqualsCharacter`, `testWrongGroupCount`), and
+`TripleNestedGroups_Issue95` gained an 887 level so that it really nests three deep. Each is marked
+in the test.
+
 Points to note from these vectors: many of their "good" messages have the wrong checksum (the
 decoders frame only), and two use correct checksums written with only 1 or 2 digits. These are
 marked invalid here because FIX requires exactly 3 digits. Also, in `RepeatedTagDetection`,
@@ -98,6 +138,8 @@ validation up to the *first* `10=` gives a correct 9 and 10, so a parser that st
   so they were not ported.
 * `UtcTimeStampTestCase.cpp` / `UtcTimeOnlyTestCase.cpp` (comparison and arithmetic) depend on the
   time type that is chosen, so they were not ported.
+* Not ported from `MessagesTestCase.cpp`: `XMLNonFIXSetString`, `getXML`, `reverseRoute`, `addRemoveGroup`, `replaceGroup`,
+  `copy`, `identifyType`, `isAdmin`/`isApp`. They test QuickFIX's API rather than the wire format.
 * `DoubleConvertor` precision/padding variants such as `convert(1.5, 3) == "1.500"` were not ported,
   because the contract has no precision option.
 * QuickFIX's `spec/FIX*.xml` dictionaries were not used. No dictionary-driven code exists yet.
