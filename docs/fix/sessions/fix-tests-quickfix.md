@@ -168,8 +168,8 @@ validation up to the *first* `10=` gives a correct 9 and 10, so a parser that st
 2. If the contract gains UTCTimeOnly and UTCDateOnly types, port the remaining conversion vectors. The old
    `GLZ_FIX_TIME_TYPES` block in `fix_quickfix_struct_tests.inl` (a raw `std::chrono` mapping) can then
    be deleted, since `utc_timestamp` covers timestamps.
-4. Still to port: the remaining `FIXMessageDecoderTest` stream cases (resync after garbage, which is the
-   caller's job here), QuickFIX/n `MessageTests.cs` cases that need a dictionary, and the FIX44/FIX50 spec
-   XML from QuickFIX (no dictionary support yet).
 3. Check the assumptions listed in `docs/fix/quickfix-tests.md` against `docs/fix/api.md` whenever the core changes.
 4. Add the dictionary-dependent tests once the contract has a dictionary or header/trailer tag sets.
+5. Still to port: the remaining `FIXMessageDecoderTest` stream cases (resync after garbage, which is the
+   caller's job here), QuickFIX/n `MessageTests.cs` cases that need a dictionary, and the FIX44/FIX50 spec
+   XML from QuickFIX (no dictionary support yet).
