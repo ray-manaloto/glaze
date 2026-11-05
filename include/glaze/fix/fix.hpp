@@ -323,7 +323,7 @@ namespace glz::fix::detail
          out.push_back(v ? 'Y' : 'N');
       }
       else if constexpr (std::same_as<T, char>) {
-         if (v == soh || v == '\0') return false;
+         if (v == soh) return false; // FIX char: any byte but the delimiter
          out.push_back(v);
       }
       else if constexpr (std::integral<T>) {

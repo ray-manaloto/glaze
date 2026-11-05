@@ -422,6 +422,23 @@ suite conformance_tests = [] {
       expect(bool(glz::read<pipe_opts>(o, make("35=D|11=a|54=12|"))));
    };
 
+   "R21 a char holding any non-delimiter byte, NUL included, round trips (regression: fuzzing/regressions/fix_read)"_test = [] {
+      NewOrderSingle o{};
+      o.cl_ord_id = "a";
+      for (int c = 0; c < 256; ++c) {
+         if (c == '|') continue;
+         o.side = char(c);
+         std::string buf;
+         expect(not glz::write<pipe_opts>(o, buf)) << c;
+         NewOrderSingle back{};
+         expect(not glz::read<pipe_opts>(back, buf)) << c;
+         expect(back.side == char(c));
+      }
+      o.side = '|';
+      std::string buf;
+      expect(bool(glz::write<pipe_opts>(o, buf)));
+   };
+
    "R22 MsgType must match the mapped struct"_test = [] {
       NewOrderSingle o{};
       expect(glz::read<pipe_opts>(o, make("35=8|11=a|")) == glz::error_code::invalid_header);
