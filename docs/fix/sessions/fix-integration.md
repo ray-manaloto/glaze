@@ -55,7 +55,7 @@ Workaround used: `apt-get install clang-19` (19.1.1 from Ubuntu noble), configur
 `clang-scan-deps-19`, so CMake's module scanning fails without that option). The Clang build uses
 the test project's `-fno-exceptions -fno-rtti -Werror` and ASan/UBSan.
 
-## Results (state at 07:43 UTC, final merge state)
+## Results (state at 07:45 UTC, final merge state)
 
 `ctest -R '^fix_'`: GCC 7/7 pass, Clang 19 7/7 pass.
 
