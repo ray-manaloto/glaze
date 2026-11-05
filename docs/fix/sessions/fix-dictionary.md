@@ -53,11 +53,8 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
 * A StandardHeader member in messages (49/56/34/52 are skipped on read and not written).
 * clang build: the system clang here (with libstdc++ 13) fails inside glaze's own headers
   (`std::expected`, `[[assume]]`). These errors do not come from the FIX code. Not investigated.
-* **Not pushed.** `git push -u origin fix/dictionary` was refused by the session's git proxy
-  ("ray-manaloto/glaze is not in this session's authorized repository set"), and this
-  container's clone had no `origin` remote. The work is in local commits on `fix/dictionary` and in
-  the bundle `fix-dictionary.bundle`, saved at the repository root and not committed. To restore
-  it: `git fetch fix-dictionary.bundle fix/dictionary:fix/dictionary`.
+* Pushing was refused by the git proxy at first. It worked once the repository was attached to
+  the session (07:16 UTC), and every commit is on `origin/fix/dictionary`.
 
 ## Provenance of tests
 
@@ -76,7 +73,10 @@ validates. Field values (order IDs, symbols, prices) are made up.
 * `cmake --preset gcc-debug && cmake --build build/debug-gcc --target fix_dictionary_test`
   (needs CMake ≥ 3.31; `pip install --user cmake` was used here), then run
   `build/debug-gcc/tests/fix_dictionary_test/fix_dictionary_test`.
-* FIX 5.0 SP2 scratch check: SP2_CHECK_RESULT
+* FIX 5.0 SP2 scratch check: passed (GCC 13, `-Werror`, about 2m20s to compile).
+  Input `8=FIXT.1.1|...|35=D|11=SP2-1|453=1|448=DESK|447=D|452=3|55=VOD.L|54=2|...` was read,
+  written and read back, and compared equal. The output begins `8=FIX.5.0SP2`. See "Not done"
+  about FIXT.
 
 ## Next steps
 
