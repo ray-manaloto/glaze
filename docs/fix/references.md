@@ -23,7 +23,8 @@ secdef records without a BeginString. The parser does not check 9 and 10 on inpu
 messages carry wrong 9 and 10 values by accident.
 **Ported:** 31 vectors in `simplefix.fixv` (15 parse, 5 validate, 8 frame, 3 checksum). Where a
 sample's 9 or 10 was accidentally wrong, the validate and frame vectors use corrected values and say
-so in `note`. Raw-data tests (SOH inside a value) and option-dependent tests (stop bytes, empty-value
+so in `note`. Raw-data tests (SOH inside a value) were first skipped, then ported to
+`simplefix_raw.fixv` (4 vectors) once `fix/core` supported length/data pairs. Option-dependent tests (stop bytes, empty-value
 switch) were skipped; the file header lists them. simplefix skips junk before `8=`; glaze's `frame()` reports `frame_error`
 instead, so `simplefix.leading_junk_pairs` and `simplefix.junk_pairs_only` expect that.
 
@@ -40,7 +41,9 @@ BeginString, but builds its messages at run time, so there are no fixed bytes to
 **Ported:** 32 vectors in `crocofix.fixv` (6 parse, 21 validate, 4 frame, 1 checksum). The order-flow
 messages are good real-world validate vectors with correct 9 and 10. Two upstream messages kept a
 stale `10=021` after an edit to 35; they are kept as `expect = error` and the note says why. One
-source literal mixes `|` with an escaped SOH; both are treated as the separator.
+source literal mixes `|` with an escaped SOH; both are treated as the separator. The data-field
+(93/89) sections went into `crocofix_raw.fixv` (9 vectors) once `fix/core` supported raw data; the
+upstream message there has a wrong `9=167` (body is 179 bytes), so a corrected twin is added.
 
 ## Philadelphia (Java), paritytrading/philadelphia — Apache-2.0
 
