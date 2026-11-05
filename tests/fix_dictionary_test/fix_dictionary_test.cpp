@@ -182,6 +182,11 @@ suite errors = [] {
       d::Logon l{};
       expect(bool(glz::read<pipe_opts>(l, msg)));
    };
+   "write rejects enum outside its code set"_test = [] {
+      d::NewOrderSingle o{}; // required Side/OrdType default to 0, which no code set holds
+      std::string out;
+      expect(glz::write<pipe_opts>(o, out).ec == glz::error_code::unexpected_enum);
+   };
    "framing a stream"_test = [] {
       std::string stream{logon44};
       stream += md44;

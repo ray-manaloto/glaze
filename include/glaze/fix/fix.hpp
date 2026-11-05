@@ -179,8 +179,32 @@ namespace glz::fix
          return size_t(-1);
       }
 
+      template <class E>
+      constexpr bool enum_valid(E v)
+      {
+         using U = std::underlying_type_t<E>;
+         constexpr auto& vals = glz::meta<E>::fix_values;
+         if constexpr (std::same_as<U, char>) {
+            for (auto s : vals)
+               if (s.size() == 1 && s[0] == char(v)) return true;
+            return false;
+         }
+         else if constexpr (std::same_as<U, int32_t>) {
+            for (auto s : vals) {
+               int32_t x{};
+               auto [p, ec] = std::from_chars(s.data(), s.data() + s.size(), x);
+               if (ec == std::errc{} && x == int32_t(v)) return true;
+            }
+            return false;
+         }
+         else {
+            return size_t(v) < vals.size();
+         }
+      }
+
+      // Returns false for a value that has no FIX encoding (an enum outside its code set).
       template <class V>
-      void write_value(const V& v, std::string& out)
+      bool write_value(const V& v, std::string& out)
       {
          if constexpr (std::same_as<V, std::string>) {
             out.append(v);
@@ -193,6 +217,7 @@ namespace glz::fix
          }
          else if constexpr (fix_enum<V>) {
             using U = std::underlying_type_t<V>;
+            if (!enum_valid(v)) return false;
             if constexpr (std::same_as<U, char>) {
                out.push_back(char(v));
             }
@@ -217,6 +242,7 @@ namespace glz::fix
          else {
             static_assert(sizeof(V) == 0, "unsupported FIX member type");
          }
+         return true;
       }
 
       template <class V>
@@ -265,8 +291,9 @@ namespace glz::fix
       }
 
       template <class T>
-      void write_body(const T& obj, std::string& out, char soh)
+      bool write_body(const T& obj, std::string& out, char soh)
       {
+         bool ok = true;
          for_each<reflect<T>::size>([&]<size_t I>() {
             const auto& m = get_member(obj, get<I>(reflect<T>::values));
             using M = std::remove_cvref_t<decltype(m)>;
@@ -280,22 +307,23 @@ namespace glz::fix
                   put_key();
                   write_value(int64_t(m.size()), out);
                   out.push_back(soh);
-                  for (const auto& e : m) write_body(e, out, soh);
+                  for (const auto& e : m) ok &= write_body(e, out, soh);
                }
             }
             else if constexpr (is_optional<M>::value) {
                if (m) {
                   put_key();
-                  write_value(*m, out);
+                  ok &= write_value(*m, out);
                   out.push_back(soh);
                }
             }
             else {
                put_key();
-               write_value(m, out);
+               ok &= write_value(m, out);
                out.push_back(soh);
             }
          });
+         return ok;
       }
 
       // Reads fields of T starting at pos. In a group (top_level == false) reading stops at the
@@ -372,7 +400,9 @@ namespace glz::fix
       body.append("35=");
       body.append(glz::meta<T>::fix_msg_type);
       body.push_back(soh);
-      detail::write_body(obj, body, soh);
+      if (!detail::write_body(obj, body, soh)) {
+         return {0, error_code::unexpected_enum, "value has no FIX encoding (enum outside its code set)"};
+      }
       out.clear();
       out.append("8=");
       out.append(detail::begin_string_of<T>());
