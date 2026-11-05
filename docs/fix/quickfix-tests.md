@@ -15,11 +15,11 @@ QuickFIX's licence is kept beside the tests as `tests/fix_quickfix_test/QUICKFIX
 | `fix_quickfix_test.cpp` | `validate`, `checksum`, `frame`, `parse_fields` over the QuickFIX message vectors | low-level contract only |
 | `fix_quickfix_struct_tests.inl` | field conversion (int8/16/32/64, uint32/64, double, char, bool, string), typed admin and app messages, repeating groups, `fix_opts` switches | `glz::read/write<fix_opts{}>` |
 
-The struct tests are compiled only when the core defines `GLZ_FIX_STRUCT_MAPPING`. This
-macro is **proposed** for the contract; `fix/core` has not adopted it yet. Without the macro they
-print `SKIPPED: <source> -- <reason>` and do not fail. Tests outside the contract are also
-printed as `SKIPPED` with a reason: date/time types, and checks that need a data dictionary.
-That way the gaps stay visible.
+The struct tests are on by default, because `fix/core` provides `glz::read/write<fix_opts>`. The
+time-type tests are compiled only with `GLZ_FIX_TIME_TYPES`, a proposed `std::chrono` mapping. Tests the
+core does not pass print `SKIPPED: <source> -- <reason>` so the gaps stay visible. Those cover date/time
+types, dictionary-dependent checks and the differences from QuickFIX listed in
+`docs/fix/sessions/fix-tests-quickfix.md`.
 
 ## Semantics the tests assume
 
@@ -32,12 +32,13 @@ change them in `docs/fix/api.md`:
 * A field value may hold any byte except SOH, including NUL and bytes with the high bit set. The
   checksum adds bytes as unsigned values.
 * `frame` uses BodyLength, so a SOH inside a value does not end a message early. It returns 0 when
-  the stream is incomplete *or* the length is malformed (`9=A`, `9=-1`, `9=200A`). QuickFIX throws in
-  the malformed case; here the caller is expected to `validate`.
-* `parse_fields` rejects a tag that is empty, non-numeric, signed or has a leading zero, and also
-  rejects a missing `=` or a missing final SOH.
+  the stream is incomplete, and returns 0 or `frame_error` when the length is malformed (`9=A`, `9=-1`,
+  `9=200A`). QuickFIX throws in the malformed case.
+* `parse_fields` rejects a tag that is empty, non-numeric or signed, and also rejects a missing `=`,
+  a missing final SOH and empty input.
 * Integer conversion rejects a leading `+`, decimals, an empty value and values out of range for the
-  member type. Float conversion rejects exponent notation, `.` and a second decimal point.
+  member type. Float conversion rejects `.` and a second decimal point. Rejecting exponent notation
+  is skipped for now, because fix/core accepts it.
   Bool is `Y`/`N` only. A char field holds exactly one byte.
 * QuickFIX's own `Parser` vectors carry wrong `10=` values (its Parser only frames). They are used
   only for framing tests.

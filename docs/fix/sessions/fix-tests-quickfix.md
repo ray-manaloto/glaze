@@ -109,6 +109,5 @@ validation up to the *first* `10=` gives a correct 9 and 10, so a parser that st
    matching skips.
 2. Once the contract has time types, turn on `GLZ_FIX_TIME_TYPES` (the proposed `std::chrono` mapping is
    at the bottom of the `.inl`).
-3. Settle the assumptions listed in `docs/fix/quickfix-tests.md` (for example, `frame` returns 0 for
-   a malformed length, and integer reads reject a leading `+`).
+3. Check the assumptions listed in `docs/fix/quickfix-tests.md` against `docs/fix/api.md` whenever the core changes.
 4. Add the dictionary-dependent tests once the contract has a dictionary or header/trailer tag sets.
