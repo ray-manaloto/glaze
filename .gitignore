@@ -66,3 +66,4 @@ pr_description.md
 pr.md
 /tmp/
 tmp/
+!tests/fix_fixpp_test/data/*.log
