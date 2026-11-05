@@ -345,6 +345,23 @@ suite struct_mapping = [] {
       expect(v.ord_status == '2');
       expect(v.exec_type == ExecType::trade);
    };
+   "truncated_and_corrupted_inputs_fail_cleanly"_test = [] {
+      Multileg m{"ML1", {{"AAA", 1.5, {{"X", 'C', 7}}}, {"BBB", 2, {}}}, 10};
+      std::string full;
+      expect(!glz::write<pipe>(m, full));
+      for (size_t n = 1; n < full.size(); ++n) {
+         Multileg r{};
+         const std::string prefix = full.substr(0, n); // owned copy so sanitizers catch over-reads
+         expect(bool(glz::read<pipe>(r, prefix))) << n;
+         expect(glz::fix::frame(prefix, '|') == 0u) << n;
+      }
+      for (size_t i = 0; i < full.size(); ++i) {
+         std::string bad = full;
+         bad[i] = char(bad[i] ^ 0x20); // changes the byte sum by +-32, never a multiple of 256
+         Multileg r{};
+         expect(bool(glz::read<pipe>(r, bad))) << i; // the checksum catches every single-byte change
+      }
+   };
    "value_errors"_test = [] {
       NewOrderSingle r{};
       expect(glz::read<pipe>(r, std::string_view{"114=X|"}) == glz::error_code::expected_true_or_false);
