@@ -1,0 +1,67 @@
+# Raw-data (length-prefixed) vectors ported from GaryHughes/crocofix (MIT License, Copyright (c) 2019
+# Gary Hughes; see licenses/crocofix-LICENSE.txt). '|' is SOH, including inside raw values.
+
+id = crocofix.raw.data_field_parse
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = 8=FIX.4.4|9=167|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|93=20|89=ABCDEF|ABCDEFABC|DEF|10=220|
+expect = ok
+count = 20
+note = SECTION "decode a message containing a data field": Signature(89) of 20 bytes with two SOH inside
+
+id = crocofix.raw.data_field_validate
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|9=167|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|93=20|89=ABCDEF|ABCDEFABC|DEF|10=220|
+expect = error
+note = same; upstream 9=167 is wrong (body is 179 bytes) and crocofix does not check it
+
+id = crocofix.raw.data_field_fixed_validate
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|9=179|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|93=20|89=ABCDEF|ABCDEFABC|DEF|10=148|
+expect = ok
+note = same message with 9 and 10 recomputed (9=179); written for glaze
+
+id = crocofix.raw.data_field_fixed_frame
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = frame
+stream = 8=FIX.4.4|9=179|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|93=20|89=ABCDEF|ABCDEFABC|DEF|10=148|8=FIX.4.4|9=179|35=D|49=INITIA
+frame_len = 202
+note = corrected message framed, SOH inside 89 does not end it
+
+id = crocofix.raw.data_field_first_piece_frame
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = frame
+stream = 8=FIX.4.4|9=167|35=D|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|93=20|89=ABCDEF|ABCDE
+frame_len = 0
+note = SECTION "decode a message containing a data field in two pieces": first piece ends inside the data
+
+id = crocofix.raw.encode_data_field_validate
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = validate
+msg = 8=FIX.4.4|9=30|93=20|89=ABCDEF|ABCDEFABC|DEF|10=119|
+expect = error
+note = SECTION "encode a message containing a data field": correct 9 and 10, but no MsgType(35), so glz::fix::validate rejects it
+
+id = crocofix.raw.encode_data_field_checksum
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = checksum
+bytes = 8=FIX.4.4|9=30|93=20|89=ABCDEF|ABCDEFABC|DEF|
+value = 119
+note = same message, CheckSum 119
+
+id = crocofix.raw.data_field_no_length_parse
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = 8=FIX.4.4|9=149|35=D|89=123|49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = ok
+count = 19
+note = SECTION "data field that has no preceeding size field": crocofix rejects it; a plain scanner reads 89=123 as an ordinary field. Ported as the scanner outcome
+
+id = crocofix.raw.data_field_no_trailing_soh_parse
+source = GaryHughes/crocofix:libcrocofix_tests/message_tests.cpp::Message
+kind = parse
+msg = 8=FIX.4.4|9=149|35=D|93=3|89=AAA49=INITIATOR|56=ACCEPTOR|34=2752|52=20200114-08:13:20.041|11=61|70=60|100=AUTO|55=BHP.AX|54=1|60=20200114-08:12:59.397|38=10000|40=2|44=20|59=1|10=021|
+expect = error
+note = SECTION "data field that does not have a traling field separator": 93=3 then 89=AAA is not followed by SOH

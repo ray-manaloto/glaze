@@ -1,0 +1,470 @@
+#!/usr/bin/env python3
+# Glaze Library
+# For the license information refer to glaze.hpp
+"""Generate header-only C++ FIX dictionary types for glaze from FIX Orchestra XML.
+
+Input: an Orchestra repository file published by the FIX Trading Community, e.g.
+OrchestraFIX42.xml, OrchestraFIX44.xml or OrchestraFIXLatest.xml from
+https://github.com/FIXTradingCommunity/orchestrations ("FIX Standard" directory,
+Apache License 2.0).
+
+Output: one header holding
+  * tag number constants        (namespace <ns>::tag)
+  * enum class per code set     (with glz::meta: glz::enumerate names + fix_values wire strings)
+  * a struct per repeating group, per component and per message, each with a glz::meta
+    that maps FIX tag numbers (as strings) to members, as described in docs/fix/api.md.
+
+Components are flattened into the structs that use them (FIX tag=value has no
+component boundary on the wire). Repeating groups become std::vector<Group> members keyed
+by their NumInGroup tag. Optional fields become std::optional<T>. StandardHeader and
+StandardTrailer are omitted from messages: the FIX writer fills 8, 9, 35 and 10 itself.
+
+Python 3 standard library only.
+
+Usage:
+  fix_codegen.py --xml OrchestraFIX44.xml --namespace fix44 --out include/glaze/fix/dict/fix44.hpp
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import sys
+import xml.etree.ElementTree as ET
+
+NS = {"fixr": "http://fixprotocol.io/2020/orchestra/repository"}
+F = "{http://fixprotocol.io/2020/orchestra/repository}"
+
+INT_TYPES = {"int", "Length", "SeqNum", "TagNum", "DayOfMonth", "NumInGroup"}
+FLOAT_TYPES = {"float", "Price", "Qty", "Amt", "Percentage", "PriceOffset"}
+MULTI_TYPES = {"MultipleValueString", "MultipleCharValue", "MultipleStringValue"}
+
+# ApplVerID(1128) code values (FIX 5.0 SP2 code set ApplVerID).
+APPL_VER_IDS = {"FIX.5.0": "7", "FIX.5.0SP1": "8", "FIX.5.0SP2": "9"}
+
+CPP_KEYWORDS = set(
+    """alignas alignof and and_eq asm auto bitand bitor bool break case catch char char8_t char16_t
+    char32_t class compl concept const consteval constexpr constinit const_cast continue co_await
+    co_return co_yield decltype default delete do double dynamic_cast else enum explicit export
+    extern false float for friend goto if inline int long mutable namespace new noexcept not not_eq
+    nullptr operator or or_eq private protected public register reinterpret_cast requires return
+    short signed sizeof static static_assert static_cast struct switch template this thread_local
+    throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while
+    xor xor_eq""".split()
+)
+
+
+def snake(name: str) -> str:
+    name = re.sub(r"IDs(?=[A-Z]|$)", "Ids", name)
+    s = re.sub(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", "_", name)
+    s = re.sub(r"[^0-9A-Za-z_]", "_", s).lower()
+    if not s or s[0].isdigit():
+        s = "f_" + s
+    if s in CPP_KEYWORDS:
+        s += "_"
+    return s
+
+
+def ident(name: str) -> str:
+    s = re.sub(r"[^0-9A-Za-z_]", "_", name)
+    if not s or s[0].isdigit():
+        s = "_" + s
+    if s in CPP_KEYWORDS or s == "NULL":
+        s += "_"
+    return s
+
+
+def cpp_char(c: str) -> str:
+    if c == "'":
+        return "'\\''"
+    if c == "\\":
+        return "'\\\\'"
+    return f"'{c}'"
+
+
+def cpp_str(s: str) -> str:
+    return '"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+class Repo:
+    def __init__(self, path: str):
+        root = ET.parse(path).getroot()
+        self.name = root.get("name", "")
+        self.version = root.get("version", "")
+        self.codesets = {}  # name -> (type, [(name, value)])
+        for cs in root.iter(F + "codeSet"):
+            codes = [(c.get("name"), c.get("value")) for c in cs.findall(F + "code")]
+            self.codesets[cs.get("name")] = (cs.get("type"), codes)
+        self.fields = {}  # id -> (name, type)
+        for f in root.iter(F + "field"):
+            self.fields[int(f.get("id"))] = (f.get("name"), f.get("type"))
+        self.components = {}  # id -> (name, element)
+        for c in root.iter(F + "component"):
+            self.components[int(c.get("id"))] = (c.get("name"), c)
+        self.groups = {}  # id -> (name, numInGroup tag, element)
+        for g in root.iter(F + "group"):
+            nig = g.find(F + "numInGroup")
+            self.groups[int(g.get("id"))] = (g.get("name"), int(nig.get("id")), g)
+        self.messages = []  # (name, msgType, structure element)
+        for m in root.iter(F + "message"):
+            # Orchestra may hold several scenarios of one message; keep the base scenario only.
+            if m.get("scenario", "base") != "base":
+                continue
+            self.messages.append((m.get("name"), m.get("msgType"), m.find(F + "structure")))
+
+
+class Repo2010(Repo):
+    """Adapter for the FIX Repository 2010 Edition "Unified" format (e.g. FIX.5.0SP2_EP247).
+
+    It is rewritten into the same in-memory model as an Orchestra file: enums inline in a
+    <field> become a code set named after the field; a BlockRepeating component and an
+    inline <repeatingGroup> become groups; required="1" becomes presence="required".
+    """
+
+    def __init__(self, path: str):
+        root = ET.parse(path).getroot()
+        fix = root.find("fix")
+        self.name = fix.get("version", "").split("_")[0]
+        self.version = fix.get("version", "")
+        self.codesets, self.fields, self.components, self.groups, self.messages = {}, {}, {}, {}, []
+        for f in fix.find("fields"):
+            name, ftype = f.get("name"), f.get("type")
+            enums = f.findall("enum")
+            if enums:
+                cs = name + "CodeSet"
+                self.codesets[cs] = (ftype, [(e.get("symbolicName"), e.get("value")) for e in enums])
+                ftype = cs
+            self.fields[int(f.get("id"))] = (name, ftype)
+        self.raw = {int(c.get("id")): c for c in fix.find("components")}
+        self.repeating = {cid for cid, c in self.raw.items() if c.get("type") == "BlockRepeating"}
+        self.next_gid = 900000
+        for cid, c in self.raw.items():
+            if cid in self.repeating:
+                rg = c.find("repeatingGroup")
+                self.groups[cid] = (c.get("name"), int(rg.get("id")), self.convert(rg))
+            else:
+                self.components[cid] = (c.get("name"), self.convert(c))
+        for m in fix.find("messages"):
+            self.messages.append((m.get("name"), m.get("msgType"), self.convert(m)))
+
+    def convert(self, elem):
+        out = ET.Element(F + "structure")
+        for child in elem:
+            req = {"presence": "required"} if child.get("required") == "1" else {}
+            if child.tag == "fieldRef":
+                ET.SubElement(out, F + "fieldRef", id=child.get("id"), **req)
+            elif child.tag == "componentRef":
+                kind = "groupRef" if int(child.get("id")) in self.repeating else "componentRef"
+                ET.SubElement(out, F + kind, id=child.get("id"), **req)
+            elif child.tag == "repeatingGroup":
+                nig = int(child.get("id"))
+                gid = self.next_gid
+                self.next_gid += 1
+                base = self.fields[nig][0]
+                base = base[2:] if base.startswith("No") else base
+                self.groups[gid] = (base, nig, self.convert(child))
+                ET.SubElement(out, F + "groupRef", id=str(gid), **req)
+        return out
+
+
+def load(path: str) -> Repo:
+    root = ET.parse(path).getroot()
+    return Repo2010(path) if root.tag == "fixRepository" else Repo(path)
+
+
+class Gen:
+    def __init__(self, repo: Repo, ns: str, source: str = "", with_header: bool = True, typed: bool = False):
+        self.r = repo
+        self.source = source
+        self.with_header = with_header
+        self.typed = typed  # map Price/Qty/... to glz::fix::decimal and UTCTimestamp to utc_timestamp
+        # FIX 5.0 and later run over the FIXT.1.1 session layer: 8=FIXT.1.1 on the wire, and the
+        # application version travels in ApplVerID(1128). FIX 4.x puts its own version in 8.
+        n = repo.name
+        self.wire_begin = "FIXT.1.1" if (n.startswith(("FIX.5", "FIX.Latest", "FIXT"))) else n
+        self.appl_ver_id = APPL_VER_IDS.get(n.split("_")[0], "")
+        self.ns = ns
+        self.used_names: set[str] = set()
+        self.enum_names: dict[str, str] = {}  # codeset name -> C++ enum name
+        self.enum_kind: dict[str, str] = {}  # codeset name -> char|int|string|multi
+        self.group_structs: dict[int, str] = {}
+        self.out_groups: list[str] = []
+        self.skip_components = {
+            cid for cid, (n, _) in repo.components.items() if n in ("StandardHeader", "StandardTrailer")
+        }
+
+    def unique(self, base: str) -> str:
+        name = ident(base)
+        n = name
+        i = 2
+        while n in self.used_names:
+            n = f"{name}{i}"
+            i += 1
+        self.used_names.add(n)
+        return n
+
+    # ---- enums --------------------------------------------------------------------------------
+    def build_enums(self) -> list[str]:
+        used_cs = set()
+        for _, t in self.r.fields.values():
+            if t in self.r.codesets:
+                used_cs.add(t)
+        out = []
+        for cs_name in sorted(used_cs):
+            cs_type, codes = self.r.codesets[cs_name]
+            if not codes:
+                continue
+            base = cs_name[: -len("CodeSet")] if cs_name.endswith("CodeSet") else cs_name
+            ename = self.unique(base)
+            self.enum_names[cs_name] = ename
+            values = [v for _, v in codes]
+            if cs_type in MULTI_TYPES:
+                kind = "multi"
+            elif cs_type == "char" and all(len(v) == 1 for v in values):
+                kind = "char"
+            elif cs_type in INT_TYPES and all(re.fullmatch(r"-?\d+", v) for v in values):
+                kind = "int"
+            else:
+                kind = "string"
+            self.enum_kind[cs_name] = kind
+            seen = set()
+            items = []
+            for cname, v in codes:
+                en = ident(cname)
+                while en in seen:
+                    en += "_"
+                seen.add(en)
+                items.append((en, v))
+            underlying = {"char": "char", "int": "int32_t"}.get(kind, "uint16_t")
+            out.append(f"   // {cs_name} ({cs_type})")
+            out.append(f"   enum class {ename} : {underlying} {{")
+            for i, (en, v) in enumerate(items):
+                if kind == "char":
+                    out.append(f"      {en} = {cpp_char(v)},")
+                elif kind == "int":
+                    out.append(f"      {en} = {int(v)},")
+                else:
+                    out.append(f"      {en} = {i},")
+            out.append("   };")
+            self.enum_items = getattr(self, "enum_items", {})
+            self.enum_items[ename] = items
+        return out
+
+    def enum_metas(self) -> list[str]:
+        out = []
+        for ename, items in self.enum_items.items():
+            full = f"glz::fix::{self.ns}::{ename}"
+            out.append("template <>")
+            out.append(f"struct glz::meta<{full}>")
+            out.append("{")
+            out.append(f"   using enum {full};")
+            out.append("   static constexpr auto value = glz::enumerate(" + ", ".join(e for e, _ in items) + ");")
+            out.append(
+                f"   static constexpr std::array<std::string_view, {len(items)}> fix_values{{"
+                + ", ".join(cpp_str(v) for _, v in items)
+                + "};"
+            )
+            out.append("};")
+        return out
+
+    # ---- member types -------------------------------------------------------------------------
+    def field_type(self, fid: int) -> str:
+        _, t = self.r.fields[fid]
+        if t in self.r.codesets and t in self.enum_names:
+            # Only char and int code sets are enum members: the fix/core codec writes an enum as
+            # its underlying value. Boolean code sets are bool; String/multi-value code sets stay
+            # std::string (the enum and its fix_values are still emitted for reference).
+            kind = self.enum_kind[t]
+            if kind in ("char", "int"):
+                return self.enum_names[t]
+            if self.r.codesets[t][0] == "Boolean":
+                return "bool"
+            return "std::string"
+        if t in INT_TYPES:
+            return "int64_t"
+        if t in FLOAT_TYPES:
+            return "glz::fix::decimal" if self.typed else "double"
+        if t == "UTCTimestamp" and self.typed:
+            return "glz::fix::utc_timestamp"
+        if t == "char":
+            return "char"
+        if t == "Boolean":
+            return "bool"
+        return "std::string"
+
+    # ---- structure flattening -----------------------------------------------------------------
+    def collect(self, elem, members, seen_tags, required_ctx=True):
+        """Flatten an Orchestra structure into [(kind, tag, cpp_type, name, required)]."""
+        for child in elem:
+            tagname = child.tag.replace(F, "")
+            req = child.get("presence") == "required" and required_ctx
+            if tagname == "fieldRef":
+                fid = int(child.get("id"))
+                if fid in seen_tags or fid not in self.r.fields:
+                    continue
+                seen_tags.add(fid)
+                members.append(("field", fid, self.field_type(fid), snake(self.r.fields[fid][0]), req))
+            elif tagname == "componentRef":
+                cid = int(child.get("id"))
+                if cid in self.skip_components or cid not in self.r.components:
+                    continue
+                self.collect(self.r.components[cid][1], members, seen_tags, req)
+            elif tagname == "groupRef":
+                gid = int(child.get("id"))
+                if gid not in self.r.groups:
+                    continue
+                gname, nig, _ = self.r.groups[gid]
+                if nig in seen_tags:
+                    continue
+                seen_tags.add(nig)
+                sname = self.group_struct(gid)
+                members.append(("group", nig, f"std::vector<{sname}>", snake(self.r.fields[nig][0]), False))
+        return members
+
+    def group_struct(self, gid: int) -> str:
+        if gid in self.group_structs:
+            return self.group_structs[gid]
+        gname, nig, elem = self.r.groups[gid]
+        sname = self.unique(gname + "Grp" if not gname.endswith("Grp") else gname)
+        self.group_structs[gid] = sname  # register before recursing (nested groups)
+        members = self.collect([c for c in elem if c.tag != F + "numInGroup"], [], set())
+        self.out_groups.append(self.emit_struct(sname, members, None))
+        return sname
+
+    def emit_struct(self, sname, members, msg_type):
+        lines = [f"   struct {sname}", "   {"]
+        names = set()
+        fixed = []
+        for kind, tag, ctype, mname, req in members:
+            while mname in names:
+                mname += "_"
+            names.add(mname)
+            fixed.append((kind, tag, ctype, mname, req))
+            if kind == "group" or req:
+                lines.append(f"      {ctype} {mname}{{}};")
+            else:
+                lines.append(f"      std::optional<{ctype}> {mname}{{}};")
+        lines.append(f"      bool operator==(const {sname}&) const = default;")
+        lines.append("   };")
+        self.metas.append((sname, fixed, msg_type))
+        return "\n".join(lines)
+
+    def meta_for(self, sname, members, msg_type) -> list[str]:
+        full = f"glz::fix::{self.ns}::{sname}"
+        out = ["template <>", f"struct glz::meta<{full}>", "{", f"   using T = {full};"]
+        if msg_type is not None:
+            out.append(f"   static constexpr std::string_view fix_msg_type = {cpp_str(msg_type)};")
+            out.append(f"   static constexpr std::string_view fix_begin_string = {cpp_str(self.wire_begin)};")
+            if self.appl_ver_id:
+                out.append(f"   static constexpr std::string_view fix_appl_ver_id = {cpp_str(self.appl_ver_id)};")
+        if members:
+            pairs = ", ".join(f'"{tag}", &T::{m}' for _, tag, _, m, _ in members)
+            out.append(f"   static constexpr auto value = glz::object({pairs});")
+        else:
+            out.append("   static constexpr auto value = glz::object();")
+        out.append("};")
+        return out
+
+    def run(self) -> str:
+        self.metas = []
+        enums = self.build_enums()
+        comps = []
+        for cid, (cname, elem) in sorted(self.r.components.items()):
+            # StandardHeader/StandardTrailer are emitted for standalone use; they are only
+            # skipped when flattening messages.
+            members = self.collect(elem, [], set())
+            comps.append(self.emit_struct(self.unique(cname), members, None))
+        # StandardHeader fields (other than 8, 9 and 35, which the codec owns) are flattened into
+        # every message ahead of its body, so sender/target/seq num/sending time read and write
+        # through the message struct. Their wire order then matches the standard header order.
+        header_members, header_tags = [], {8, 9, 35, 10}
+        hdr = [e for _, (n, e) in self.r.components.items() if n == "StandardHeader"]
+        if self.with_header and hdr:
+            header_members = self.collect(hdr[0], [], header_tags)
+        msgs = []
+        for mname, mtype, structure in self.r.messages:
+            if structure is None:
+                continue
+            members = list(header_members) + self.collect(structure, [], set(header_tags))
+            msgs.append(self.emit_struct(self.unique(mname), members, mtype))
+
+        o = []
+        o.append("// Glaze Library")
+        o.append("// For the license information refer to glaze.hpp")
+        o.append("//")
+        o.append("// GENERATED FILE - do not edit. Produced by util/fix_codegen/fix_codegen.py from the")
+        o.append(f"// FIX Orchestra repository file for {self.r.name} (version {self.r.version}).")
+        o.append(f"// Source data file: {self.source} (https://github.com/FIXTradingCommunity)")
+        o.append("// Copyright (c) FIX Protocol Ltd., licensed under the Apache License, Version 2.0;")
+        o.append("// see LICENSE-FIX-ORCHESTRA beside this file.")
+        o.append("")
+        o.append("#pragma once")
+        o.append("")
+        o.append("#include <array>")
+        o.append("#include <cstdint>")
+        o.append("#include <optional>")
+        o.append("#include <string>")
+        o.append("#include <string_view>")
+        o.append("#include <vector>")
+        o.append("")
+        o.append('#include "glaze/core/common.hpp"')
+        if self.typed:
+            o.append('#include "glaze/fix/types.hpp"')
+        o.append("")
+        o.append(f"namespace glz::fix::{self.ns}")
+        o.append("{")
+        o.append(f"   inline constexpr std::string_view begin_string = {cpp_str(self.wire_begin)}; // tag 8 on the wire")
+        o.append(f"   inline constexpr std::string_view dictionary_version = {cpp_str(self.r.name)};")
+        if self.appl_ver_id:
+            o.append(f"   inline constexpr std::string_view appl_ver_id = {cpp_str(self.appl_ver_id)}; // tag 1128")
+        o.append("")
+        o.append("   namespace tag")
+        o.append("   {")
+        tag_names = set()
+        for fid, (fname, _) in sorted(self.r.fields.items()):
+            n = ident(fname)
+            if n in tag_names:
+                continue
+            tag_names.add(n)
+            o.append(f"      inline constexpr uint32_t {n} = {fid};")
+        o.append("   }")
+        o.append("")
+        o.extend(enums)
+        o.append("")
+        o.append("   // ---- repeating groups ----")
+        o.extend(self.out_groups)
+        o.append("")
+        o.append("   // ---- components (flattened) ----")
+        o.extend(comps)
+        o.append("")
+        o.append("   // ---- messages ----")
+        o.extend(msgs)
+        o.append("}")
+        o.append("")
+        o.extend(self.enum_metas())
+        o.append("")
+        for sname, members, mt in self.metas:
+            o.extend(self.meta_for(sname, members, mt))
+        o.append("")
+        return "\n".join(o)
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--xml", required=True, help="Orchestra repository XML, or a Repository 2010 Unified XML")
+    ap.add_argument("--namespace", required=True, help="C++ namespace under glz::fix, e.g. fix44")
+    ap.add_argument("--out", required=True, help="output header path")
+    ap.add_argument("--typed", action="store_true",
+                    help="use glz::fix::decimal for float-like fields and glz::fix::utc_timestamp for UTCTimestamp")
+    ap.add_argument("--no-header", action="store_true",
+                    help="do not flatten StandardHeader fields (49, 56, 34, 52, ...) into messages")
+    a = ap.parse_args(argv)
+    text = Gen(load(a.xml), a.namespace, os.path.basename(a.xml), not a.no_header, a.typed).run()
+    with open(a.out, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
