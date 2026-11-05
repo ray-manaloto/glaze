@@ -14,7 +14,7 @@ Session 4 of 6. Goal: port parsing test vectors from more open-source FIX tag=va
 - `data/FORMAT.md`: the `.fixv` format (blocks of `key = value`, `|` stands for SOH). It is meant to be
   reusable by other sessions and by other languages.
 - 372 vectors (371 asserted, 1 `pending`, `spec.parse_leading_zero_tag`); the runner reports 373 tests
-  (371 vectors plus two metadata checks), all passing against `fix/core` at 69fcbd3:
+  (371 vectors plus two metadata checks), all passing against `fix/core` at 5d28957 (merged last at 07:36 UTC):
 
   | file | vectors | origin |
   |---|---|---|
