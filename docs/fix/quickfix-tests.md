@@ -13,6 +13,9 @@ QuickFIX's licence is kept beside the tests as `tests/fix_quickfix_test/QUICKFIX
 | File | What it covers | Needs |
 |---|---|---|
 | `fix_quickfix_test.cpp` | `validate`, `checksum`, `frame`, `parse_fields` over the QuickFIX message vectors | low-level contract only |
+| `qfj_qfn_vectors.inl` | 43 raw QuickFIX/J and QuickFIX/n vectors with recomputed `wire_valid` | low-level |
+| `fix_quickfix_more_tests.inl` | typed QuickFIX/J and QuickFIX/n cases, more QuickFIX C++ GetString/SetString (exact writes), nested and header groups | struct mapping |
+| `fix_quickfix_v2_tests.inl` | raw-data fields, `utc_timestamp`, `decimal` | fix/core v2 |
 | `fix_quickfix_struct_tests.inl` | field conversion (int8/16/32/64, uint32/64, double, char, bool, string), typed admin and app messages, repeating groups, `fix_opts` switches | `glz::read/write<fix_opts{}>` |
 
 The struct tests are on by default, because `fix/core` provides `glz::read/write<fix_opts>`. The
