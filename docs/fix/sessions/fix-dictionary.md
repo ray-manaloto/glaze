@@ -45,7 +45,7 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
   (underlying value), the generator now emits `bool` for Boolean code sets and `std::string` for
   String code sets. Only char and int code sets are enum members.
 * **Test** `tests/fix_dictionary_test/` (registered in `tests/CMakeLists.txt`, boost-ext ut via
-  `ut/ut.hpp`), 25 tests and 161 asserts, all passing against `fix/core`'s codec with the `gcc-debug` preset (GCC 13,
+  `ut/ut.hpp`), 26 tests and 212 asserts, all passing against `fix/core`'s codec with the `gcc-debug` preset (GCC 13,
   `-Werror`, ASan/UBSan on):
   * generated metadata: tags, enum wire values, enum names through glaze JSON, msg types;
   * FIX 4.4 round trips: NewOrderSingle with a Parties group, ExecutionReport,
@@ -54,7 +54,8 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
   * session layer (FIX 4.4): Logon, Heartbeat, TestRequest, ResendRequest, Reject,
     SequenceReset and Logout, each read, checked (header 49/56/34/52 plus body fields) and
     written back byte for byte; a Heartbeat built from scratch; PossDupFlag/OrigSendingTime
-    round trip; a FIXT.1.1 Logon (`fixt11`, 1137=9) byte for byte, and again through the typed header with SendingTime as `utc_timestamp`;
+    round trip; the FIXT.1.1 session messages (`fixt11`: Logon with 1137=9, Heartbeat, TestRequest,
+    ResendRequest, Reject with RefApplVerID(1130), SequenceReset, Logout) byte for byte, and again through the typed header with SendingTime as `utc_timestamp`;
   * errors: bad checksum, wrong MsgType, stream framing.
   * Before the merge, two more tests checked enum code-set validation in the stub. They were
     removed because `fix/core` does not validate enums (see `docs/fix/dictionary.md`).
@@ -64,8 +65,6 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
 * Enum code-set validation in the codec (proposal: `meta<E>::fix_values`). Doubles are written
   as `1e+06` by `fix/core` (exponent); this is reported in `docs/fix/dictionary.md`, and the MD
   byte-exact sample uses 1500/2500 for now.
-* Only Logon is tested for FIXT.1.1 (`fixt11.hpp`, committed, 42 KB). The other FIXT session
-  messages are generated but untested.
 * The codec does not fill ApplVerID(1128) or check tag 8 on read (needs `fix/core`; see
   `docs/fix/dictionary.md`).
 * Required-field presence is not checked on read. A message without 49/56 reads as empty
@@ -105,7 +104,7 @@ validates. Field values (order IDs, symbols, prices) are made up.
 
 1. Consider making `--typed` the default for the committed headers (it is exact). Keep merging `fix/core`. Ask it to adopt `fix_values` (enum validation, String code-set
    enums) and fixed-notation float writing. Then restore the 1000000-sized MD sample.
-2. Test the remaining `fixt11` session messages. Ask `fix/core` for the three FIXT items in
+2. Ask `fix/core` for the three FIXT items in
    `docs/fix/dictionary.md`.
 3. Decide whether to commit `fix50sp2.hpp` (5.6 MB), or to generate it at build time from a
    fetched XML through a CMake option (`glaze_FIX_DICTIONARIES`).
