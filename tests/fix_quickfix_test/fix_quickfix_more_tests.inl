@@ -495,3 +495,168 @@ suite quickfixj_quickfixn_typed = [] {
       expect(n.headline == "\344bcf\366d\347\351");
    };
 };
+
+// ---------------------------------------------------------------------------------------------
+// QuickFIX C++ MessagesTestCase.cpp / MessageTests: more <x>GetString / <x>SetString pairs (FIX 4.2).
+// Members are declared in tag order because QuickFIX writes body fields sorted by tag.
+// ---------------------------------------------------------------------------------------------
+namespace qf_more
+{
+   struct ExecutionReport42
+   {
+      double avg_px{}; // 6
+      double cum_qty{}; // 14
+      std::string exec_id; // 17
+      char exec_trans_type{}; // 20
+      std::string order_id; // 37
+      char ord_status{}; // 39
+      char side{}; // 54
+      std::string symbol; // 55
+      char exec_type{}; // 150
+      double leaves_qty{}; // 151
+   };
+   struct DontKnowTrade42
+   {
+      std::string exec_id; // 17
+      std::string order_id; // 37
+      char side{}; // 54
+      std::string symbol; // 55
+      char dk_reason{}; // 127
+   };
+   struct OrderCancelReplace42
+   {
+      std::string cl_ord_id; // 11
+      char handl_inst{}; // 21
+      char ord_type{}; // 40
+      std::string orig_cl_ord_id; // 41
+      char side{}; // 54
+      std::string symbol; // 55
+      std::string transact_time; // 60
+   };
+   struct OrderCancel42
+   {
+      std::string cl_ord_id; // 11
+      std::string orig_cl_ord_id; // 41
+      char side{}; // 54
+      std::string symbol; // 55
+      std::string transact_time; // 60
+   };
+}
+
+template <>
+struct glz::meta<qf_more::ExecutionReport42>
+{
+   using T = qf_more::ExecutionReport42;
+   static constexpr auto fix_msg_type = "8";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value = glz::object("6", &T::avg_px, "14", &T::cum_qty, "17", &T::exec_id, "20",
+                                             &T::exec_trans_type, "37", &T::order_id, "39", &T::ord_status, "54",
+                                             &T::side, "55", &T::symbol, "150", &T::exec_type, "151", &T::leaves_qty);
+};
+template <>
+struct glz::meta<qf_more::DontKnowTrade42>
+{
+   using T = qf_more::DontKnowTrade42;
+   static constexpr auto fix_msg_type = "Q";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value = glz::object("17", &T::exec_id, "37", &T::order_id, "54", &T::side, "55", &T::symbol,
+                                             "127", &T::dk_reason);
+};
+template <>
+struct glz::meta<qf_more::OrderCancelReplace42>
+{
+   using T = qf_more::OrderCancelReplace42;
+   static constexpr auto fix_msg_type = "G";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value = glz::object("11", &T::cl_ord_id, "21", &T::handl_inst, "40", &T::ord_type, "41",
+                                             &T::orig_cl_ord_id, "54", &T::side, "55", &T::symbol, "60",
+                                             &T::transact_time);
+};
+template <>
+struct glz::meta<qf_more::OrderCancel42>
+{
+   using T = qf_more::OrderCancel42;
+   static constexpr auto fix_msg_type = "F";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value = glz::object("11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "54", &T::side, "55",
+                                             &T::symbol, "60", &T::transact_time);
+};
+
+suite quickfix_more_message_strings = [] {
+   using namespace qf_more;
+
+   constexpr std::string_view execReport = "8=FIX.4.2\0019=77\00135=8\0016=23.4\00114=300\001"
+                                           "17=EXECID\00120=1\00137=ORDERID\00139=3\00154=4\00155=MSFT\001"
+                                           "150=2\001151=200\00110=052\001";
+   "MessagesTestCase.cpp / MessageTests / executionReportGetString"_test = [&] {
+      ExecutionReport42 m{23.4, 300, "EXECID", '1', "ORDERID", '3', '4', "MSFT", '2', 200};
+      std::string buf;
+      expect(not glz::write<glz::fix_opts{}>(m, buf));
+      expect(buf == execReport) << buf;
+   };
+   "MessagesTestCase.cpp / MessageTests / executionReportSetString"_test = [&] {
+      ExecutionReport42 m{};
+      expect(not glz::read<glz::fix_opts{}>(m, execReport));
+      expect(m.order_id == "ORDERID" and m.exec_id == "EXECID");
+      expect(m.exec_trans_type == '1' and m.exec_type == '2' and m.ord_status == '3');
+      expect(m.symbol == "MSFT" and m.side == '4');
+      expect(m.leaves_qty == 200.0 and m.cum_qty == 300.0 and m.avg_px == 23.4);
+   };
+
+   constexpr std::string_view dkTrade = "8=FIX.4.2\0019=45\00135=Q\00117=EXECID\00137=ORDERID\001"
+                                        "54=2\00155=MSFT\001127=1\00110=195\001";
+   "MessagesTestCase.cpp / MessageTests / dontKnowTradeGetString"_test = [&] {
+      DontKnowTrade42 m{"EXECID", "ORDERID", '2', "MSFT", '1'};
+      std::string buf;
+      expect(not glz::write<glz::fix_opts{}>(m, buf));
+      expect(buf == dkTrade) << buf;
+   };
+   "MessagesTestCase.cpp / MessageTests / dontKnowTradeSetString"_test = [&] {
+      DontKnowTrade42 m{};
+      expect(not glz::read<glz::fix_opts{}>(m, dkTrade));
+      expect(m.order_id == "ORDERID" and m.exec_id == "EXECID" and m.dk_reason == '1');
+      expect(m.symbol == "MSFT" and m.side == '2');
+   };
+
+   "MessagesTestCase.cpp / MessageTests / orderCancelReplaceGetString"_test = [] {
+      constexpr std::string_view expected = "8=FIX.4.2\0019=75\00135=G\00111=CLIENTID\00121=1\001"
+                                            "40=3\00141=ORIGINALID\00154=2\00155=MSFT\001"
+                                            "60=19000101-00:00:00\00110=179\001";
+      OrderCancelReplace42 m{"CLIENTID", '1', '3', "ORIGINALID", '2', "MSFT", "19000101-00:00:00"};
+      std::string buf;
+      expect(not glz::write<glz::fix_opts{}>(m, buf));
+      expect(buf == expected) << buf;
+   };
+   "MessagesTestCase.cpp / MessageTests / orderCancelReplaceRequestSetString"_test = [] {
+      constexpr std::string_view msg = "8=FIX.4.2\0019=63\00135=G\00111=CLIENTID\00121=1\001"
+                                       "40=3\00141=ORIGINALID\00154=2\00155=MSFT\00160=TODAY\001"
+                                       "10=228\001";
+      OrderCancelReplace42 m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.orig_cl_ord_id == "ORIGINALID" and m.cl_ord_id == "CLIENTID" and m.handl_inst == '1');
+      expect(m.symbol == "MSFT" and m.side == '2' and m.ord_type == '3');
+   };
+
+   "MessagesTestCase.cpp / MessageTests / orderCancelRequestGetString"_test = [] {
+      constexpr std::string_view expected = "8=FIX.4.2\0019=65\00135=F\00111=CLIENTID\00141=ORIGINALID\001"
+                                            "54=1\00155=MSFT\00160=19000101-00:00:00\00110=009\001";
+      OrderCancel42 m{"CLIENTID", "ORIGINALID", '1', "MSFT", "19000101-00:00:00"};
+      std::string buf;
+      expect(not glz::write<glz::fix_opts{}>(m, buf));
+      expect(buf == expected) << buf;
+   };
+   "MessagesTestCase.cpp / MessageTests / orderCancelRequestSetString"_test = [] {
+      constexpr std::string_view msg = "8=FIX.4.2\0019=53\00135=F\00111=CLIENTID\00141=ORIGINALID\001"
+                                       "54=1\00155=MSFT\00160=TODAY\00110=058\001";
+      OrderCancel42 m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.orig_cl_ord_id == "ORIGINALID" and m.cl_ord_id == "CLIENTID");
+      expect(m.symbol == "MSFT" and m.side == '1' and m.transact_time == "TODAY");
+   };
+
+   "MessagesTestCase.cpp / MessageTests / <x>SetString: 35 must match the target type"_test = [&] {
+      // Reading an ExecutionReport into a DontKnowTrade is a MsgType mismatch (validate_msg_type).
+      DontKnowTrade42 m{};
+      expect(bool(glz::read<glz::fix_opts{}>(m, execReport)));
+   };
+};

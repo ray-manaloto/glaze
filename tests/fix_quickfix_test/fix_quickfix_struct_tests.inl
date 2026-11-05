@@ -175,6 +175,7 @@ template <>
 struct glz::meta<qf_struct::Logon>
 {
    using T = qf_struct::Logon;
+   static constexpr auto fix_begin_string = "FIX.4.2";
    static constexpr auto fix_msg_type = "A";
    static constexpr auto value = glz::object("108", &T::heart_bt_int);
 };
@@ -182,6 +183,7 @@ template <>
 struct glz::meta<qf_struct::TestRequest>
 {
    using T = qf_struct::TestRequest;
+   static constexpr auto fix_begin_string = "FIX.4.2";
    static constexpr auto fix_msg_type = "1";
    static constexpr auto value = glz::object("112", &T::test_req_id);
 };
@@ -189,6 +191,7 @@ template <>
 struct glz::meta<qf_struct::ResendRequest>
 {
    using T = qf_struct::ResendRequest;
+   static constexpr auto fix_begin_string = "FIX.4.2";
    static constexpr auto fix_msg_type = "2";
    static constexpr auto value = glz::object("7", &T::begin_seq_no, "16", &T::end_seq_no);
 };
@@ -196,6 +199,7 @@ template <>
 struct glz::meta<qf_struct::Reject>
 {
    using T = qf_struct::Reject;
+   static constexpr auto fix_begin_string = "FIX.4.2";
    static constexpr auto fix_msg_type = "3";
    static constexpr auto value = glz::object("45", &T::ref_seq_num, "58", &T::text);
 };
@@ -203,6 +207,7 @@ template <>
 struct glz::meta<qf_struct::SequenceReset>
 {
    using T = qf_struct::SequenceReset;
+   static constexpr auto fix_begin_string = "FIX.4.2";
    static constexpr auto fix_msg_type = "4";
    static constexpr auto value = glz::object("36", &T::new_seq_no, "123", &T::gap_fill_flag);
 };
@@ -210,6 +215,7 @@ template <>
 struct glz::meta<qf_struct::Logout>
 {
    using T = qf_struct::Logout;
+   static constexpr auto fix_begin_string = "FIX.4.2";
    static constexpr auto fix_msg_type = "5";
    static constexpr auto value = glz::object("58", &T::text);
 };
@@ -217,6 +223,7 @@ template <>
 struct glz::meta<qf_struct::NewOrderSingle>
 {
    using T = qf_struct::NewOrderSingle;
+   static constexpr auto fix_begin_string = "FIX.4.2";
    static constexpr auto fix_msg_type = "D";
    static constexpr auto value = glz::object("11", &T::cl_ord_id, "21", &T::handl_inst, "40", &T::ord_type, "54",
                                              &T::side, "55", &T::symbol, "60", &T::transact_time);
@@ -450,8 +457,7 @@ suite quickfix_typed_messages = [] {
    using namespace qf_struct;
 
    // Each pair is MessagesTestCase.cpp / MessageTests / <x>GetString and <x>SetString.
-   // GetString compares only the bytes from 35= to 10= because the contract does not yet say
-   // how write chooses BeginString; the whole output must still validate.
+   // GetString compares the whole message (meta<T>::fix_begin_string = "FIX.4.2").
 
    "MessagesTestCase.cpp / MessageTests / logonSetString"_test = [] {
       Logon m{};
@@ -463,7 +469,7 @@ suite quickfix_typed_messages = [] {
       std::string buf;
       expect(not glz::write<glz::fix_opts{}>(m, buf));
       expect(is_valid(buf));
-      expect(body_from_35(buf) == body_from_35(logon));
+      expect(buf == logon) << buf;
    };
    "MessagesTestCase.cpp / MessageTests / testRequestSetString"_test = [] {
       TestRequest m{};
@@ -475,7 +481,7 @@ suite quickfix_typed_messages = [] {
       std::string buf;
       expect(not glz::write<glz::fix_opts{}>(m, buf));
       expect(is_valid(buf));
-      expect(body_from_35(buf) == body_from_35(testRequest));
+      expect(buf == testRequest) << buf;
    };
    "MessagesTestCase.cpp / MessageTests / resendRequestSetString"_test = [] {
       ResendRequest m{};
@@ -488,7 +494,7 @@ suite quickfix_typed_messages = [] {
       std::string buf;
       expect(not glz::write<glz::fix_opts{}>(m, buf));
       expect(is_valid(buf));
-      expect(body_from_35(buf) == body_from_35(resendRequest));
+      expect(buf == resendRequest) << buf;
    };
    "MessagesTestCase.cpp / MessageTests / rejectSetString"_test = [] {
       Reject m{};
@@ -501,7 +507,7 @@ suite quickfix_typed_messages = [] {
       std::string buf;
       expect(not glz::write<glz::fix_opts{}>(m, buf));
       expect(is_valid(buf));
-      expect(body_from_35(buf) == body_from_35(reject));
+      expect(buf == reject) << buf;
    };
    "MessagesTestCase.cpp / MessageTests / sequenceResetSetString"_test = [] {
       SequenceReset m{};
@@ -514,7 +520,7 @@ suite quickfix_typed_messages = [] {
       std::string buf;
       expect(not glz::write<glz::fix_opts{}>(m, buf));
       expect(is_valid(buf));
-      expect(body_from_35(buf) == body_from_35(sequenceReset));
+      expect(buf == sequenceReset) << buf;
    };
    "MessagesTestCase.cpp / MessageTests / logoutSetString"_test = [] {
       Logout m{};
@@ -526,7 +532,7 @@ suite quickfix_typed_messages = [] {
       std::string buf;
       expect(not glz::write<glz::fix_opts{}>(m, buf));
       expect(is_valid(buf));
-      expect(body_from_35(buf) == body_from_35(logout));
+      expect(buf == logout) << buf;
    };
    "MessagesTestCase.cpp / MessageTests / newOrderSingleSetString"_test = [] {
       NewOrderSingle m{};
@@ -543,7 +549,7 @@ suite quickfix_typed_messages = [] {
       std::string buf;
       expect(not glz::write<glz::fix_opts{}>(m, buf));
       expect(is_valid(buf));
-      expect(body_from_35(buf) == body_from_35(newOrderSingleGet));
+      expect(buf == newOrderSingleGet) << buf;
    };
 
    "MessagesTestCase.cpp / MessageTests / setString / strGood (typed header fields)"_test = [] {
