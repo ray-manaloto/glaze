@@ -5,7 +5,7 @@ project(fix_fixpp_test)
 
 add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp)
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE FIX_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+target_compile_definitions(${PROJECT_NAME} PRIVATE FIX_TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data" GLZ_FIX_HAS_STRUCT_MAPPING)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glz_test_common)
 

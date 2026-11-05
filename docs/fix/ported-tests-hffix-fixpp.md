@@ -34,10 +34,16 @@ FIX libraries. The cases are rewritten for the shared contract in `include/glaze
 
 ## Open questions for `fix/core`
 
-1. Should `parse_fields` honour length-prefixed data fields (95/96, 40980/40981) whose value contains SOH?
+1. Length-prefixed data fields (95/96, 40980/40981) containing SOH: core says this is not supported yet.
 2. Should `parse_fields` and `validate` accept a final `10=NNN` with no SOH after it? The tests
    assume they should not: the message counts as incomplete.
-3. Should empty values (`37=`) be accepted? hffix accepts them, and the tests expect `parse_fields`
-   to as well.
+3. Empty values (`37=`): settled by core. They are rejected with `syntax_error`, and the test now
+   expects that.
 4. Does `glz::read` check BeginString (8)? fixpp rejects `FIX.5.1`.
 5. Will FIX UTCTimestamp, UTCDate and UTCTimeOnly map to `std::chrono` types?
+
+## Known core gaps (guarded by `GLZ_FIX_KNOWN_FAILURES`)
+
+- An unknown tag inside a group entry ends the group, even with `error_on_unknown_keys = false`
+  (fixpp snapshot frame, tag 9063).
+- Floats are written with an exponent (`1e+06`). The FIX float type has no exponent.

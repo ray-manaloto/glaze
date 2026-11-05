@@ -6,34 +6,38 @@
   `tests/CMakeLists.txt`. They cover:
   - checksums
   - BodyLength and field-order checks
-  - empty values and data fields
+  - empty values (rejected by the contract) and data fields
   - multi-message iteration
-  - streaming and incomplete buffers (`frame`)
+  - streaming and incomplete buffers (`frame`, including `frame_error`)
   - custom separators
-  - repeating groups, including nested and empty groups and unknown tags, at the scanner level
+  - repeating groups, including nested and empty groups and unknown tags
   - field wire forms
+  - struct mapping through `glz::read` and `glz::write<fix_opts>`
   - all copied sample files
-- Results with the local stub, built with g++ 13 using `-std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -pedantic -Werror`:
-  - hffix: 21 tests and 144 asserts pass.
-  - fixpp: 18 tests and 70 asserts pass.
+- `fix/core` was merged at 07:15 UTC, and the local stub header was replaced with core's header.
+  Struct-mapping tests are on by default: the test CMake defines `GLZ_FIX_HAS_STRUCT_MAPPING`.
+- Results against fix/core, built with g++ 13 using `-std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -pedantic -Werror`:
+  - hffix: 24 tests and 162 asserts pass.
+  - fixpp: 24 tests pass.
   - Both targets are also clean under `-fsanitize=address,undefined`.
-- `include/glaze/fix/fix.hpp` is a **local stub** of the contract. It implements only
-  `parse_fields`, `checksum`, `validate` and `frame`, plus `glz::FIX` and `glz::fix_opts`.
-  **Replace it with `fix/core`'s header** when that branch lands. `fix/core` was not on the remote
-  during this session.
-- Design note: `docs/fix/ported-tests-hffix-fixpp.md`. It describes how the cases map to the
-  contract and lists the open questions for core.
+- Design note: `docs/fix/ported-tests-hffix-fixpp.md`.
+
+## Known core gaps found by these tests (skipped unless built with `-DGLZ_FIX_KNOWN_FAILURES`)
+
+- fixpp `should_visit_snapshot_frame_struct`: an unknown tag (9063) inside a group entry ends the
+  group, even with `error_on_unknown_keys = false`. The read then fails with "repeating group count
+  does not match its entries". fixpp's non-strict mode accepts it. A variant with the custom tags
+  removed passes.
+- fixpp `should_write_float_field`: `1000000.0` is written as `1e+06`, but the FIX float type has
+  no exponent. fixpp expects `1000000`.
 
 ## Not done / skipped (printed as `SKIP name: reason` when the tests run)
 
-- Struct-mapping tests are written but built only with `-DGLZ_FIX_HAS_STRUCT_MAPPING`. Core should
-  define this macro, or the test CMake should add it, once `glz::read` and `glz::write<fix_opts>`
-  exist. They have not been compiled yet, so expect small fixes.
 - hffix `msg_type_string`: glaze has no FIX dictionary.
 - hffix `message_writer_bounds`: needs fixed-size buffer writes.
-- hffix and fixpp typed chrono, date and time tests: the contract has no time types. The test
+- hffix and fixpp typed chrono, date and time tests: core keeps timestamps as text. The test
   vectors are recorded in the skip messages.
-- Raw data containing SOH (95/96).
+- Raw data containing SOH (95/96): core says this is not supported yet.
 - Reader rejection of BeginString `FIX.5.1`.
 - hffix `test/data/fix.5.0.set.1` (2 MB) was not copied.
 - Not ported:
@@ -43,13 +47,15 @@
   - fixpp `xml/` (code generator)
   - hffix `util/fixprint`
   - hffix `fixspec/` (FIX specification archives)
+- hffix `null_field_value` was changed. hffix iterates over `37=`, but the contract rejects empty
+  values, so the test now expects a `syntax_error`.
 - clang 18 with libstdc++ 13 rejects glaze's own `glaze/util/expected.hpp` in this container
-  (no `std::expected`). This is an environment problem, not a problem in these tests; only GCC was verified.
+  (no `std::expected`), so only GCC was verified.
 - The configure step needs CMake 3.31 or newer. The container has 3.28, so a pip-installed CMake 4.4
   was used: `cmake --preset gcc-debug`, then `cmake --build build/debug-gcc --target fix_hffix_test fix_fixpp_test`,
-  then `ctest -R fix_`. Both targets pass.
+  then `ctest -R fix_`.
 - Pushing was blocked at first: the git proxy returned 403 until `ray-manaloto/glaze` was added to
-  the session's sources. After that the branch was pushed.
+  the session's sources.
 
 ## Provenance of every ported test
 
@@ -73,10 +79,8 @@ The reference repositories were cloned with `git clone --depth 1` into `/tmp/ref
 
 ## Next steps
 
-1. Merge `fix/core`, delete the stub `include/glaze/fix/fix.hpp` in favour of core's header, and
-   rebuild both targets. Then define `GLZ_FIX_HAS_STRUCT_MAPPING` and fix the struct tests to
-   match core's real API: how `fix_opts` is constructed, whether header tags 49/56/34/52 need
-   members, and how optional group fields work.
-2. Get core's answers to the open questions in `docs/fix/ported-tests-hffix-fixpp.md` and turn
-   the matching SKIPs into tests.
+1. Merge newer `fix/core` commits, rebuild, and try `-DGLZ_FIX_KNOWN_FAILURES`. Remove each guard
+   once core fixes the gap: unknown tags inside groups, and float output without exponents.
+2. Get core's answers to the open questions in `docs/fix/ported-tests-hffix-fixpp.md` (raw data
+   fields, BeginString check, chrono) and turn the matching SKIPs into tests.
 3. Optionally add `fix.5.0.set.1` (2 MB) through a fetch step instead of committing it.
