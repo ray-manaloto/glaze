@@ -248,7 +248,7 @@ suite artio = [] {
       auto bad = m;
       bad.replace(bad.size() - 4, 3, "000");
       expect(glz::fix::validate(bad, '|').ec == glz::error_code::invalid_body);
-      // SKIP: typed read of the checksum-mismatched message did not report an error in this harness; validate() does.
+      // SKIP: typed read of the checksum-mismatched message did not report an error in this test; validate() does.
    };
    "artio_wrong_msg_type_rejected"_test = [] {
       // artio dispatches on 35; glaze checks it against fix_msg_type by default.
