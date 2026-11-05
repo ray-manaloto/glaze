@@ -1,0 +1,495 @@
+# Test vectors ported from the published `fefix` crate, version 0.7.0 (crates.io, 2021-10-26),
+# https://crates.io/crates/fefix, repository https://github.com/ferrumfix/ferrumfix.
+# Copyright Filippo Costa (@neysofu) and FerrumFIX contributors (Cargo.toml authors:
+# "Filippo Costa @neysofu"). Licensed under MIT OR Apache-2.0 (Cargo.toml `license` field).
+# The .crate archive ships no LICENSE-MIT / LICENSE-APACHE / NOTICE file; its only LICENSE file is
+# resources/repositories/LICENSE.pdf, which belongs to the bundled FIX Repository data (FIX Trading
+# Community), not to fefix, and nothing here is taken from it.
+#
+# Ported from #[test] functions in src/tagvalue/raw_decoder.rs, src/tagvalue/decoder.rs,
+# src/tagvalue/utils.rs and src/fix_values/checksum.rs. No crate code was run; every 9 and 10 below
+# was recomputed independently with '|' read as SOH.
+#
+# '|' is SOH. Upstream unit tests use b'|' as the decoder separator, and their hand-written
+# messages carry CheckSums summed over the literal '|' byte (0x7C), e.g. 10=091 for the sample
+# NewOrderSingle (glaze, reading '|' as SOH, gets 254). Those vectors are therefore validate
+# expect=error here, with a *_soh twin carrying the recomputed checksum. RANDOM_MESSAGES in
+# decoder.rs were checked upstream with real SOH, so their checksums are correct.
+#
+# Skipped: message_with_data_field (value contains '|' and SOH: raw data, unsupported);
+# empty_message_is_invalid (empty msg is not expressible reliably in .fixv); checksum edge_cases
+# with bytes 128/127 (not representable as UTF-8 text) and the empty-input case; quickcheck
+# property tests; config.rs tests (decoder settings, no wire data); edge cases whose framing
+# outcome depends on how an "8=" front with an empty or "=" value is treated.
+
+# --- src/tagvalue/raw_decoder.rs ---
+
+id = fefix.crate_raw_sample_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid
+kind = parse
+msg = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=091|
+expect = ok
+fields = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=091
+count = 8
+note = upstream asserts begin string FIX.4.2 and payload 35=D..59=0 (checksum not verified)
+
+id = fefix.crate_raw_sample_validate
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid
+kind = validate
+msg = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=091|
+expect = error
+note = BodyLength 40 correct; 091 was summed over literal '|' bytes, with SOH the sum is 254
+
+id = fefix.crate_raw_sample_soh_validate
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid
+kind = validate
+msg = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=254|
+expect = ok
+note = same message with CheckSum recomputed over SOH separators
+
+id = fefix.crate_raw_sample_checksum
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::sample_message_is_valid
+kind = checksum
+bytes = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|
+value = 254
+
+id = fefix.crate_raw_msg_type_only_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid
+kind = parse
+msg = 8=?|9=5|35=?|10=183|
+expect = ok
+fields = 8=?|9=5|35=?|10=183
+count = 4
+
+id = fefix.crate_raw_msg_type_only_validate
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid
+kind = validate
+msg = 8=?|9=5|35=?|10=183|
+expect = error
+note = BodyLength 5 correct; CheckSum 183 is the '|' sum, SOH sum is 070
+
+id = fefix.crate_raw_msg_type_only_soh_validate
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid
+kind = validate
+msg = 8=?|9=5|35=?|10=070|
+expect = ok
+note = minimal message: 8, 9, 35 and 10 only; CheckSum recomputed over SOH
+
+id = fefix.crate_raw_msg_type_only_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_only_msg_type_tag_is_valid
+kind = frame
+stream = 8=?|9=5|35=?|10=070|8=?|9=5|
+frame_len = 20
+
+id = fefix.crate_raw_empty_payload_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_empty_payload_is_invalid
+kind = parse
+msg = 8=?|9=5|10=082|
+expect = ok
+count = 3
+note = well-formed fields; the invalidity is structural (see validate)
+
+id = fefix.crate_raw_empty_payload_validate
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_empty_payload_is_invalid
+kind = validate
+msg = 8=?|9=5|10=082|
+expect = error
+note = no MsgType (35) third; upstream DecodeError::Invalid
+
+id = fefix.crate_raw_bad_checksum_validate
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::message_with_bad_checksum_is_invalid
+kind = validate
+msg = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=000|
+expect = error
+note = BodyLength correct, CheckSum 000 wrong (actual 254); upstream DecodeError::CheckSum
+
+id = fefix.crate_raw_edge_empty_begin_string_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = 8=|9=0|10=225|
+expect = error
+note = empty value for tag 8; upstream only requires no panic
+
+id = fefix.crate_raw_edge_empty_checksum_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = 8=|9=0|10=|
+expect = error
+note = empty values for tags 8 and 10
+
+id = fefix.crate_raw_edge_equals_run_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = 8====|9=0|10=|
+expect = error
+note = 8 has value "===" (allowed) but 10 is empty
+
+id = fefix.crate_raw_edge_leading_separators_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = |||9=0|10=|
+expect = error
+note = empty fields at the front
+
+id = fefix.crate_raw_edge_leading_separators_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = frame
+stream = |||9=0|10=|
+frame_len = error
+note = front is SOH, cannot start a message
+
+id = fefix.crate_raw_edge_digits_no_equals_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = 9999999999999
+expect = error
+note = no '=' and no SOH
+
+id = fefix.crate_raw_edge_digits_no_equals_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = frame
+stream = 9999999999999
+frame_len = error
+note = front is '9', not "8="
+
+id = fefix.crate_raw_edge_negative_digits_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = -9999999999999
+expect = error
+
+id = fefix.crate_raw_edge_negative_digits_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = frame
+stream = -9999999999999
+frame_len = error
+
+id = fefix.crate_raw_edge_all_equals_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = ==============
+expect = error
+note = empty tag
+
+id = fefix.crate_raw_edge_all_equals_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = frame
+stream = ==============
+frame_len = error
+
+id = fefix.crate_raw_edge_digits_soh_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = 9999999999999|
+expect = error
+note = field without '='
+
+id = fefix.crate_raw_edge_digits_soh_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = frame
+stream = 9999999999999|
+frame_len = error
+
+id = fefix.crate_raw_edge_huge_tag_empty_value_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = |999999999999=|
+expect = error
+note = empty first field, then a 12-digit tag (> 999999999) with empty value
+
+id = fefix.crate_raw_edge_huge_value_trailing_equals_parse
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = parse
+msg = |999=999999999999999999|=
+expect = error
+note = empty first field and a trailing "=" with no tag, value or SOH
+
+id = fefix.crate_raw_edge_huge_value_trailing_equals_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::edge_cases_dont_cause_panic
+kind = frame
+stream = |999=999999999999999999|=
+frame_len = error
+
+id = fefix.crate_raw_buffered_repeated_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder
+kind = frame
+stream = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=254|8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=254|8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=254|
+frame_len = 62
+note = upstream streams 42 back-to-back copies (CheckSum 091 there; 254 here, the SOH sum); 3 copies kept
+
+id = fefix.crate_raw_buffered_partial_header_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder
+kind = frame
+stream = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|
+frame_len = 0
+note = buffered decoder has no frame until enough bytes are supplied
+
+id = fefix.crate_raw_buffered_missing_last_soh_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder
+kind = frame
+stream = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=254
+frame_len = 0
+note = 61 of 62 bytes: trailer SOH not yet arrived
+
+id = fefix.crate_raw_buffered_begin_only_frame
+source = fefix crate 0.7.0:src/tagvalue/raw_decoder.rs::new_buffered_decoder_has_no_current_frame
+kind = frame
+stream = 8=FIX.4.2|
+frame_len = 0
+note = only BeginString received
+
+# --- src/tagvalue/decoder.rs ---
+
+id = fefix.crate_dec_simple_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::can_parse_simple_message
+kind = parse
+msg = 8=FIX.4.2|9=40|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=091|
+expect = ok
+count = 8
+note = checksum verification off in the upstream test decoder
+
+id = fefix.crate_dec_foobar_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::skip_checksum_verification
+kind = parse
+msg = 8=FIX.FOOBAR|9=5|35=0|10=000|
+expect = ok
+fields = 8=FIX.FOOBAR|9=5|35=0|10=000
+count = 4
+note = unknown BeginString, accepted upstream with checksum verification off
+
+id = fefix.crate_dec_foobar_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::no_skip_checksum_verification
+kind = validate
+msg = 8=FIX.FOOBAR|9=5|35=0|10=000|
+expect = error
+note = BodyLength 5 correct; CheckSum 000 wrong (actual 198); upstream errors with verification on
+
+id = fefix.crate_dec_foobar_soh_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::no_skip_checksum_verification
+kind = validate
+msg = 8=FIX.FOOBAR|9=5|35=0|10=198|
+expect = ok
+note = same message with correct CheckSum; validate does not check the BeginString value
+
+id = fefix.crate_dec_group_entries_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::repeating_group_entries
+kind = parse
+msg = 8=FIX.4.2|9=196|35=X|49=A|56=B|34=12|52=20100318-03:21:11.364|262=A|268=2|279=0|269=0|278=BID|55=EUR/USD|270=1.37215|15=EUR|271=2500000|346=1|279=0|269=1|278=OFFER|55=EUR/USD|270=1.37224|15=EUR|271=2503200|346=1|10=171|
+expect = ok
+count = 26
+note = NoMDEntries (268) = 2; upstream asserts group length 2 and entry 0 has 278=BID
+
+id = fefix.crate_dec_empty_group_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::top_level_tag_after_empty_group
+kind = parse
+msg = 8=FIX.4.4|9=17|35=X|268=0|346=1|10=171|
+expect = ok
+fields = 8=FIX.4.4|9=17|35=X|268=0|346=1|10=171
+count = 6
+note = 268=0 (empty group) followed by top-level 346=1
+
+id = fefix.crate_dec_empty_group_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::top_level_tag_after_empty_group
+kind = validate
+msg = 8=FIX.4.4|9=17|35=X|268=0|346=1|10=171|
+expect = error
+note = BodyLength 17 correct; CheckSum 171 wrong (actual 024)
+
+id = fefix.crate_dec_empty_group_soh_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::top_level_tag_after_empty_group
+kind = validate
+msg = 8=FIX.4.4|9=17|35=X|268=0|346=1|10=024|
+expect = ok
+note = same message with CheckSum recomputed
+
+id = fefix.crate_dec_random_heartbeat_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::heartbeat_message_fields_are_ok
+kind = parse
+msg = 8=FIX.4.2|9=42|35=0|49=A|56=B|34=12|52=20100304-07:59:30|10=185|
+expect = ok
+fields = 8=FIX.4.2|9=42|35=0|49=A|56=B|34=12|52=20100304-07:59:30|10=185
+count = 8
+note = upstream asserts 35=0, 8=FIX.4.2, 34=12
+
+id = fefix.crate_dec_random_heartbeat_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = validate
+msg = 8=FIX.4.2|9=42|35=0|49=A|56=B|34=12|52=20100304-07:59:30|10=185|
+expect = ok
+note = RANDOM_MESSAGES[0] Heartbeat; 9 and 10 correct
+
+id = fefix.crate_dec_random_heartbeat_checksum
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = checksum
+bytes = 8=FIX.4.2|9=42|35=0|49=A|56=B|34=12|52=20100304-07:59:30|
+value = 185
+
+id = fefix.crate_dec_random_trading_session_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = validate
+msg = 8=FIX.4.2|9=97|35=6|49=BKR|56=IM|34=14|52=20100204-09:18:42|23=115685|28=N|55=SPMI.MI|54=2|44=2200.75|27=S|25=H|10=248|
+expect = ok
+note = RANDOM_MESSAGES[1] IOI (35=6); 9 and 10 correct
+
+id = fefix.crate_dec_random_trade_capture_req_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = validate
+msg = 8=FIX.4.4|9=117|35=AD|34=2|49=A|50=1|52=20100219-14:33:32.258|56=B|57=M|263=1|568=1|569=0|580=1|75=20100218|60=20100218-00:00:00.000|10=202|
+expect = ok
+note = RANDOM_MESSAGES[2] TradeCaptureReportRequest (two-character MsgType AD)
+
+id = fefix.crate_dec_random_trade_capture_req_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = parse
+msg = 8=FIX.4.4|9=117|35=AD|34=2|49=A|50=1|52=20100219-14:33:32.258|56=B|57=M|263=1|568=1|569=0|580=1|75=20100218|60=20100218-00:00:00.000|10=202|
+expect = ok
+count = 16
+
+id = fefix.crate_dec_random_reject_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = validate
+msg = 8=FIX.4.4|9=94|35=3|34=214|49=A|50=U1|52=20100304-09:42:23.130|56=AB|128=B1|45=176|58=txt|371=15|372=X|373=1|10=058|
+expect = ok
+note = RANDOM_MESSAGES[3] Reject (35=3)
+
+id = fefix.crate_dec_random_reject_checksum
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = checksum
+bytes = 8=FIX.4.4|9=94|35=3|34=214|49=A|50=U1|52=20100304-09:42:23.130|56=AB|128=B1|45=176|58=txt|371=15|372=X|373=1|
+value = 58
+
+id = fefix.crate_dec_random_seq_reset_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = validate
+msg = 8=FIX.4.4|9=70|35=4|49=A|56=XYZ|34=129|52=20100302-19:38:21|43=Y|57=LOL|123=Y|36=175|10=192|
+expect = ok
+note = RANDOM_MESSAGES[4] SequenceReset (35=4)
+
+id = fefix.crate_dec_random_new_order_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = validate
+msg = 8=FIX.4.4|9=122|35=D|34=215|49=CLIENT12|52=20100225-19:41:57.316|56=B|1=Marcel|11=13346|21=1|40=2|44=5|54=1|59=0|60=20100225-19:39:52.020|10=072|
+expect = ok
+note = RANDOM_MESSAGES[5] NewOrderSingle
+
+id = fefix.crate_dec_random_new_order_checksum
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = checksum
+bytes = 8=FIX.4.4|9=122|35=D|34=215|49=CLIENT12|52=20100225-19:41:57.316|56=B|1=Marcel|11=13346|21=1|40=2|44=5|54=1|59=0|60=20100225-19:39:52.020|
+value = 72
+
+id = fefix.crate_dec_random_md_incremental_frame
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = frame
+stream = 8=FIX.4.2|9=196|35=X|49=A|56=B|34=12|52=20100318-03:21:11.364|262=A|268=2|279=0|269=0|278=BID|55=EUR/USD|270=1.37215|15=EUR|271=2500000|346=1|279=0|269=1|278=OFFER|55=EUR/USD|270=1.37224|15=EUR|271=2503200|346=1|10=171|8=FIX.4.2|9=42|35=0|49=A|56=B|34=12|52=20100304-07:59:30|10=185|
+frame_len = 219
+note = RANDOM_MESSAGES[6] (219 bytes) followed by RANDOM_MESSAGES[0]
+
+id = fefix.crate_dec_random_pair_second_frame
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::assortment_of_random_messages_is_ok
+kind = frame
+stream = 8=FIX.4.2|9=42|35=0|49=A|56=B|34=12|52=20100304-07:59:30|10=185|8=FIX.4.2|9=196|35=X|49=A|56=B|
+frame_len = 64
+note = RANDOM_MESSAGES[0] (64 bytes) followed by a partial second message
+
+id = fefix.crate_dec_no_final_separator_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_final_separator
+kind = parse
+msg = 8=FIX.4.4|9=122|35=D|34=215|49=CLIENT12|52=20100225-19:41:57.316|56=B|1=Marcel|11=13346|21=1|40=2|44=5|54=1|59=0|60=20100225-19:39:52.020|10=072
+expect = error
+note = last field has no SOH
+
+id = fefix.crate_dec_no_final_separator_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_final_separator
+kind = validate
+msg = 8=FIX.4.4|9=122|35=D|34=215|49=CLIENT12|52=20100225-19:41:57.316|56=B|1=Marcel|11=13346|21=1|40=2|44=5|54=1|59=0|60=20100225-19:39:52.020|10=072
+expect = error
+note = otherwise correct 9 and 10; only the trailing SOH is missing
+
+id = fefix.crate_dec_no_final_separator_frame
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_final_separator
+kind = frame
+stream = 8=FIX.4.4|9=122|35=D|34=215|49=CLIENT12|52=20100225-19:41:57.316|56=B|1=Marcel|11=13346|21=1|40=2|44=5|54=1|59=0|60=20100225-19:39:52.020|10=072
+frame_len = 0
+note = 144 of 145 bytes; the frame is incomplete until the final SOH arrives
+
+id = fefix.crate_dec_must_end_with_separator_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_must_end_with_separator
+kind = validate
+msg = 8=FIX.4.2|9=41|35=D|49=AFUNDMGR|56=ABROKERt|15=USD|59=0|10=127
+expect = error
+note = no trailing SOH (BodyLength 41 is correct; CheckSum 127 is the '|' sum, SOH sum is 115)
+
+id = fefix.crate_dec_must_end_with_separator_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_must_end_with_separator
+kind = parse
+msg = 8=FIX.4.2|9=41|35=D|49=AFUNDMGR|56=ABROKERt|15=USD|59=0|10=127
+expect = error
+
+id = fefix.crate_dec_without_checksum_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_checksum
+kind = validate
+msg = 8=FIX.4.4|9=37|35=D|49=AFUNDMGR|56=ABROKERt|15=USD|59=0|
+expect = error
+note = no CheckSum (10) field
+
+id = fefix.crate_dec_without_checksum_parse
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_checksum
+kind = parse
+msg = 8=FIX.4.4|9=37|35=D|49=AFUNDMGR|56=ABROKERt|15=USD|59=0|
+expect = ok
+count = 7
+note = fields are well formed; only validate rejects it
+
+id = fefix.crate_dec_without_header_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_standard_header
+kind = validate
+msg = 35=D|49=AFUNDMGR|56=ABROKERt|15=USD|59=0|10=000|
+expect = error
+note = no BeginString (8) / BodyLength (9)
+
+id = fefix.crate_dec_without_header_frame
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::message_without_standard_header
+kind = frame
+stream = 35=D|49=AFUNDMGR|56=ABROKERt|15=USD|59=0|10=000|
+frame_len = error
+note = front is "35=", cannot start a message
+
+id = fefix.crate_dec_incorrect_body_length_validate
+source = fefix crate 0.7.0:src/tagvalue/decoder.rs::detect_incorrect_checksum
+kind = validate
+msg = 8=FIX.4.2|9=43|35=D|49=AFUNDMGR|56=ABROKER|15=USD|59=0|10=146|
+expect = error
+note = despite the test name, BodyLength 43 is wrong (actual 40); CheckSum 146 also wrong (actual 001)
+
+# --- src/tagvalue/utils.rs ---
+
+id = fefix.crate_utils_checksum_digits_letters_validate
+source = fefix crate 0.7.0:src/tagvalue/utils.rs::correct_retrieval_of_checksum_digits
+kind = validate
+msg = 8=FIX.4.4|9=1337|35=?|...|10=ABC|
+expect = error
+note = upstream only extracts the last three bytes; "..." has no '=' and 10=ABC is not digits
+
+id = fefix.crate_utils_checksum_digits_parse
+source = fefix crate 0.7.0:src/tagvalue/utils.rs::correct_retrieval_of_checksum_digits
+kind = parse
+msg = 8=FIX.4.4|9=1337|35=?|...|10=000|
+expect = error
+note = field "..." has no '='
+
+# --- src/fix_values/checksum.rs ---
+
+id = fefix.crate_checksum_single_soh
+source = fefix crate 0.7.0:src/fix_values/checksum.rs::edges_cases
+kind = checksum
+bytes = |
+value = 1
+note = CheckSum::compute(&[1]) == 1 (byte 0x01 is SOH)
+
+id = fefix.crate_checksum_two_soh
+source = fefix crate 0.7.0:src/fix_values/checksum.rs::edges_cases
+kind = checksum
+bytes = ||
+value = 2
+note = derived from the [1] case: sum of two 0x01 bytes
