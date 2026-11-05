@@ -1,0 +1,193 @@
+# More test vectors ported from Artio (https://github.com/real-logic/artio).
+# Copyright 2015-2025 Real Logic Limited, Adaptive Financial Consulting Ltd. Licensed under the
+# Apache License, Version 2.0 (see licenses/artio-LICENSE). Upstream has no NOTICE file.
+# Complements artio.fixv with literal FIX strings from other Artio tests (Java octal escapes
+# evaluated): BusinessRejectRefIdExtractorTest, PossDupFinderTest, PasswordCleanerTest,
+# FixMessagePredicateTest, SessionParserTest and further ReceiverEndPointTest framing cases.
+# Many of these fixtures carry stale BodyLength/CheckSum values because the code under test
+# does not check them; the vectors record what glaze's validate must say (recomputed with python3).
+# Not ported: ReplayerTest (SendingTime is a runtime constant), PossDupFinderTest validate of
+# SECOND_MESSAGE (only correct if BodyLength "0065" with leading zeros is accepted), PasswordCleaner
+# outputs with "***" (same stale-trailer pattern), MessageBasedAcceptorSystemTest (built at runtime).
+
+id = artio.ioi_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/BusinessRejectRefIdExtractorTest.java::shouldExtractBusinessRejectRefId
+kind = parse
+msg = 8=FIX.4.4|9=154|35=6|49=FOO|56=BAR|34=2|52=20200505-09:48:58|23=224553|28=N|55=BAZ|54=1|27=3000|44=22333.000000|25=H|10=170|
+expect = ok
+count = 15
+note = IOI (35=6) message; tag=value scan succeeds (15 fields)
+
+id = artio.ioi_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/BusinessRejectRefIdExtractorTest.java::shouldExtractBusinessRejectRefId
+kind = validate
+msg = 8=FIX.4.4|9=154|35=6|49=FOO|56=BAR|34=2|52=20200505-09:48:58|23=224553|28=N|55=BAZ|54=1|27=3000|44=22333.000000|25=H|10=170|
+expect = error
+note = stated BodyLength 154 but actual body is 101 bytes (CheckSum 170 also wrong, actual 123); extractor does not validate
+
+id = artio.possdup_second_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/PossDupFinderTest.java::shouldFindLengthOfPossDupMessage
+kind = parse
+msg = 8=FIX.4.4|9=0065|35=5|49=initiator|56=acceptor|34=2|52=20161206-11:04:51.461|43=Y|10=088|
+expect = ok
+count = 9
+note = Logout with PossDupFlag; BodyLength value written with leading zeros (0065)
+
+id = artio.possdup_second_checksum
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/PossDupFinderTest.java::shouldFindLengthOfPossDupMessage
+kind = checksum
+bytes = 8=FIX.4.4|9=0065|35=5|49=initiator|56=acceptor|34=2|52=20161206-11:04:51.461|43=Y|
+value = 88
+note = SECOND_MESSAGE CheckSum 088 is correct
+
+id = artio.possdup_first_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/PossDupFinderTest.java::shouldOnlyReturnPossDupAtLength
+kind = validate
+msg = 8=FIX.4.4|9=0065|35=5|49=initiator|56=acceptor|34=2|52=20161206-11:04:51.461|10=088|
+expect = error
+note = FIRST_MESSAGE is SECOND_MESSAGE without 43=Y but keeps its header and trailer: body is 60 bytes (not 65), CheckSum actual 090 (not 088)
+
+id = artio.password_logon_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogon
+kind = validate
+msg = 8=FIX.4.4|9=99|35=A|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|98=0|108=10|141=N|553=bob|554=Uv1aegoh|10=062|
+expect = ok
+note = Logon with Username/Password; BodyLength 99 and CheckSum 062 both correct
+
+id = artio.password_logon_frame
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogon
+kind = frame
+stream = 8=FIX.4.4|9=99|35=A|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|98=0|108=10|141=N|553=bob|554=Uv1aegoh|10=062|
+frame_len = 121
+note = Logon with password frames at its full length
+
+id = artio.password_logon_checksum
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogon
+kind = checksum
+bytes = 8=FIX.4.4|9=99|35=A|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|98=0|108=10|141=N|553=bob|554=Uv1aegoh|
+value = 62
+note = Logon CheckSum 062
+
+id = artio.no_password_logon_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldNotChangeLogonWithoutPassword
+kind = validate
+msg = 8=FIX.4.4|9=78|35=A|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|98=0|108=10|141=N|10=062|
+expect = error
+note = BodyLength 78 correct but the fixture reuses CheckSum 062 (actual 081)
+
+id = artio.short_password_logon_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogonWithShortNamePassword
+kind = validate
+msg = 8=FIX.4.4|9=98|35=A|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|98=0|108=10|141=N|553=bobdobsdobs|554=x|10=062|
+expect = error
+note = stated BodyLength 98 but actual body is 100 bytes (and CheckSum 062 is stale)
+
+id = artio.empty_password_logon_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordFromLogonWithEmptyPassword
+kind = parse
+msg = 8=FIX.4.4|9=97|35=A|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|98=0|108=10|141=N|553=bobdobsdobs|554=|10=062|
+expect = error
+note = Password field 554 has an empty value; parse_fields rejects empty values
+
+id = artio.user_request_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordsFromUserRequest
+kind = parse
+msg = 8=FIX.4.4|9=116|35=BE|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|923=A|924=3|553=initiator|554=Uv1aegoh|925=newPassword|10=062|
+expect = ok
+count = 13
+note = UserRequest (35=BE, two-character MsgType) parses as 13 fields
+
+id = artio.user_request_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/PasswordCleanerTest.java::shouldCleanPasswordsFromUserRequest
+kind = validate
+msg = 8=FIX.4.4|9=116|35=BE|49=initiator|56=acceptor|34=1|52=20191002-16:54:47.446|923=A|924=3|553=initiator|554=Uv1aegoh|925=newPassword|10=062|
+expect = error
+note = BodyLength 116 correct, CheckSum 062 stale (actual 185)
+
+id = artio.header_eg_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/logger/FixMessagePredicateTest.java::shouldMatchHeader
+kind = parse
+msg = 8=FIX.4.4|9=110|35=A|49=initiator|56=acceptor|34=1|52=20210915-14:21:55.490|98=0|108=10|141=N|553=bob|554=***|35002=0|35003=0|10=047|
+expect = ok
+count = 15
+note = Logon with five-digit custom tags 35002 and 35003
+
+id = artio.header_eg_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/logger/FixMessagePredicateTest.java::shouldMatchHeader
+kind = validate
+msg = 8=FIX.4.4|9=110|35=A|49=initiator|56=acceptor|34=1|52=20210915-14:21:55.490|98=0|108=10|141=N|553=bob|554=***|35002=0|35003=0|10=047|
+expect = error
+note = BodyLength 110 correct, CheckSum 047 wrong (actual 168)
+
+id = artio.header_eg_checksum
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/logger/FixMessagePredicateTest.java::shouldMatchHeader
+kind = checksum
+bytes = 8=FIX.4.4|9=110|35=A|49=initiator|56=acceptor|34=1|52=20210915-14:21:55.490|98=0|108=10|141=N|553=bob|554=***|35002=0|35003=0|
+value = 168
+note = actual CheckSum of HEADER_EG is 168
+
+id = artio.missing_msg_seq_num_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfMissingMsgSeqNum
+kind = parse
+msg = 8=FIX.4.4|35=B|49=abc|52=00000101-00:00:00.000|56=das|
+expect = ok
+count = 5
+note = header-only News message, no BodyLength and no CheckSum; tag=value scan succeeds
+
+id = artio.missing_msg_seq_num_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfMissingMsgSeqNum
+kind = validate
+msg = 8=FIX.4.4|35=B|49=abc|52=00000101-00:00:00.000|56=das|
+expect = error
+note = second field is 35, not 9 (no BodyLength, no CheckSum)
+
+id = artio.unknown_msg_type_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfUnknownMessageType
+kind = parse
+msg = 8=FIX.4.4|35=*|34=2|49=abc|52=00000101-00:00:00.000|56=das|
+expect = ok
+count = 6
+note = MsgType value * is a legal tag=value value
+
+id = artio.unknown_msg_type_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldNotifySessionOfUnknownMessageType
+kind = validate
+msg = 8=FIX.4.4|35=*|34=2|49=abc|52=00000101-00:00:00.000|56=das|
+expect = error
+note = no BodyLength and no CheckSum
+
+id = artio.wrong_comp_id_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldValidateCompId
+kind = validate
+msg = 8=FIX.4.2|9=146|35=D|34=4|49=WRONG|52=20090323-15:40:29|56=WRONG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|
+expect = error
+note = EG_MESSAGE with CompIDs replaced by WRONG keeps BodyLength 146 (actual 143) and CheckSum 195 (actual 116)
+
+id = artio.wrong_comp_id_parse
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/session/SessionParserTest.java::shouldValidateCompId
+kind = parse
+msg = 8=FIX.4.2|9=146|35=D|34=4|49=WRONG|52=20090323-15:40:29|56=WRONG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|
+expect = ok
+count = 19
+note = same message parses as 19 fields
+
+id = artio.frame_logon_then_eg
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameLogonMessageWhenLoggerBehind
+kind = frame
+stream = 8=FIX.4.2|9=64|35=A|34=1|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|98=0|108=30|10=161|8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|
+frame_len = 86
+note = LOGON_MESSAGE followed by EG_MESSAGE; first frame is the 86-byte Logon
+
+id = artio.frame_split_prefix
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameSplitFixMessage
+kind = frame
+stream = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|
+frame_len = 0
+note = a prefix of EG_MESSAGE ending after 11=NF 0542/03232009 (as when the message arrives split) is incomplete
+
+id = artio.frame_eg_without_final_soh
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldOnlyFrameCompleteFixMessage
+kind = frame
+stream = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195
+frame_len = 0
+note = EG_MESSAGE missing only its final SOH is incomplete

@@ -1,0 +1,252 @@
+# Test vectors ported from simplefix (https://github.com/da4089/simplefix), MIT licence,
+# Copyright (C) 2016-2026, David Arnold.
+# Only behaviour checked by simplefix's own tests is ported. BodyLength(9) and CheckSum(10)
+# of every validate/frame vector were recomputed with python3; fixes are noted per vector.
+#
+# Skipped (not representable or config-dependent):
+#   test_parser.py::test_raw_data, test_raw_data_tags - raw data values contain SOH
+#   test_parser.py::test_simplefix_on_split_execution_report - XmlData(213) holds embedded SOH
+#   test_parser.py::test_stop_tag, test_stop_tag_deprecated, test_stop_char_*,
+#     test_eol_is_eom_* - parser options (alternative stop tag / '\n' stop byte), no 10= trailer
+#   test_parser.py::test_empty_value (parse) - accepted or rejected depending on parser option
+#     allow_empty_values; only the framing of that message is ported
+#   test_parser.py::test_parse_empty_string, test_begin_string_config - API/config only
+#   test_message.py time/timestamp, compare, remove, repeating-group and tag/value type tests -
+#     encoder API only, nothing tag=value-parsing related
+
+# ---- parse ----
+
+id = simplefix.basic_fix_message
+source = da4089/simplefix:test/test_parser.py::test_basic_fix_message
+kind = parse
+msg = 8=FIX.4.2|9=10|35=D|29=A|10=203|
+expect = ok
+fields = 8=FIX.4.2|9=10|35=D|29=A|10=203|
+note = FixMessage(8=FIX.4.2,35=D,29=A).encode() parsed back; 8, 35, 29 values recovered
+
+id = simplefix.bad_tag
+source = da4089/simplefix:test/test_parser.py::test_bad_tag
+kind = parse
+msg = 8=FIX.4.2|9=10|35=D|xx=A|10=203|
+expect = error
+note = non-numeric tag 'xx' raises TagNotNumberError
+
+id = simplefix.int_value_zero
+source = da4089/simplefix:test/test_parser.py::test_int_value_zero
+kind = parse
+msg = 8=FIX.4.2|34=0|10=0|
+expect = ok
+fields = 8=FIX.4.2|34=0|10=0|
+note = value 0 in 34; no 9 and loose 10=0, tag=value scan only
+
+id = simplefix.int_value_one
+source = da4089/simplefix:test/test_parser.py::test_int_value_one
+kind = parse
+msg = 8=FIX.4.2|34=1|10=0|
+expect = ok
+fields = 8=FIX.4.2|34=1|10=0|
+note = value 1 in 34
+
+id = simplefix.int_value_32bit
+source = da4089/simplefix:test/test_parser.py::test_int_value_32bit
+kind = parse
+msg = 8=FIX.4.2|34=4294967295|10=0|
+expect = ok
+fields = 8=FIX.4.2|34=4294967295|10=0|
+note = value 2^32-1 kept verbatim
+
+id = simplefix.int_value_33bit
+source = da4089/simplefix:test/test_parser.py::test_int_value_33bit
+kind = parse
+msg = 8=FIX.4.2|34=4294967296|10=0|
+expect = ok
+fields = 8=FIX.4.2|34=4294967296|10=0|
+note = value 2^32 kept verbatim
+
+id = simplefix.int_value_64bit
+source = da4089/simplefix:test/test_parser.py::test_int_value_64bit
+kind = parse
+msg = 8=FIX.4.2|34=18446744073709551615|10=0|
+expect = ok
+fields = 8=FIX.4.2|34=18446744073709551615|10=0|
+note = value 2^64-1 kept verbatim
+
+id = simplefix.int_value_65bit
+source = da4089/simplefix:test/test_parser.py::test_int_value_65bit
+kind = parse
+msg = 8=FIX.4.2|34=18446744073709551616|10=0|
+expect = ok
+fields = 8=FIX.4.2|34=18446744073709551616|10=0|
+note = value 2^64 kept verbatim (value text is not range-limited)
+
+id = simplefix.embedded_equals
+source = da4089/simplefix:test/test_parser.py::test_embedded_equals_96_no_95
+kind = parse
+msg = 8=FIX.4.2|9=169|35=A|52=20171213-01:41:08.063|49=HelloWorld|56=1234|34=1|96=ABC=DE|98=0|108=30|554=HelloWorld|8013=Y|10=166|
+expect = ok
+fields = 8=FIX.4.2|9=169|35=A|52=20171213-01:41:08.063|49=HelloWorld|56=1234|34=1|96=ABC=DE|98=0|108=30|554=HelloWorld|8013=Y|10=166|
+note = only the first '=' splits tag from value: 96=ABC=DE; original (loose) 9 and 10 kept, scan only
+
+id = simplefix.cme_secdef_no_begin_string
+source = da4089/simplefix:test/test_parser.py::test_cme_secdef
+kind = parse
+msg = 35=d|5799=00000000|980=A|779=20180408160519000025|1180=310|1300=64|462=5|207=XCME|1151=ES|6937=ES|55=ESM9|48=736|22=8|167=FUT|461=FFIXSX|200=201906|15=USD|1142=F|562=1|1140=3000|969=25.0000000|9787=0.0100000|996=IPNT|1147=50.0000000|1150=263175.0000000|731=00000111|5796=20180406|1149=275950.0000000|1148=249950.0000000|1143=600.0000000|1146=12.5000000|9779=N|864=2|865=5|1145=20180316133000000000|865=7|1145=20190621133000000000|1141=1|1022=GBX|264=10|870=1|871=24|872=00000000000001000010000000001111|1234=0|
+expect = ok
+count = 44
+note = first record of CME secdef file: no 8/9/10, repeated tags 865/1145; tag=value scan succeeds
+
+id = simplefix.string_with_equals
+source = da4089/simplefix:test/test_message.py::test_string_with_equals
+kind = parse
+msg = 8=FIX.4.2|
+expect = ok
+fields = 8=FIX.4.2|
+note = single tag=value string; append_string("8=FIX.4.2")
+
+id = simplefix.string_without_equals
+source = da4089/simplefix:test/test_message.py::test_string_without_equals
+kind = parse
+msg = FIX.4.2|
+expect = error
+note = field with no '=' is rejected (ValueError)
+
+id = simplefix.string_with_bad_tag
+source = da4089/simplefix:test/test_message.py::test_string_with_bad_tag
+kind = parse
+msg = foo=bar|
+expect = error
+note = non-numeric tag 'foo' is rejected (ValueError)
+
+id = simplefix.header_field_order
+source = da4089/simplefix:test/test_message.py::test_header_field
+kind = parse
+msg = 20001=first|20002=second|20000=third|
+expect = ok
+fields = 20001=first|20002=second|20000=third|
+note = raw-mode encoding output; field order preserved as on the wire
+
+id = simplefix.str_values
+source = da4089/simplefix:test/test_message.py::test_str
+kind = parse
+msg = 1=1|2=foo|3=bar|4=3.1415679|
+expect = ok
+fields = 1=1|2=foo|3=bar|4=3.1415679|
+note = str(msg) output '1=1|2=foo|3=bar|4=3.1415679' with SOH terminator added on last field
+
+# ---- validate ----
+
+id = simplefix.set_session_version
+source = da4089/simplefix:test/test_message.py::test_set_session_version
+kind = validate
+msg = 8=FIX.4.4|9=5|35=0|10=163|
+expect = ok
+note = minimal heartbeat as encoded by simplefix; 9=5 and 10=163 verified
+
+id = simplefix.cooked_checksum
+source = da4089/simplefix:test/test_message.py::test_cooked_checksum
+kind = validate
+msg = 8=FIX.4.2|9=16|35=D|5001=AAAAA|10=048|
+expect = ok
+note = encoded message with BodyLength 16 and zero-padded CheckSum 048; verified
+
+id = simplefix.basic_fix_message_valid
+source = da4089/simplefix:test/test_parser.py::test_basic_fix_message
+kind = validate
+msg = 8=FIX.4.2|9=10|35=D|29=A|10=203|
+expect = ok
+note = encode() output of 8=FIX.4.2,35=D,29=A (computed with python3, test builds it via FixMessage)
+
+id = simplefix.partial_string_complete
+source = da4089/simplefix:test/test_parser.py::test_parse_partial_string
+kind = validate
+msg = 8=FIX.4.2|9=5|35=0|10=161|
+expect = ok
+note = message reassembled from two fragments; 9=5 and 10=161 verified
+
+id = simplefix.embedded_equals_fixed
+source = da4089/simplefix:test/test_parser.py::test_embedded_equals_96_no_95
+kind = validate
+msg = 8=FIX.4.2|9=101|35=A|52=20171213-01:41:08.063|49=HelloWorld|56=1234|34=1|96=ABC=DE|98=0|108=30|554=HelloWorld|8013=Y|10=088|
+expect = ok
+note = Logon with '=' inside value 96; simplefix's loose 9=169/10=166 fixed to 9=101/10=088
+
+# ---- frame ----
+
+id = simplefix.partial_string_first_fragment
+source = da4089/simplefix:test/test_parser.py::test_parse_partial_string
+kind = frame
+stream = 8=FIX.4.2|9=
+frame_len = 0
+note = fragment ending inside BodyLength gives no message
+
+id = simplefix.partial_string_reassembled
+source = da4089/simplefix:test/test_parser.py::test_parse_partial_string
+kind = frame
+stream = 8=FIX.4.2|9=5|35=0|10=161|
+frame_len = 26
+note = both fragments appended form one complete message
+
+id = simplefix.get_buffer_after_message
+source = da4089/simplefix:test/test_parser.py::test_get_buffer
+kind = frame
+stream = 8=FIX.4.2|9=5|35=0|10=161|
+frame_len = 26
+note = whole buffer consumed by the message (get_buffer() returns empty afterwards)
+
+id = simplefix.empty_value_frame
+source = da4089/simplefix:test/test_parser.py::test_empty_value
+kind = frame
+stream = 8=FIX.4.2|9=9|35=D|29=|10=098|
+frame_len = 30
+note = message with empty value 29= frames normally; original 9=9 and 10=098 verified correct
+
+id = simplefix.leading_junk_pairs
+source = da4089/simplefix:test/test_parser.py::test_leading_junk_pairs
+kind = frame
+stream = 1=2|3=4|8=FIX.4.2|9=5|35=0|10=161|
+frame_len = error
+note = junk fields before 8= are skipped; frame_len is the length of the message itself; simplefix skips junk before 8=; glz::fix::frame does not skip and reports frame_error (docs/fix/api.md, Q1 settled by fix/core)
+
+id = simplefix.junk_pairs_only
+source = da4089/simplefix:test/test_parser.py::test_junk_pairs
+kind = frame
+stream = 1=2|3=4|5=6|
+frame_len = error
+note = stream of junk fields with no 8= gives no message; simplefix skips junk and waits; glz::fix::frame reports frame_error instead (docs/fix/api.md)
+
+id = simplefix.raw_data_packet_boundary_first
+source = da4089/simplefix:test/test_parser.py::test_raw_data_ending_on_packet_boundary
+kind = frame
+stream = 8=FIX.4.2|9=84|35=A|52=20171213-01:41:08.063|49=HelloWorld|56=1234|34=1|95=6|96=ABC=DE
+frame_len = 0
+note = first packet ends right after raw data 96 (before its SOH): incomplete; 9 fixed from loose 169 to 84
+
+id = simplefix.raw_data_packet_boundary_full
+source = da4089/simplefix:test/test_parser.py::test_raw_data_ending_on_packet_boundary
+kind = frame
+stream = 8=FIX.4.2|9=84|35=A|52=20171213-01:41:08.063|49=HelloWorld|56=1234|34=1|95=6|96=ABC=DE|98=0|108=30|10=217|
+frame_len = 106
+note = both packets: complete message with 95=6/96=ABC=DE; loose 9=169/10=166 fixed to 9=84/10=217
+
+# ---- checksum ----
+
+id = simplefix.checksum_heartbeat_44
+source = da4089/simplefix:test/test_message.py::test_set_session_version
+kind = checksum
+bytes = 8=FIX.4.4|9=5|35=0|
+value = 163
+note = expected 10=163 from encode()
+
+id = simplefix.checksum_cooked
+source = da4089/simplefix:test/test_message.py::test_cooked_checksum
+kind = checksum
+bytes = 8=FIX.4.2|9=16|35=D|5001=AAAAA|
+value = 48
+note = expected 10=048 from encode() (two-digit value, zero-padded on the wire)
+
+id = simplefix.checksum_heartbeat_42
+source = da4089/simplefix:test/test_parser.py::test_parse_partial_string
+kind = checksum
+bytes = 8=FIX.4.2|9=5|35=0|
+value = 161
+note = 10=161 in the reassembled message

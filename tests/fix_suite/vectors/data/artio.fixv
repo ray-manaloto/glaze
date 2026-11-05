@@ -1,0 +1,186 @@
+# Test vectors ported from Artio (https://github.com/real-logic/artio).
+# Copyright 2015-2025 Real Logic Limited, Adaptive Financial Consulting Ltd. Licensed under the Apache License, Version 2.0.
+# Upstream has no NOTICE file. Messages are the constants in
+# artio-codecs/src/test/java/uk/co/real_logic/artio/util/TestMessages.java (Java octal escapes
+# evaluated; non-ASCII bytes replaced by '?' as String.getBytes(US_ASCII) does) and are cited by
+# the test that uses them. '|' is SOH. expect=ok validate and non-zero frame vectors re-verified
+# with python3.
+#
+# Not ported / deliberately limited:
+# - EXECUTION_REPORT, ZERO_REPEATING_GROUP, REPEATING_GROUP, NESTED_REPEATING_GROUP have stale
+#   BodyLength values (378/378/190/190 vs actual 387/353/153/200) but correct CheckSums; OtfParser
+#   does not check BodyLength, so they are ported only as parse vectors.
+# - ZERO_CHECKSUM_MESSAGE uses BodyLength "0067" (leading zeros); Artio's OtfParserTest only checks
+#   the parse, so it is ported as parse + checksum, not validate.
+# - GARBLED_MESSAGE ("4garbled9=") is defined but referenced by no test; skipped.
+# - SessionParserTest / ExampleDictionary messages test session/dictionary semantics (CompID,
+#   duplicate tags, enum values), not tag=value framing; skipped.
+# - CommonDecoderImplTest covers decimal float decoding only; AsciiBufferTest covers integer/
+#   MsgType decoding only; no FIX message vectors there.
+
+id = artio.eg_message_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameValidFixMessage
+kind = validate
+msg = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|
+expect = ok
+note = NewOrderSingle EG_MESSAGE: BodyLength 146, CheckSum 195; framed with status OK
+
+id = artio.logon_message_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldNotifyDuplicateSession
+kind = validate
+msg = 8=FIX.4.2|9=64|35=A|34=1|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|98=0|108=30|10=161|
+expect = ok
+note = LOGON_MESSAGE: BodyLength 64, CheckSum 161
+
+id = artio.eg_message_parse
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfValidMessageFields
+kind = parse
+msg = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|
+expect = ok
+count = 19
+note = fields 8, 9, 35, 34 first, then 15 more (19 in total), no onError
+
+id = artio.eg_message_checksum
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfValidMessageEnd
+kind = checksum
+bytes = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|
+value = 195
+note = EG_MESSAGE CheckSum 195 accepted by OtfParser
+
+id = artio.frame_complete
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameValidFixMessage
+kind = frame
+stream = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|
+frame_len = 169
+note = one complete message is framed at MSG_LEN
+
+id = artio.frame_incomplete
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldOnlyFrameCompleteFixMessage
+kind = frame
+stream = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N
+frame_len = 0
+note = MSG_LEN - 8 bytes: nothing framed
+
+id = artio.frame_two_complete
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameTwoCompleteFixMessagesInOnePacket
+kind = frame
+stream = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|
+frame_len = 169
+note = two back-to-back messages; first frame is MSG_LEN
+
+id = artio.frame_complete_then_incomplete
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldFrameOneCompleteMessageWhenTheSecondMessageIsIncomplete
+kind = frame
+stream = 8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=195|8=FIX.4.2|9=146|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|54=1|38=100|55=CVS|40=1|59=0|47=A|60=20090323-15:40:29|21=1|207=N
+frame_len = 169
+note = complete message followed by MSG_LEN - 8 bytes of the next; first frame is MSG_LEN
+
+id = artio.frame_logon
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldNotifyDuplicateSession
+kind = frame
+stream = 8=FIX.4.2|9=64|35=A|34=1|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|98=0|108=30|10=161|
+frame_len = 86
+note = Logon framed at LOGON_MESSAGE.length
+
+id = artio.invalid_checksum_validate
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfInvalidChecksum
+kind = validate
+msg = 8=FIX.4.2|9=133|35=D|34=4|49=ABC_DEFG01|52=20090323-15:40:29|56=CCG|115=XYZ|11=NF 0542/03232009|55=CVS|40=1|59=0|47=A60=20090323-15:40:29|21=1|207=N|10=155|
+expect = error
+note = CheckSum 155 is wrong (actual 172); onError(INVALID_CHECKSUM) also asserted by ReceiverEndPointTest.invalidChecksumMessageRecorded
+
+id = artio.body_length_too_short_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::shouldIgnoreMessageWithBodyLengthTooShort
+kind = validate
+msg = 8=FIX.4.4|9=5|35=A|34=1|49=TW|52=20150604-12:46:54|56=ISLD|98=0|10=000|
+expect = error
+note = BodyLength 5 is far shorter than the body (actual 50); saved as INVALID_BODYLENGTH
+
+id = artio.invalid_message_parse
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfInvalidMessage
+kind = parse
+msg = 8=FIX.4.2|9=145|35=D|34=4|49=ABC_DEFG01|52=\\?56=CCG|115=XYZ|11=NF 0542/03232009||||||54=1|38=55140=|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=172|
+expect = error
+note = run of empty fields (consecutive SOH) after 11=...; onError(PARSE_ERROR)
+
+id = artio.invalid_message_validate
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfInvalidMessage
+kind = validate
+msg = 8=FIX.4.2|9=145|35=D|34=4|49=ABC_DEFG01|52=\\?56=CCG|115=XYZ|11=NF 0542/03232009||||||54=1|38=55140=|59=0|47=A|60=20090323-15:40:29|21=1|207=N|10=172|
+expect = error
+note = same message: empty fields, and BodyLength/CheckSum do not match
+
+id = artio.out_of_required_order_validate
+source = real-logic/artio:artio-core/src/test/java/uk/co/real_logic/artio/engine/framer/ReceiverEndPointTest.java::fieldOutOfOrderMessageRecordedOnce
+kind = validate
+msg = 35=0|8=FIX.4.4|9=0027|115=abc|116=2|117=1.1|127=19700101-00:00:00.001|10=161|
+expect = error
+note = MsgType(35) before BeginString(8); saved as INVALID (TAG_SPECIFIED_OUT_OF_REQUIRED_ORDER_MESSAGE from ExampleDictionary.java)
+
+id = artio.execution_report_parse
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfRepeatingGroup
+kind = parse
+msg = 8=FIX.4.2|9=378|35=8|128=XYZ|34=5|49=CCG|56=ABC_DEFG01|52=20090323-15:40:35|55=CVS|37=NF 0542/03232009|11=NF 0542/03232009|17=NF 0542/03232009001001001|20=0|39=2|150=2|54=1|38=100|40=1|59=0|31=25.4800|32=100|14=0|6=0|151=0|60=20090323-15:40:30|58=Fill|30=N|76=0034|207=N|47=A|9430=NX|9483=000008|9578=1|382=1|375=TOD|337=0000|437=100|438=1243|9579=0000100001|9426=2/2|9433=0034|29=1|63=0|9440=001001001|10=013|
+expect = ok
+count = 45
+note = ExecutionReport with one-entry ContraBrokers group (382=1); parses without error (BodyLength stale upstream; not a validate vector)
+
+id = artio.zero_repeating_group_parse
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfOnlyHeaderForEmptyGroup
+kind = parse
+msg = 8=FIX.4.2|9=378|35=8|128=XYZ|34=5|49=CCG|56=ABC_DEFG01|52=20090323-15:40:35|55=CVS|37=NF 0542/03232009|11=NF 0542/03232009|17=NF 0542/03232009001001001|20=0|39=2|150=2|54=1|38=100|40=1|59=0|31=25.4800|32=100|14=0|6=0|151=0|60=20090323-15:40:30|58=Fill|30=N|76=0034|207=N|47=A|9430=NX|9483=000008|9578=1|382=0|9579=0000100001|9426=2/2|9433=0034|29=1|63=0|9440=001001001|10=153|
+expect = ok
+count = 41
+note = 382=0 empty group; parses without error (BodyLength stale upstream; not a validate vector)
+
+id = artio.repeating_group_parse
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfMultiElementRepeatingGroup
+kind = parse
+msg = 8=FIX.4.2|9=190|35=E|49=INST|56=BROK|52=20050908-15:51:22|34=200|66=14|394=1|68=2|73=2|11=order-1|67=1|55=IBM|54=2|38=2000|40=1|11=order-2|67=2|55=AOL|54=2|38=1000|40=1|10=021|
+expect = ok
+count = 24
+note = NoOrders(73)=2 group with two entries; parses without error (BodyLength stale upstream; not a validate vector)
+
+id = artio.nested_repeating_group_parse
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfNestedRepeatingGroup
+kind = parse
+msg = 8=FIX.4.2|9=190|35=E|49=INST|56=BROK|52=20050908-15:51:22|34=200|66=14|394=1|68=2|73=2|11=order-1|67=1|55=IBM|54=2|38=2000|40=1|78=2|79=bob|467=10|366=4|79=sally|467=11|366=5|11=order-2|67=2|55=AOL|54=2|38=1000|40=1|10=076|
+expect = ok
+count = 31
+note = NoOrders group containing nested NoAllocs(78)=2 group; parses without error (BodyLength stale upstream; not a validate vector)
+
+id = artio.execution_report_checksum
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfRepeatingGroup
+kind = checksum
+bytes = 8=FIX.4.2|9=378|35=8|128=XYZ|34=5|49=CCG|56=ABC_DEFG01|52=20090323-15:40:35|55=CVS|37=NF 0542/03232009|11=NF 0542/03232009|17=NF 0542/03232009001001001|20=0|39=2|150=2|54=1|38=100|40=1|59=0|31=25.4800|32=100|14=0|6=0|151=0|60=20090323-15:40:30|58=Fill|30=N|76=0034|207=N|47=A|9430=NX|9483=000008|9578=1|382=1|375=TOD|337=0000|437=100|438=1243|9579=0000100001|9426=2/2|9433=0034|29=1|63=0|9440=001001001|
+value = 13
+note = EXECUTION_REPORT CheckSum 013 is correct (OtfParser checks it, no onError)
+
+id = artio.repeating_group_checksum
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfMultiElementRepeatingGroup
+kind = checksum
+bytes = 8=FIX.4.2|9=190|35=E|49=INST|56=BROK|52=20050908-15:51:22|34=200|66=14|394=1|68=2|73=2|11=order-1|67=1|55=IBM|54=2|38=2000|40=1|11=order-2|67=2|55=AOL|54=2|38=1000|40=1|
+value = 21
+note = REPEATING_GROUP CheckSum 021 is correct (OtfParser checks it, no onError)
+
+id = artio.nested_repeating_group_checksum
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::notifiesAcceptorOfNestedRepeatingGroup
+kind = checksum
+bytes = 8=FIX.4.2|9=190|35=E|49=INST|56=BROK|52=20050908-15:51:22|34=200|66=14|394=1|68=2|73=2|11=order-1|67=1|55=IBM|54=2|38=2000|40=1|78=2|79=bob|467=10|366=4|79=sally|467=11|366=5|11=order-2|67=2|55=AOL|54=2|38=1000|40=1|
+value = 76
+note = NESTED_REPEATING_GROUP CheckSum 076 is correct (OtfParser checks it, no onError)
+
+id = artio.zero_checksum_parse
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::parsesZeroChecksumMessages
+kind = parse
+msg = 8=FIX.4.4|9=0067|35=0|49=acceptor|56=initiator|34=2|52=20160415-12:50:23.294|112=hi|10=000|
+expect = ok
+count = 9
+note = Heartbeat whose CheckSum is 000; parses without error
+
+id = artio.zero_checksum_checksum
+source = real-logic/artio:artio-codecs/src/test/java/uk/co/real_logic/artio/otf/OtfParserTest.java::parsesZeroChecksumMessages
+kind = checksum
+bytes = 8=FIX.4.4|9=0067|35=0|49=acceptor|56=initiator|34=2|52=20160415-12:50:23.294|112=hi|
+value = 0
+note = bytes sum to 0 mod 256 (CheckSum 000 is genuinely correct)

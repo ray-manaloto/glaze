@@ -1,0 +1,217 @@
+# Test vectors ported from Philadelphia (https://github.com/paritytrading/philadelphia).
+# Copyright 2015 Philadelphia authors. Licensed under the Apache License, Version 2.0.
+# Upstream has no NOTICE file. Message strings copied from the cited tests; '|' is SOH.
+# Every expect=ok validate vector and every non-zero frame vector was re-verified with python3
+# (BodyLength and CheckSum recomputed).
+
+id = philadelphia.message_parse
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageTest.java::parse
+kind = parse
+msg = 11=123|21=1|55=FOO|54=1|60=20150924-09:30:05.250|38=100|40=2|44=150.25|
+expect = ok
+fields = 11=123|21=1|55=FOO|54=1|60=20150924-09:30:05.250|38=100|40=2|44=150.25
+count = 8
+note = FIXMessage.fromString round-trips the body fields in order (no header/trailer)
+
+id = philadelphia.read_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::read
+kind = validate
+msg = 8=FIX.4.2|9=5|35=D|10=181|
+expect = ok
+note = minimal FIX.4.2 message with BodyLength 5 and CheckSum 181 is accepted
+
+id = philadelphia.read_fixt11_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readFixt11
+kind = validate
+msg = 8=FIXT.1.1|9=5|35=D|10=005|
+expect = ok
+note = minimal FIXT.1.1 message (BeginString FIXT.1.1) is accepted
+
+id = philadelphia.read_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::read
+kind = frame
+stream = 8=FIX.4.2|9=5|35=D|10=181|
+frame_len = 26
+note = whole buffer consumed as one message
+
+id = philadelphia.read_fixt11_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readFixt11
+kind = frame
+stream = 8=FIXT.1.1|9=5|35=D|10=005|
+frame_len = 27
+note = whole FIXT.1.1 buffer consumed as one message
+
+id = philadelphia.read_checksum
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::read
+kind = checksum
+bytes = 8=FIX.4.2|9=5|35=D|
+value = 181
+note = CheckSum of 8=FIX.4.2|9=5|35=D| is 181
+
+id = philadelphia.read_fixt11_checksum
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readFixt11
+kind = checksum
+bytes = 8=FIXT.1.1|9=5|35=D|
+value = 5
+note = CheckSum of 8=FIXT.1.1|9=5|35=D| is 5
+
+id = philadelphia.garbled_checksum_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledCheckSum
+kind = validate
+msg = 8=FIX.4.2|9=5|35=D|10=000|
+expect = error
+note = CheckSum 000 is wrong (correct is 181); parser rejects with checksum enabled
+
+id = philadelphia.partial_begin_string_tag_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialBeginStringTag
+kind = frame
+stream = 8
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_begin_string_value_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialBeginStringValue
+kind = frame
+stream = 8=FIX
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_body_length_missing_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialBodyLengthMissing
+kind = frame
+stream = 8=FIX.4.2|
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_body_length_tag_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialBodyLengthTag
+kind = frame
+stream = 8=FIX.4.2|9
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_body_length_value_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialBodyLengthValue
+kind = frame
+stream = 8=FIX.4.2|9=1
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_body_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialBody
+kind = frame
+stream = 8=FIX.4.2|9=5|35=
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_check_sum_missing_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialCheckSumMissing
+kind = frame
+stream = 8=FIX.4.2|9=5|35=D|
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_check_sum_tag_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialCheckSumTag
+kind = frame
+stream = 8=FIX.4.2|9=5|35=D|10
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_check_sum_value_missing_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialCheckSumValueMissing
+kind = frame
+stream = 8=FIX.4.2|9=5|35=D|10=
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.partial_check_sum_value_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readPartialCheckSumValue
+kind = frame
+stream = 8=FIX.4.2|9=5|35=D|10=0
+frame_len = 0
+note = truncated input: parser returns false and consumes nothing
+
+id = philadelphia.garbled_begin_string_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBeginString
+kind = frame
+stream = 9=30|8=FIX.4.2|
+frame_len = error
+note = 9= before 8=: no message produced; glz::fix::frame reports frame_error for a front that cannot start a message (docs/fix/api.md)
+
+id = philadelphia.garbled_body_length_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXMessageParserTest.java::readGarbledBodyLength
+kind = frame
+stream = 8=FIX.4.2|8=FIX.4.2|
+frame_len = error
+note = second field is 8= instead of 9=: no message produced; glz::fix::frame reports frame_error for a front that cannot start a message (docs/fix/api.md)
+
+id = philadelphia.heartbeat_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::heartbeat
+kind = validate
+msg = 8=FIX.4.2|9=60|35=0|49=initiator|56=acceptor|34=1|52=19700101-00:00:35.000|10=223|
+expect = ok
+note = Heartbeat sent by initiator; exact wire bytes asserted by the test
+
+id = philadelphia.test_request_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::testRequest
+kind = validate
+msg = 8=FIX.4.2|9=86|35=1|49=initiator|56=acceptor|34=2|52=19700101-00:00:35.000|112=19700101-00:00:35.000|10=213|
+expect = ok
+note = TestRequest sent by initiator; exact wire bytes asserted by the test
+
+id = philadelphia.receive_message_without_msg_seq_num_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveMessageWithoutMsgSeqNum
+kind = validate
+msg = 8=FIX.4.2|9=87|35=5|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|58=MsgSeqNum(34) not found|10=117|
+expect = ok
+note = Logout with Text containing spaces and parentheses; exact wire bytes asserted by the test
+
+id = philadelphia.receive_test_request_without_test_req_i_d_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveTestRequestWithoutTestReqID
+kind = validate
+msg = 8=FIX.4.2|9=99|35=3|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|45=1|373=1|58=TestReqID(112) not found|10=092|
+expect = ok
+note = session-level Reject; exact wire bytes asserted by the test
+
+id = philadelphia.receive_resend_request_with_end_seq_no_smaller_than_last_msg_seq_num_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveResendRequestWithEndSeqNoSmallerThanLastMsgSeqNum
+kind = validate
+msg = 8=FIX.4.2|9=71|35=4|49=initiator|56=acceptor|34=2|52=19700101-00:00:00.000|123=Y|36=4|10=230|
+expect = ok
+note = SequenceReset-GapFill; exact wire bytes asserted by the test
+
+id = philadelphia.receive_message_with_too_high_msg_seq_num_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::receiveMessageWithTooHighMsgSeqNum
+kind = validate
+msg = 8=FIX.4.2|9=69|35=2|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|7=1|16=0|10=093|
+expect = ok
+note = ResendRequest; exact wire bytes asserted by the test
+
+id = philadelphia.send_logon_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendLogon
+kind = validate
+msg = 8=FIX.4.2|9=72|35=A|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|98=0|108=30|10=004|
+expect = ok
+note = Logon; CheckSum with leading zeros (004); exact wire bytes asserted by the test
+
+id = philadelphia.send_logon_with_reset_seq_num_flag_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendLogonWithResetSeqNumFlag
+kind = validate
+msg = 8=FIX.4.2|9=78|35=A|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|98=0|108=30|141=Y|10=055|
+expect = ok
+note = Logon with ResetSeqNumFlag; exact wire bytes asserted by the test
+
+id = philadelphia.send_application_message_validate
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendApplicationMessage
+kind = validate
+msg = 8=FIX.4.2|9=131|35=D|49=initiator|56=acceptor|34=2|52=19700101-00:00:00.000|11=1|21=1|55=FOO|54=1|60=19700101-00:00:00.000|38=100.00|40=2|44=25.50|10=020|
+expect = ok
+note = NewOrderSingle, 3-digit BodyLength; exact wire bytes asserted by the test
+
+id = philadelphia.send_application_message_frame
+source = paritytrading/philadelphia:libraries/core/src/test/java/com/paritytrading/philadelphia/FIXInitiatorTest.java::sendApplicationMessage
+kind = frame
+stream = 8=FIX.4.2|9=72|35=A|49=initiator|56=acceptor|34=1|52=19700101-00:00:00.000|98=0|108=30|10=004|8=FIX.4.2|9=131|35=D|49=initiator|56=acceptor|34=2|52=19700101-00:00:00.000|11=1|21=1|55=FOO|54=1|60=19700101-00:00:00.000|38=100.00|40=2|44=25.50|10=020|
+frame_len = 94
+note = Logon followed by NewOrderSingle on the wire; first frame is the Logon
