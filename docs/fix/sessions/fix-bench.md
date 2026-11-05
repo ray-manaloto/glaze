@@ -19,6 +19,6 @@ Branch `fix/bench`, from `origin/fix/core` (e5babf6).
   reported as 10000/10000 mismatches by the check). Could pass a message order to match.
 * Per-message (rather than per-100-message batch) latency distribution.
 * `std::string_view` variants of the structs for zero-copy read comparison.
-* Profiling glaze-fix read/write: on this VM it is ~3x slower than hffix on read and ~4x on write; faster than QuickFIX on both.
+* Profiling glaze-fix read/write: on this VM it is about 3.5x slower than hffix on read and write in the README run; faster than QuickFIX on both.
 * The bench is not built with the glaze test flags (`-fno-exceptions -fno-rtti -Werror`); hffix
   uses exceptions in places.
