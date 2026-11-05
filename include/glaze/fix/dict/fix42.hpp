@@ -1423,11 +1423,13 @@ namespace glz::fix::fix42
    struct IOIQualGrp
    {
       std::optional<IOIQualifier> ioi_qualifier{};
+      bool operator==(const IOIQualGrp&) const = default;
    };
    struct RoutingGrp
    {
       std::optional<RoutingType> routing_type{};
       std::optional<std::string> routing_id{};
+      bool operator==(const RoutingGrp&) const = default;
    };
    struct ContraGrp
    {
@@ -1435,11 +1437,13 @@ namespace glz::fix::fix42
       std::optional<std::string> contra_trader{};
       std::optional<double> contra_trade_qty{};
       std::optional<std::string> contra_trade_time{};
+      bool operator==(const ContraGrp&) const = default;
    };
    struct MsgTypeGrp
    {
       std::optional<std::string> ref_msg_type{};
       std::optional<MsgDirection> msg_direction{};
+      bool operator==(const MsgTypeGrp&) const = default;
    };
    struct InstrmtGrp
    {
@@ -1462,21 +1466,25 @@ namespace glz::fix::fix42
       std::optional<std::string> security_desc{};
       std::optional<int64_t> encoded_security_desc_len{};
       std::optional<std::string> encoded_security_desc{};
+      bool operator==(const InstrmtGrp&) const = default;
    };
    struct LinesOfTextGrp
    {
       std::string text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const LinesOfTextGrp&) const = default;
    };
    struct PreAllocGrp
    {
       std::optional<std::string> alloc_account{};
       std::optional<double> alloc_shares{};
+      bool operator==(const PreAllocGrp&) const = default;
    };
    struct TrdgSesGrp
    {
       std::optional<std::string> trading_session_id{};
+      bool operator==(const TrdgSesGrp&) const = default;
    };
    struct ListOrdGrp
    {
@@ -1554,6 +1562,7 @@ namespace glz::fix::fix42
       std::optional<double> discretion_offset{};
       std::optional<std::string> clearing_firm{};
       std::optional<std::string> clearing_account{};
+      bool operator==(const ListOrdGrp&) const = default;
    };
    struct OrdAllocGrp
    {
@@ -1562,6 +1571,7 @@ namespace glz::fix::fix42
       std::optional<std::string> secondary_order_id{};
       std::optional<std::string> list_id{};
       std::optional<std::string> wave_no{};
+      bool operator==(const OrdAllocGrp&) const = default;
    };
    struct ExecAllocGrp
    {
@@ -1569,12 +1579,14 @@ namespace glz::fix::fix42
       std::optional<std::string> exec_id{};
       std::optional<double> last_px{};
       std::optional<LastCapacity> last_capacity{};
+      bool operator==(const ExecAllocGrp&) const = default;
    };
    struct MiscFeesGrp
    {
       std::optional<double> misc_fee_amt{};
       std::optional<std::string> misc_fee_curr{};
       std::optional<MiscFeeType> misc_fee_type{};
+      bool operator==(const MiscFeesGrp&) const = default;
    };
    struct AllocGrp
    {
@@ -1601,6 +1613,7 @@ namespace glz::fix::fix42
       std::optional<double> accrued_interest_amt{};
       std::optional<SettlInstMode> settl_inst_mode{};
       std::vector<MiscFeesGrp> no_misc_fees{};
+      bool operator==(const AllocGrp&) const = default;
    };
    struct OrdListStatGrp
    {
@@ -1614,6 +1627,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const OrdListStatGrp&) const = default;
    };
    struct QuotReqGrp
    {
@@ -1648,10 +1662,12 @@ namespace glz::fix::fix42
       std::optional<std::string> expire_time{};
       std::optional<std::string> transact_time{};
       std::optional<std::string> currency{};
+      bool operator==(const QuotReqGrp&) const = default;
    };
    struct MDReqGrp
    {
       MDEntryType md_entry_type{};
+      bool operator==(const MDReqGrp&) const = default;
    };
    struct InstrmtMDReqGrp
    {
@@ -1675,6 +1691,7 @@ namespace glz::fix::fix42
       std::optional<int64_t> encoded_security_desc_len{};
       std::optional<std::string> encoded_security_desc{};
       std::optional<std::string> trading_session_id{};
+      bool operator==(const InstrmtMDReqGrp&) const = default;
    };
    struct MDFullGrp
    {
@@ -1708,6 +1725,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const MDFullGrp&) const = default;
    };
    struct MDIncGrp
    {
@@ -1767,6 +1785,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const MDIncGrp&) const = default;
    };
    struct QuotCxlEntriesGrp
    {
@@ -1790,6 +1809,7 @@ namespace glz::fix::fix42
       std::optional<int64_t> encoded_security_desc_len{};
       std::optional<std::string> encoded_security_desc{};
       std::optional<std::string> underlying_symbol{};
+      bool operator==(const QuotCxlEntriesGrp&) const = default;
    };
    struct QuotEntryAckGrp
    {
@@ -1814,6 +1834,7 @@ namespace glz::fix::fix42
       std::optional<int64_t> encoded_security_desc_len{};
       std::optional<std::string> encoded_security_desc{};
       std::optional<QuoteEntryRejectReason> quote_entry_reject_reason{};
+      bool operator==(const QuotEntryAckGrp&) const = default;
    };
    struct QuotSetAckGrp
    {
@@ -1839,6 +1860,7 @@ namespace glz::fix::fix42
       std::optional<std::string> encoded_underlying_security_desc{};
       std::optional<int64_t> tot_quote_entries{};
       std::vector<QuotEntryAckGrp> no_quote_entries{};
+      bool operator==(const QuotSetAckGrp&) const = default;
    };
    struct UndInstrmtGrp
    {
@@ -1864,6 +1886,7 @@ namespace glz::fix::fix42
       std::optional<double> ratio_qty{};
       std::optional<Side> side{};
       std::optional<std::string> underlying_currency{};
+      bool operator==(const UndInstrmtGrp&) const = default;
    };
    struct QuotEntryGrp
    {
@@ -1903,6 +1926,7 @@ namespace glz::fix::fix42
       std::optional<std::string> fut_sett_date2{};
       std::optional<double> order_qty2{};
       std::optional<std::string> currency{};
+      bool operator==(const QuotEntryGrp&) const = default;
    };
    struct QuotSetGrp
    {
@@ -1929,6 +1953,7 @@ namespace glz::fix::fix42
       std::optional<std::string> quote_set_valid_until_time{};
       int64_t tot_quote_entries{};
       std::vector<QuotEntryGrp> no_quote_entries{};
+      bool operator==(const QuotSetGrp&) const = default;
    };
    struct BidDescReqGrp
    {
@@ -1943,6 +1968,7 @@ namespace glz::fix::fix42
       std::optional<double> fair_value{};
       std::optional<double> outside_index_pct{};
       std::optional<double> value_of_futures{};
+      bool operator==(const BidDescReqGrp&) const = default;
    };
    struct BidCompReqGrp
    {
@@ -1953,6 +1979,7 @@ namespace glz::fix::fix42
       std::optional<SettlmntTyp> settlmnt_typ{};
       std::optional<std::string> fut_sett_date{};
       std::optional<std::string> account{};
+      bool operator==(const BidCompReqGrp&) const = default;
    };
    struct BidCompRspGrp
    {
@@ -1971,6 +1998,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const BidCompRspGrp&) const = default;
    };
    struct InstrmtStrkPxGrp
    {
@@ -2001,23 +2029,65 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const InstrmtStrkPxGrp&) const = default;
    };
 
    // ---- components (flattened) ----
+   struct StandardHeader
+   {
+      std::string begin_string{};
+      int64_t body_length{};
+      MsgType msg_type{};
+      std::string sender_comp_id{};
+      std::string target_comp_id{};
+      std::optional<std::string> on_behalf_of_comp_id{};
+      std::optional<std::string> deliver_to_comp_id{};
+      std::optional<int64_t> secure_data_len{};
+      std::optional<std::string> secure_data{};
+      int64_t msg_seq_num{};
+      std::optional<std::string> sender_sub_id{};
+      std::optional<std::string> sender_location_id{};
+      std::optional<std::string> target_sub_id{};
+      std::optional<std::string> target_location_id{};
+      std::optional<std::string> on_behalf_of_sub_id{};
+      std::optional<std::string> on_behalf_of_location_id{};
+      std::optional<std::string> deliver_to_sub_id{};
+      std::optional<std::string> deliver_to_location_id{};
+      std::optional<PossDupFlag> poss_dup_flag{};
+      std::optional<PossResend> poss_resend{};
+      std::string sending_time{};
+      std::optional<std::string> orig_sending_time{};
+      std::optional<int64_t> xml_data_len{};
+      std::optional<std::string> xml_data{};
+      std::optional<MessageEncoding> message_encoding{};
+      std::optional<int64_t> last_msg_seq_num_processed{};
+      std::optional<std::string> on_behalf_of_sending_time{};
+      bool operator==(const StandardHeader&) const = default;
+   };
+   struct StandardTrailer
+   {
+      std::optional<int64_t> signature_length{};
+      std::optional<std::string> signature{};
+      std::string check_sum{};
+      bool operator==(const StandardTrailer&) const = default;
+   };
 
    // ---- messages ----
    struct Heartbeat
    {
       std::optional<std::string> test_req_id{};
+      bool operator==(const Heartbeat&) const = default;
    };
    struct TestRequest
    {
       std::string test_req_id{};
+      bool operator==(const TestRequest&) const = default;
    };
    struct ResendRequest
    {
       int64_t begin_seq_no{};
       int64_t end_seq_no{};
+      bool operator==(const ResendRequest&) const = default;
    };
    struct Reject
    {
@@ -2028,17 +2098,20 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const Reject&) const = default;
    };
    struct SequenceReset
    {
       std::optional<GapFillFlag> gap_fill_flag{};
       int64_t new_seq_no{};
+      bool operator==(const SequenceReset&) const = default;
    };
    struct Logout
    {
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const Logout&) const = default;
    };
    struct IOI
    {
@@ -2080,6 +2153,7 @@ namespace glz::fix::fix42
       std::vector<RoutingGrp> no_routing_ids{};
       std::optional<double> spread_to_benchmark{};
       std::optional<Benchmark> benchmark{};
+      bool operator==(const IOI&) const = default;
    };
    struct Advertisement
    {
@@ -2117,6 +2191,7 @@ namespace glz::fix::fix42
       std::optional<std::string> url_link{};
       std::optional<std::string> last_mkt{};
       std::optional<std::string> trading_session_id{};
+      bool operator==(const Advertisement&) const = default;
    };
    struct ExecutionReport
    {
@@ -2212,6 +2287,7 @@ namespace glz::fix::fix42
       std::optional<std::string> clearing_firm{};
       std::optional<std::string> clearing_account{};
       std::optional<MultiLegReportingType> multi_leg_reporting_type{};
+      bool operator==(const ExecutionReport&) const = default;
    };
    struct OrderCancelReject
    {
@@ -2230,6 +2306,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const OrderCancelReject&) const = default;
    };
    struct Logon
    {
@@ -2240,6 +2317,7 @@ namespace glz::fix::fix42
       std::optional<ResetSeqNumFlag> reset_seq_num_flag{};
       std::optional<int64_t> max_message_size{};
       std::vector<MsgTypeGrp> no_msg_types{};
+      bool operator==(const Logon&) const = default;
    };
    struct News
    {
@@ -2254,6 +2332,7 @@ namespace glz::fix::fix42
       std::optional<std::string> url_link{};
       std::optional<int64_t> raw_data_length{};
       std::optional<std::string> raw_data{};
+      bool operator==(const News&) const = default;
    };
    struct Email
    {
@@ -2270,6 +2349,7 @@ namespace glz::fix::fix42
       std::vector<LinesOfTextGrp> lines_of_text{};
       std::optional<int64_t> raw_data_length{};
       std::optional<std::string> raw_data{};
+      bool operator==(const Email&) const = default;
    };
    struct NewOrderSingle
    {
@@ -2344,6 +2424,7 @@ namespace glz::fix::fix42
       std::optional<double> discretion_offset{};
       std::optional<std::string> clearing_firm{};
       std::optional<std::string> clearing_account{};
+      bool operator==(const NewOrderSingle&) const = default;
    };
    struct NewOrderList
    {
@@ -2359,6 +2440,7 @@ namespace glz::fix::fix42
       std::optional<std::string> encoded_list_exec_inst{};
       int64_t tot_no_orders{};
       std::vector<ListOrdGrp> no_orders{};
+      bool operator==(const NewOrderList&) const = default;
    };
    struct OrderCancelRequest
    {
@@ -2397,6 +2479,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const OrderCancelRequest&) const = default;
    };
    struct OrderCancelReplaceRequest
    {
@@ -2470,6 +2553,7 @@ namespace glz::fix::fix42
       std::optional<LocateReqd> locate_reqd{};
       std::optional<std::string> clearing_firm{};
       std::optional<std::string> clearing_account{};
+      bool operator==(const OrderCancelReplaceRequest&) const = default;
    };
    struct OrderStatusRequest
    {
@@ -2498,6 +2582,7 @@ namespace glz::fix::fix42
       std::optional<int64_t> encoded_security_desc_len{};
       std::optional<std::string> encoded_security_desc{};
       Side side{};
+      bool operator==(const OrderStatusRequest&) const = default;
    };
    struct Allocation
    {
@@ -2547,6 +2632,7 @@ namespace glz::fix::fix42
       std::optional<int64_t> num_days_interest{};
       std::optional<double> accrued_interest_rate{};
       std::vector<AllocGrp> no_allocs{};
+      bool operator==(const Allocation&) const = default;
    };
    struct ListCancelRequest
    {
@@ -2555,6 +2641,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const ListCancelRequest&) const = default;
    };
    struct ListExecute
    {
@@ -2565,6 +2652,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const ListExecute&) const = default;
    };
    struct ListStatusRequest
    {
@@ -2572,6 +2660,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const ListStatusRequest&) const = default;
    };
    struct ListStatus
    {
@@ -2586,6 +2675,7 @@ namespace glz::fix::fix42
       std::optional<std::string> transact_time{};
       int64_t tot_no_orders{};
       std::vector<OrdListStatGrp> no_orders{};
+      bool operator==(const ListStatus&) const = default;
    };
    struct AllocationAck
    {
@@ -2599,6 +2689,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const AllocationAck&) const = default;
    };
    struct DontKnowTrade
    {
@@ -2632,11 +2723,13 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const DontKnowTrade&) const = default;
    };
    struct QuoteRequest
    {
       std::string quote_req_id{};
       std::vector<QuotReqGrp> no_related_sym{};
+      bool operator==(const QuoteRequest&) const = default;
    };
    struct Quote
    {
@@ -2678,6 +2771,7 @@ namespace glz::fix::fix42
       std::optional<std::string> fut_sett_date2{};
       std::optional<double> order_qty2{};
       std::optional<std::string> currency{};
+      bool operator==(const Quote&) const = default;
    };
    struct SettlementInstructions
    {
@@ -2717,6 +2811,7 @@ namespace glz::fix::fix42
       std::optional<std::string> cash_settl_agent_acct_name{};
       std::optional<std::string> cash_settl_agent_contact_name{};
       std::optional<std::string> cash_settl_agent_contact_phone{};
+      bool operator==(const SettlementInstructions&) const = default;
    };
    struct MarketDataRequest
    {
@@ -2727,6 +2822,7 @@ namespace glz::fix::fix42
       std::optional<AggregatedBook> aggregated_book{};
       std::vector<MDReqGrp> no_md_entry_types{};
       std::vector<InstrmtMDReqGrp> no_related_sym{};
+      bool operator==(const MarketDataRequest&) const = default;
    };
    struct MarketDataSnapshotFullRefresh
    {
@@ -2754,11 +2850,13 @@ namespace glz::fix::fix42
       std::optional<CorporateAction> corporate_action{};
       std::optional<double> total_volume_traded{};
       std::vector<MDFullGrp> no_md_entries{};
+      bool operator==(const MarketDataSnapshotFullRefresh&) const = default;
    };
    struct MarketDataIncrementalRefresh
    {
       std::optional<std::string> md_req_id{};
       std::vector<MDIncGrp> no_md_entries{};
+      bool operator==(const MarketDataIncrementalRefresh&) const = default;
    };
    struct MarketDataRequestReject
    {
@@ -2767,6 +2865,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const MarketDataRequestReject&) const = default;
    };
    struct QuoteCancel
    {
@@ -2776,6 +2875,7 @@ namespace glz::fix::fix42
       std::optional<QuoteResponseLevel> quote_response_level{};
       std::optional<std::string> trading_session_id{};
       std::vector<QuotCxlEntriesGrp> no_quote_entries{};
+      bool operator==(const QuoteCancel&) const = default;
    };
    struct QuoteStatusRequest
    {
@@ -2801,6 +2901,7 @@ namespace glz::fix::fix42
       std::optional<std::string> encoded_security_desc{};
       std::optional<Side> side{};
       std::optional<std::string> trading_session_id{};
+      bool operator==(const QuoteStatusRequest&) const = default;
    };
    struct QuoteAcknowledgement
    {
@@ -2812,6 +2913,7 @@ namespace glz::fix::fix42
       std::optional<std::string> trading_session_id{};
       std::optional<std::string> text{};
       std::vector<QuotSetAckGrp> no_quote_sets{};
+      bool operator==(const QuoteAcknowledgement&) const = default;
    };
    struct SecurityDefinitionRequest
    {
@@ -2842,6 +2944,7 @@ namespace glz::fix::fix42
       std::optional<std::string> encoded_text{};
       std::optional<std::string> trading_session_id{};
       std::vector<UndInstrmtGrp> no_related_sym{};
+      bool operator==(const SecurityDefinitionRequest&) const = default;
    };
    struct SecurityDefinition
    {
@@ -2874,6 +2977,7 @@ namespace glz::fix::fix42
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
       std::vector<UndInstrmtGrp> no_related_sym{};
+      bool operator==(const SecurityDefinition&) const = default;
    };
    struct SecurityStatusRequest
    {
@@ -2900,6 +3004,7 @@ namespace glz::fix::fix42
       std::optional<std::string> currency{};
       SubscriptionRequestType subscription_request_type{};
       std::optional<std::string> trading_session_id{};
+      bool operator==(const SecurityStatusRequest&) const = default;
    };
    struct SecurityStatus
    {
@@ -2939,6 +3044,7 @@ namespace glz::fix::fix42
       std::optional<double> last_px{};
       std::optional<std::string> transact_time{};
       std::optional<Adjustment> adjustment{};
+      bool operator==(const SecurityStatus&) const = default;
    };
    struct TradingSessionStatusRequest
    {
@@ -2947,6 +3053,7 @@ namespace glz::fix::fix42
       std::optional<TradSesMethod> trad_ses_method{};
       std::optional<TradSesMode> trad_ses_mode{};
       SubscriptionRequestType subscription_request_type{};
+      bool operator==(const TradingSessionStatusRequest&) const = default;
    };
    struct TradingSessionStatus
    {
@@ -2965,6 +3072,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const TradingSessionStatus&) const = default;
    };
    struct MassQuote
    {
@@ -2974,6 +3082,7 @@ namespace glz::fix::fix42
       std::optional<double> def_bid_size{};
       std::optional<double> def_offer_size{};
       std::vector<QuotSetGrp> no_quote_sets{};
+      bool operator==(const MassQuote&) const = default;
    };
    struct BusinessMessageReject
    {
@@ -2984,6 +3093,7 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const BusinessMessageReject&) const = default;
    };
    struct BidRequest
    {
@@ -3016,18 +3126,21 @@ namespace glz::fix::fix42
       std::optional<std::string> text{};
       std::optional<int64_t> encoded_text_len{};
       std::optional<std::string> encoded_text{};
+      bool operator==(const BidRequest&) const = default;
    };
    struct BidResponse
    {
       std::optional<std::string> bid_id{};
       std::optional<std::string> client_bid_id{};
       std::vector<BidCompRspGrp> no_bid_components{};
+      bool operator==(const BidResponse&) const = default;
    };
    struct ListStrikePrice
    {
       std::string list_id{};
       int64_t tot_no_strikes{};
       std::vector<InstrmtStrkPxGrp> no_strikes{};
+      bool operator==(const ListStrikePrice&) const = default;
    };
 }
 
@@ -3810,10 +3923,23 @@ struct glz::meta<glz::fix::fix42::Urgency>
 };
 
 template <>
+struct glz::meta<glz::fix::fix42::StandardHeader>
+{
+   using T = glz::fix::fix42::StandardHeader;
+   static constexpr auto value = glz::object("8", &T::begin_string, "9", &T::body_length, "35", &T::msg_type, "49", &T::sender_comp_id, "56", &T::target_comp_id, "115", &T::on_behalf_of_comp_id, "128", &T::deliver_to_comp_id, "90", &T::secure_data_len, "91", &T::secure_data, "34", &T::msg_seq_num, "50", &T::sender_sub_id, "142", &T::sender_location_id, "57", &T::target_sub_id, "143", &T::target_location_id, "116", &T::on_behalf_of_sub_id, "144", &T::on_behalf_of_location_id, "129", &T::deliver_to_sub_id, "145", &T::deliver_to_location_id, "43", &T::poss_dup_flag, "97", &T::poss_resend, "52", &T::sending_time, "122", &T::orig_sending_time, "212", &T::xml_data_len, "213", &T::xml_data, "347", &T::message_encoding, "369", &T::last_msg_seq_num_processed, "370", &T::on_behalf_of_sending_time);
+};
+template <>
+struct glz::meta<glz::fix::fix42::StandardTrailer>
+{
+   using T = glz::fix::fix42::StandardTrailer;
+   static constexpr auto value = glz::object("93", &T::signature_length, "89", &T::signature, "10", &T::check_sum);
+};
+template <>
 struct glz::meta<glz::fix::fix42::Heartbeat>
 {
    using T = glz::fix::fix42::Heartbeat;
    static constexpr std::string_view fix_msg_type = "0";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("112", &T::test_req_id);
 };
 template <>
@@ -3821,6 +3947,7 @@ struct glz::meta<glz::fix::fix42::TestRequest>
 {
    using T = glz::fix::fix42::TestRequest;
    static constexpr std::string_view fix_msg_type = "1";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("112", &T::test_req_id);
 };
 template <>
@@ -3828,6 +3955,7 @@ struct glz::meta<glz::fix::fix42::ResendRequest>
 {
    using T = glz::fix::fix42::ResendRequest;
    static constexpr std::string_view fix_msg_type = "2";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("7", &T::begin_seq_no, "16", &T::end_seq_no);
 };
 template <>
@@ -3835,6 +3963,7 @@ struct glz::meta<glz::fix::fix42::Reject>
 {
    using T = glz::fix::fix42::Reject;
    static constexpr std::string_view fix_msg_type = "3";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("45", &T::ref_seq_num, "371", &T::ref_tag_id, "372", &T::ref_msg_type, "373", &T::session_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -3842,6 +3971,7 @@ struct glz::meta<glz::fix::fix42::SequenceReset>
 {
    using T = glz::fix::fix42::SequenceReset;
    static constexpr std::string_view fix_msg_type = "4";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("123", &T::gap_fill_flag, "36", &T::new_seq_no);
 };
 template <>
@@ -3849,6 +3979,7 @@ struct glz::meta<glz::fix::fix42::Logout>
 {
    using T = glz::fix::fix42::Logout;
    static constexpr std::string_view fix_msg_type = "5";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -3868,6 +3999,7 @@ struct glz::meta<glz::fix::fix42::IOI>
 {
    using T = glz::fix::fix42::IOI;
    static constexpr std::string_view fix_msg_type = "6";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("23", &T::ioiid, "28", &T::ioi_trans_type, "26", &T::ioi_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "27", &T::ioi_shares, "44", &T::price, "15", &T::currency, "62", &T::valid_until_time, "25", &T::ioi_qlty_ind, "130", &T::ioi_natural_flag, "199", &T::no_ioi_qualifiers, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "60", &T::transact_time, "149", &T::url_link, "215", &T::no_routing_ids, "218", &T::spread_to_benchmark, "219", &T::benchmark);
 };
 template <>
@@ -3875,6 +4007,7 @@ struct glz::meta<glz::fix::fix42::Advertisement>
 {
    using T = glz::fix::fix42::Advertisement;
    static constexpr std::string_view fix_msg_type = "7";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("2", &T::adv_id, "5", &T::adv_trans_type, "3", &T::adv_ref_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "4", &T::adv_side, "53", &T::shares, "44", &T::price, "15", &T::currency, "75", &T::trade_date, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "149", &T::url_link, "30", &T::last_mkt, "336", &T::trading_session_id);
 };
 template <>
@@ -3888,6 +4021,7 @@ struct glz::meta<glz::fix::fix42::ExecutionReport>
 {
    using T = glz::fix::fix42::ExecutionReport;
    static constexpr std::string_view fix_msg_type = "8";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("37", &T::order_id, "198", &T::secondary_order_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "109", &T::client_id, "76", &T::exec_broker, "382", &T::no_contra_brokers, "66", &T::list_id, "17", &T::exec_id, "20", &T::exec_trans_type, "19", &T::exec_ref_id, "150", &T::exec_type, "39", &T::ord_status, "103", &T::ord_rej_reason, "378", &T::exec_restatement_reason, "1", &T::account, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "18", &T::exec_inst, "47", &T::rule80_a, "32", &T::last_shares, "31", &T::last_px, "194", &T::last_spot_rate, "195", &T::last_forward_points, "30", &T::last_mkt, "336", &T::trading_session_id, "29", &T::last_capacity, "151", &T::leaves_qty, "14", &T::cum_qty, "6", &T::avg_px, "424", &T::day_order_qty, "425", &T::day_cum_qty, "426", &T::day_avg_px, "427", &T::gt_booking_inst, "75", &T::trade_date, "60", &T::transact_time, "113", &T::report_to_exch, "12", &T::commission, "13", &T::comm_type, "381", &T::gross_trade_amt, "119", &T::settl_curr_amt, "120", &T::settl_currency, "155", &T::settl_curr_fx_rate, "156", &T::settl_curr_fx_rate_calc, "21", &T::handl_inst, "110", &T::min_qty, "111", &T::max_floor, "77", &T::open_close, "210", &T::max_show, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "439", &T::clearing_firm, "440", &T::clearing_account, "442", &T::multi_leg_reporting_type);
 };
 template <>
@@ -3895,6 +4029,7 @@ struct glz::meta<glz::fix::fix42::OrderCancelReject>
 {
    using T = glz::fix::fix42::OrderCancelReject;
    static constexpr std::string_view fix_msg_type = "9";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("37", &T::order_id, "198", &T::secondary_order_id, "11", &T::cl_ord_id, "41", &T::orig_cl_ord_id, "39", &T::ord_status, "109", &T::client_id, "76", &T::exec_broker, "66", &T::list_id, "1", &T::account, "60", &T::transact_time, "434", &T::cxl_rej_response_to, "102", &T::cxl_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -3908,6 +4043,7 @@ struct glz::meta<glz::fix::fix42::Logon>
 {
    using T = glz::fix::fix42::Logon;
    static constexpr std::string_view fix_msg_type = "A";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("98", &T::encrypt_method, "108", &T::heart_bt_int, "95", &T::raw_data_length, "96", &T::raw_data, "141", &T::reset_seq_num_flag, "383", &T::max_message_size, "384", &T::no_msg_types);
 };
 template <>
@@ -3927,6 +4063,7 @@ struct glz::meta<glz::fix::fix42::News>
 {
    using T = glz::fix::fix42::News;
    static constexpr std::string_view fix_msg_type = "B";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("42", &T::orig_time, "61", &T::urgency, "148", &T::headline, "358", &T::encoded_headline_len, "359", &T::encoded_headline, "215", &T::no_routing_ids, "146", &T::no_related_sym, "33", &T::lines_of_text, "149", &T::url_link, "95", &T::raw_data_length, "96", &T::raw_data);
 };
 template <>
@@ -3934,6 +4071,7 @@ struct glz::meta<glz::fix::fix42::Email>
 {
    using T = glz::fix::fix42::Email;
    static constexpr std::string_view fix_msg_type = "C";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("164", &T::email_thread_id, "94", &T::email_type, "42", &T::orig_time, "147", &T::subject, "356", &T::encoded_subject_len, "357", &T::encoded_subject, "215", &T::no_routing_ids, "146", &T::no_related_sym, "37", &T::order_id, "11", &T::cl_ord_id, "33", &T::lines_of_text, "95", &T::raw_data_length, "96", &T::raw_data);
 };
 template <>
@@ -3953,6 +4091,7 @@ struct glz::meta<glz::fix::fix42::NewOrderSingle>
 {
    using T = glz::fix::fix42::NewOrderSingle;
    static constexpr std::string_view fix_msg_type = "D";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("11", &T::cl_ord_id, "109", &T::client_id, "76", &T::exec_broker, "1", &T::account, "78", &T::no_allocs, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "81", &T::process_code, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "140", &T::prev_close_px, "54", &T::side, "114", &T::locate_reqd, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "15", &T::currency, "376", &T::compliance_id, "377", &T::solicited_flag, "23", &T::ioiid, "117", &T::quote_id, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "47", &T::rule80_a, "121", &T::forex_req, "120", &T::settl_currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "77", &T::open_close, "203", &T::covered_or_uncovered, "204", &T::customer_or_firm, "210", &T::max_show, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "439", &T::clearing_firm, "440", &T::clearing_account);
 };
 template <>
@@ -3966,6 +4105,7 @@ struct glz::meta<glz::fix::fix42::NewOrderList>
 {
    using T = glz::fix::fix42::NewOrderList;
    static constexpr std::string_view fix_msg_type = "E";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("66", &T::list_id, "390", &T::bid_id, "391", &T::client_bid_id, "414", &T::prog_rpt_reqs, "394", &T::bid_type, "415", &T::prog_period_interval, "433", &T::list_exec_inst_type, "69", &T::list_exec_inst, "352", &T::encoded_list_exec_inst_len, "353", &T::encoded_list_exec_inst, "68", &T::tot_no_orders, "73", &T::no_orders);
 };
 template <>
@@ -3973,6 +4113,7 @@ struct glz::meta<glz::fix::fix42::OrderCancelRequest>
 {
    using T = glz::fix::fix42::OrderCancelRequest;
    static constexpr std::string_view fix_msg_type = "F";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("41", &T::orig_cl_ord_id, "37", &T::order_id, "11", &T::cl_ord_id, "66", &T::list_id, "1", &T::account, "109", &T::client_id, "76", &T::exec_broker, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "376", &T::compliance_id, "377", &T::solicited_flag, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -3980,6 +4121,7 @@ struct glz::meta<glz::fix::fix42::OrderCancelReplaceRequest>
 {
    using T = glz::fix::fix42::OrderCancelReplaceRequest;
    static constexpr std::string_view fix_msg_type = "G";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("37", &T::order_id, "109", &T::client_id, "76", &T::exec_broker, "41", &T::orig_cl_ord_id, "11", &T::cl_ord_id, "66", &T::list_id, "1", &T::account, "78", &T::no_allocs, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "21", &T::handl_inst, "18", &T::exec_inst, "110", &T::min_qty, "111", &T::max_floor, "100", &T::ex_destination, "386", &T::no_trading_sessions, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "60", &T::transact_time, "38", &T::order_qty, "152", &T::cash_order_qty, "40", &T::ord_type, "44", &T::price, "99", &T::stop_px, "211", &T::peg_difference, "388", &T::discretion_inst, "389", &T::discretion_offset, "376", &T::compliance_id, "377", &T::solicited_flag, "15", &T::currency, "59", &T::time_in_force, "168", &T::effective_time, "432", &T::expire_date, "126", &T::expire_time, "427", &T::gt_booking_inst, "12", &T::commission, "13", &T::comm_type, "47", &T::rule80_a, "121", &T::forex_req, "120", &T::settl_currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "193", &T::fut_sett_date2, "192", &T::order_qty2, "77", &T::open_close, "203", &T::covered_or_uncovered, "204", &T::customer_or_firm, "210", &T::max_show, "114", &T::locate_reqd, "439", &T::clearing_firm, "440", &T::clearing_account);
 };
 template <>
@@ -3987,6 +4129,7 @@ struct glz::meta<glz::fix::fix42::OrderStatusRequest>
 {
    using T = glz::fix::fix42::OrderStatusRequest;
    static constexpr std::string_view fix_msg_type = "H";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("37", &T::order_id, "11", &T::cl_ord_id, "109", &T::client_id, "1", &T::account, "76", &T::exec_broker, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side);
 };
 template <>
@@ -4018,6 +4161,7 @@ struct glz::meta<glz::fix::fix42::Allocation>
 {
    using T = glz::fix::fix42::Allocation;
    static constexpr std::string_view fix_msg_type = "J";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("70", &T::alloc_id, "71", &T::alloc_trans_type, "72", &T::ref_alloc_id, "196", &T::alloc_link_id, "197", &T::alloc_link_type, "73", &T::no_orders, "124", &T::no_execs, "54", &T::side, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "53", &T::shares, "30", &T::last_mkt, "336", &T::trading_session_id, "6", &T::avg_px, "15", &T::currency, "74", &T::avg_prx_precision, "75", &T::trade_date, "60", &T::transact_time, "63", &T::settlmnt_typ, "64", &T::fut_sett_date, "381", &T::gross_trade_amt, "118", &T::net_money, "77", &T::open_close, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "157", &T::num_days_interest, "158", &T::accrued_interest_rate, "78", &T::no_allocs);
 };
 template <>
@@ -4025,6 +4169,7 @@ struct glz::meta<glz::fix::fix42::ListCancelRequest>
 {
    using T = glz::fix::fix42::ListCancelRequest;
    static constexpr std::string_view fix_msg_type = "K";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("66", &T::list_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4032,6 +4177,7 @@ struct glz::meta<glz::fix::fix42::ListExecute>
 {
    using T = glz::fix::fix42::ListExecute;
    static constexpr std::string_view fix_msg_type = "L";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("66", &T::list_id, "391", &T::client_bid_id, "390", &T::bid_id, "60", &T::transact_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4039,6 +4185,7 @@ struct glz::meta<glz::fix::fix42::ListStatusRequest>
 {
    using T = glz::fix::fix42::ListStatusRequest;
    static constexpr std::string_view fix_msg_type = "M";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("66", &T::list_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4052,6 +4199,7 @@ struct glz::meta<glz::fix::fix42::ListStatus>
 {
    using T = glz::fix::fix42::ListStatus;
    static constexpr std::string_view fix_msg_type = "N";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("66", &T::list_id, "429", &T::list_status_type, "82", &T::no_rpts, "431", &T::list_order_status, "83", &T::rpt_seq, "444", &T::list_status_text, "445", &T::encoded_list_status_text_len, "446", &T::encoded_list_status_text, "60", &T::transact_time, "68", &T::tot_no_orders, "73", &T::no_orders);
 };
 template <>
@@ -4059,6 +4207,7 @@ struct glz::meta<glz::fix::fix42::AllocationAck>
 {
    using T = glz::fix::fix42::AllocationAck;
    static constexpr std::string_view fix_msg_type = "P";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("109", &T::client_id, "76", &T::exec_broker, "70", &T::alloc_id, "75", &T::trade_date, "60", &T::transact_time, "87", &T::alloc_status, "88", &T::alloc_rej_code, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4066,6 +4215,7 @@ struct glz::meta<glz::fix::fix42::DontKnowTrade>
 {
    using T = glz::fix::fix42::DontKnowTrade;
    static constexpr std::string_view fix_msg_type = "Q";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("37", &T::order_id, "17", &T::exec_id, "127", &T::dk_reason, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "38", &T::order_qty, "152", &T::cash_order_qty, "32", &T::last_shares, "31", &T::last_px, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4079,6 +4229,7 @@ struct glz::meta<glz::fix::fix42::QuoteRequest>
 {
    using T = glz::fix::fix42::QuoteRequest;
    static constexpr std::string_view fix_msg_type = "R";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("131", &T::quote_req_id, "146", &T::no_related_sym);
 };
 template <>
@@ -4086,6 +4237,7 @@ struct glz::meta<glz::fix::fix42::Quote>
 {
    using T = glz::fix::fix42::Quote;
    static constexpr std::string_view fix_msg_type = "S";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "301", &T::quote_response_level, "336", &T::trading_session_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "132", &T::bid_px, "133", &T::offer_px, "134", &T::bid_size, "135", &T::offer_size, "62", &T::valid_until_time, "188", &T::bid_spot_rate, "190", &T::offer_spot_rate, "189", &T::bid_forward_points, "191", &T::offer_forward_points, "60", &T::transact_time, "64", &T::fut_sett_date, "40", &T::ord_type, "193", &T::fut_sett_date2, "192", &T::order_qty2, "15", &T::currency);
 };
 template <>
@@ -4093,6 +4245,7 @@ struct glz::meta<glz::fix::fix42::SettlementInstructions>
 {
    using T = glz::fix::fix42::SettlementInstructions;
    static constexpr std::string_view fix_msg_type = "T";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("162", &T::settl_inst_id, "163", &T::settl_inst_trans_type, "214", &T::settl_inst_ref_id, "160", &T::settl_inst_mode, "165", &T::settl_inst_source, "79", &T::alloc_account, "166", &T::settl_location, "75", &T::trade_date, "70", &T::alloc_id, "30", &T::last_mkt, "336", &T::trading_session_id, "54", &T::side, "167", &T::security_type, "168", &T::effective_time, "60", &T::transact_time, "109", &T::client_id, "76", &T::exec_broker, "169", &T::stand_inst_db_type, "170", &T::stand_inst_db_name, "171", &T::stand_inst_db_id, "172", &T::settl_delivery_type, "173", &T::settl_depository_code, "174", &T::settl_brkr_code, "175", &T::settl_inst_code, "176", &T::security_settl_agent_name, "177", &T::security_settl_agent_code, "178", &T::security_settl_agent_acct_num, "179", &T::security_settl_agent_acct_name, "180", &T::security_settl_agent_contact_name, "181", &T::security_settl_agent_contact_phone, "182", &T::cash_settl_agent_name, "183", &T::cash_settl_agent_code, "184", &T::cash_settl_agent_acct_num, "185", &T::cash_settl_agent_acct_name, "186", &T::cash_settl_agent_contact_name, "187", &T::cash_settl_agent_contact_phone);
 };
 template <>
@@ -4112,6 +4265,7 @@ struct glz::meta<glz::fix::fix42::MarketDataRequest>
 {
    using T = glz::fix::fix42::MarketDataRequest;
    static constexpr std::string_view fix_msg_type = "V";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("262", &T::md_req_id, "263", &T::subscription_request_type, "264", &T::market_depth, "265", &T::md_update_type, "266", &T::aggregated_book, "267", &T::no_md_entry_types, "146", &T::no_related_sym);
 };
 template <>
@@ -4125,6 +4279,7 @@ struct glz::meta<glz::fix::fix42::MarketDataSnapshotFullRefresh>
 {
    using T = glz::fix::fix42::MarketDataSnapshotFullRefresh;
    static constexpr std::string_view fix_msg_type = "W";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("262", &T::md_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "291", &T::financial_status, "292", &T::corporate_action, "387", &T::total_volume_traded, "268", &T::no_md_entries);
 };
 template <>
@@ -4138,6 +4293,7 @@ struct glz::meta<glz::fix::fix42::MarketDataIncrementalRefresh>
 {
    using T = glz::fix::fix42::MarketDataIncrementalRefresh;
    static constexpr std::string_view fix_msg_type = "X";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("262", &T::md_req_id, "268", &T::no_md_entries);
 };
 template <>
@@ -4145,6 +4301,7 @@ struct glz::meta<glz::fix::fix42::MarketDataRequestReject>
 {
    using T = glz::fix::fix42::MarketDataRequestReject;
    static constexpr std::string_view fix_msg_type = "Y";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("262", &T::md_req_id, "281", &T::md_req_rej_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4158,6 +4315,7 @@ struct glz::meta<glz::fix::fix42::QuoteCancel>
 {
    using T = glz::fix::fix42::QuoteCancel;
    static constexpr std::string_view fix_msg_type = "Z";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "298", &T::quote_cancel_type, "301", &T::quote_response_level, "336", &T::trading_session_id, "295", &T::no_quote_entries);
 };
 template <>
@@ -4165,6 +4323,7 @@ struct glz::meta<glz::fix::fix42::QuoteStatusRequest>
 {
    using T = glz::fix::fix42::QuoteStatusRequest;
    static constexpr std::string_view fix_msg_type = "a";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("117", &T::quote_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "54", &T::side, "336", &T::trading_session_id);
 };
 template <>
@@ -4184,6 +4343,7 @@ struct glz::meta<glz::fix::fix42::QuoteAcknowledgement>
 {
    using T = glz::fix::fix42::QuoteAcknowledgement;
    static constexpr std::string_view fix_msg_type = "b";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "297", &T::quote_ack_status, "300", &T::quote_reject_reason, "301", &T::quote_response_level, "336", &T::trading_session_id, "58", &T::text, "296", &T::no_quote_sets);
 };
 template <>
@@ -4197,6 +4357,7 @@ struct glz::meta<glz::fix::fix42::SecurityDefinitionRequest>
 {
    using T = glz::fix::fix42::SecurityDefinitionRequest;
    static constexpr std::string_view fix_msg_type = "c";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("320", &T::security_req_id, "321", &T::security_request_type, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "336", &T::trading_session_id, "146", &T::no_related_sym);
 };
 template <>
@@ -4204,6 +4365,7 @@ struct glz::meta<glz::fix::fix42::SecurityDefinition>
 {
    using T = glz::fix::fix42::SecurityDefinition;
    static constexpr std::string_view fix_msg_type = "d";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("320", &T::security_req_id, "322", &T::security_response_id, "323", &T::security_response_type, "393", &T::total_num_securities, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "336", &T::trading_session_id, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text, "146", &T::no_related_sym);
 };
 template <>
@@ -4211,6 +4373,7 @@ struct glz::meta<glz::fix::fix42::SecurityStatusRequest>
 {
    using T = glz::fix::fix42::SecurityStatusRequest;
    static constexpr std::string_view fix_msg_type = "e";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "263", &T::subscription_request_type, "336", &T::trading_session_id);
 };
 template <>
@@ -4218,6 +4381,7 @@ struct glz::meta<glz::fix::fix42::SecurityStatus>
 {
    using T = glz::fix::fix42::SecurityStatus;
    static constexpr std::string_view fix_msg_type = "f";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("324", &T::security_status_req_id, "55", &T::symbol, "65", &T::symbol_sfx, "48", &T::security_id, "22", &T::id_source, "167", &T::security_type, "200", &T::maturity_month_year, "205", &T::maturity_day, "201", &T::put_or_call, "202", &T::strike_price, "206", &T::opt_attribute, "231", &T::contract_multiplier, "223", &T::coupon_rate, "207", &T::security_exchange, "106", &T::issuer, "348", &T::encoded_issuer_len, "349", &T::encoded_issuer, "107", &T::security_desc, "350", &T::encoded_security_desc_len, "351", &T::encoded_security_desc, "15", &T::currency, "336", &T::trading_session_id, "325", &T::unsolicited_indicator, "326", &T::security_trading_status, "291", &T::financial_status, "292", &T::corporate_action, "327", &T::halt_reason, "328", &T::in_view_of_common, "329", &T::due_to_related, "330", &T::buy_volume, "331", &T::sell_volume, "332", &T::high_px, "333", &T::low_px, "31", &T::last_px, "60", &T::transact_time, "334", &T::adjustment);
 };
 template <>
@@ -4225,6 +4389,7 @@ struct glz::meta<glz::fix::fix42::TradingSessionStatusRequest>
 {
    using T = glz::fix::fix42::TradingSessionStatusRequest;
    static constexpr std::string_view fix_msg_type = "g";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("335", &T::trad_ses_req_id, "336", &T::trading_session_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "263", &T::subscription_request_type);
 };
 template <>
@@ -4232,6 +4397,7 @@ struct glz::meta<glz::fix::fix42::TradingSessionStatus>
 {
    using T = glz::fix::fix42::TradingSessionStatus;
    static constexpr std::string_view fix_msg_type = "h";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("335", &T::trad_ses_req_id, "336", &T::trading_session_id, "338", &T::trad_ses_method, "339", &T::trad_ses_mode, "325", &T::unsolicited_indicator, "340", &T::trad_ses_status, "341", &T::trad_ses_start_time, "342", &T::trad_ses_open_time, "343", &T::trad_ses_pre_close_time, "344", &T::trad_ses_close_time, "345", &T::trad_ses_end_time, "387", &T::total_volume_traded, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4251,6 +4417,7 @@ struct glz::meta<glz::fix::fix42::MassQuote>
 {
    using T = glz::fix::fix42::MassQuote;
    static constexpr std::string_view fix_msg_type = "i";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("131", &T::quote_req_id, "117", &T::quote_id, "301", &T::quote_response_level, "293", &T::def_bid_size, "294", &T::def_offer_size, "296", &T::no_quote_sets);
 };
 template <>
@@ -4258,6 +4425,7 @@ struct glz::meta<glz::fix::fix42::BusinessMessageReject>
 {
    using T = glz::fix::fix42::BusinessMessageReject;
    static constexpr std::string_view fix_msg_type = "j";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("45", &T::ref_seq_num, "372", &T::ref_msg_type, "379", &T::business_reject_ref_id, "380", &T::business_reject_reason, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4277,6 +4445,7 @@ struct glz::meta<glz::fix::fix42::BidRequest>
 {
    using T = glz::fix::fix42::BidRequest;
    static constexpr std::string_view fix_msg_type = "k";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("390", &T::bid_id, "391", &T::client_bid_id, "374", &T::bid_request_trans_type, "392", &T::list_name, "393", &T::total_num_securities, "394", &T::bid_type, "395", &T::num_tickets, "15", &T::currency, "396", &T::side_value1, "397", &T::side_value2, "398", &T::no_bid_descriptors, "420", &T::no_bid_components, "409", &T::liquidity_ind_type, "410", &T::wt_average_liquidity, "411", &T::exchange_for_physical, "412", &T::out_main_cntry_u_index, "413", &T::cross_percent, "414", &T::prog_rpt_reqs, "415", &T::prog_period_interval, "416", &T::inc_tax_ind, "121", &T::forex_req, "417", &T::num_bidders, "75", &T::trade_date, "418", &T::trade_type, "419", &T::basis_px_type, "443", &T::strike_time, "58", &T::text, "354", &T::encoded_text_len, "355", &T::encoded_text);
 };
 template <>
@@ -4290,6 +4459,7 @@ struct glz::meta<glz::fix::fix42::BidResponse>
 {
    using T = glz::fix::fix42::BidResponse;
    static constexpr std::string_view fix_msg_type = "l";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("390", &T::bid_id, "391", &T::client_bid_id, "420", &T::no_bid_components);
 };
 template <>
@@ -4303,5 +4473,6 @@ struct glz::meta<glz::fix::fix42::ListStrikePrice>
 {
    using T = glz::fix::fix42::ListStrikePrice;
    static constexpr std::string_view fix_msg_type = "m";
+   static constexpr std::string_view fix_begin_string = "FIX.4.2";
    static constexpr auto value = glz::object("66", &T::list_id, "422", &T::tot_no_strikes, "428", &T::no_strikes);
 };

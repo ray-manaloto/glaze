@@ -266,6 +266,7 @@ class Gen:
                 lines.append(f"      {ctype} {mname}{{}};")
             else:
                 lines.append(f"      std::optional<{ctype}> {mname}{{}};")
+        lines.append(f"      bool operator==(const {sname}&) const = default;")
         lines.append("   };")
         self.metas.append((sname, fixed, msg_type))
         return "\n".join(lines)
@@ -275,6 +276,7 @@ class Gen:
         out = ["template <>", f"struct glz::meta<{full}>", "{", f"   using T = {full};"]
         if msg_type is not None:
             out.append(f"   static constexpr std::string_view fix_msg_type = {cpp_str(msg_type)};")
+            out.append(f"   static constexpr std::string_view fix_begin_string = {cpp_str(self.r.name)};")
         if members:
             pairs = ", ".join(f'"{tag}", &T::{m}' for _, tag, _, m, _ in members)
             out.append(f"   static constexpr auto value = glz::object({pairs});")
@@ -288,8 +290,8 @@ class Gen:
         enums = self.build_enums()
         comps = []
         for cid, (cname, elem) in sorted(self.r.components.items()):
-            if cid in self.skip_components:
-                continue
+            # StandardHeader/StandardTrailer are emitted for standalone use; they are only
+            # skipped when flattening messages.
             members = self.collect(elem, [], set())
             comps.append(self.emit_struct(self.unique(cname), members, None))
         msgs = []
