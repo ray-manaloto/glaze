@@ -1,0 +1,58 @@
+Glaze FIX tag=value support — third-party notices (DRAFT)
+===========================================================
+
+Glaze is licensed under the MIT License (see LICENSE). The FIX test suites and generated FIX
+dictionaries include material from the projects below, each under its own licence. Full licence
+texts are in docs/fix/licences/ and beside the files concerned.
+
+-------------------------------------------------------------------------------
+QuickFIX, QuickFIX/J, QuickFIX/n — The QuickFIX Software License, Version 1.0
+-------------------------------------------------------------------------------
+This product includes software developed by quickfixengine.org (http://www.quickfixengine.org/).
+
+  tests/fix_quickfix_test/  — tests and message vectors ported from
+    https://github.com/quickfix/quickfix   (Copyright (c) 2001-2020 Oren Miller)
+    https://github.com/quickfix-j/quickfixj (Copyright (c) 2001-2005 quickfixengine.org)
+    https://github.com/connamara/quickfixn (Copyright (c) 2001-2010 quickfixengine.org)
+  Licence: docs/fix/licences/QuickFIX-*.txt
+  "QuickFIX" and "quickfixengine.org" are not used to endorse or promote this product.
+
+-------------------------------------------------------------------------------
+hffix — BSD 2-Clause
+-------------------------------------------------------------------------------
+  tests/fix_hffix_test/ — tests and sample messages from https://github.com/jamesdbrock/hffix
+  Copyright 2011, T3 IP, LLC. All rights reserved.
+  Licence: docs/fix/licences/hffix-BSD-2-Clause.txt
+
+-------------------------------------------------------------------------------
+fixpp — MIT
+-------------------------------------------------------------------------------
+  tests/fix_fixpp_test/ — tests from https://github.com/Abc-Arbitrage/fixpp
+  Copyright (c) 2016 ABC arbitrage
+  Licence: docs/fix/licences/fixpp-MIT.txt
+
+-------------------------------------------------------------------------------
+crocofix — MIT; simplefix — MIT
+-------------------------------------------------------------------------------
+  tests/fix_vectors_test/data/crocofix.fixv  — Copyright (c) 2019 Gary Hughes
+  tests/fix_vectors_test/data/simplefix.fixv — Copyright (C) 2016-2026, David Arnold
+  Licences: docs/fix/licences/crocofix-MIT.txt, simplefix-MIT.txt
+
+-------------------------------------------------------------------------------
+Artio, Philadelphia, ferrumfix — Apache License 2.0
+-------------------------------------------------------------------------------
+  tests/fix_vectors_test/data/artio.fixv        — Copyright 2015-2025 Real Logic Limited
+  tests/fix_vectors_test/data/philadelphia.fixv — Copyright 2015 Philadelphia authors
+  tests/fix_vectors_test/data/fefix.fixv        — ferrumfix authors (MIT OR Apache-2.0; used under Apache-2.0)
+  These files contain test vectors adapted (re-formatted) from the upstream test suites.
+  Licence: docs/fix/licences/Apache-2.0.txt
+
+-------------------------------------------------------------------------------
+FIX Orchestra repository data — Apache License 2.0
+-------------------------------------------------------------------------------
+  include/glaze/fix/dict/fix42.hpp, fix44.hpp — generated (modified form) from
+    https://github.com/FIXTradingCommunity/orchestrations, FIX Standard/OrchestraFIX42.xml and
+    OrchestraFIX44.xml.
+  Copyright (c) 2017-2026 FIX Protocol Limited.
+  Licence: docs/fix/licences/FIX-Orchestrations-Apache-2.0.txt
+  FIX is a trademark of FIX Protocol Limited; it is used here descriptively only.
