@@ -28,7 +28,7 @@
   Struct-mapping tests are on by default: the test CMake defines `GLZ_FIX_HAS_STRUCT_MAPPING`.
 - Results against fix/core, built with g++ 13 using `-std=c++23 -fno-exceptions -fno-rtti -Wall -Wextra -pedantic -Werror`:
   - hffix: 44 tests pass (24 + 20).
-  - fixpp: 43 tests pass (24 + 19).
+  - fixpp: 47 tests pass (24 + 23).
   - Both targets are also clean under `-fsanitize=address,undefined`.
 - Design note: `docs/fix/ported-tests-hffix-fixpp.md`.
 
@@ -62,8 +62,8 @@
 - hffix `test/data/fix.5.0.set.1` (2 MB) was not copied.
 - Not ported:
   - fixpp `bench_test`, `*_bench` (benchmarks)
-  - fixpp `message_test` getters and setters, which are fixpp API specific (group creation is
-    covered by the struct tests)
+  - fixpp `message_test` type-list and getter/setter internals. The behaviour-level cases are
+    ported as struct tests, and the rest print SKIP.
   - fixpp `xml/` (code generator)
   - hffix `util/fixprint`
   - hffix `fixspec/` (FIX specification archives)
@@ -99,6 +99,8 @@
 | fix_hffix_more.cpp: single_byte_corruption_detected, every_truncation_detected, header_errors, frame_garbage, bad_number_in_struct, write_rejects_delimiter_in_value, value_may_contain_equals | written for this port (hffix reader is_complete / is_valid semantics) | - | - | glaze MIT |
 | fix_fixpp_more.cpp: nested_groups_struct, nested_groups_roundtrip, incremental_refresh_*, logon_struct, multi_char_msg_type | Abc-Arbitrage/fixpp | tests/visitor_test.cc, tests/writer_test.cc | should_visit_nested_repeating_groups, should_write_nested_repeating_groups, should_visit_incremental_refresh_frame, should_visit_logon_frame, should_visit_message_with_multiple_chars_message_type | MIT |
 | fix_fixpp_more.cpp: heartbeat_42_and_44 | Abc-Arbitrage/fixpp | tests/writer_test.cc | should_write_heartbeat_message_42 / _44 | MIT |
+| fix_fixpp_more.cpp: should_optionally_get, should_overwrite_tags_in_message, should_visit_custom_message_struct, read_into_filled_struct | Abc-Arbitrage/fixpp | tests/message_test.cc, tests/visitor_test.cc | should_optionally_get, should_overwrite_tags_in_message, should_extend_message_properly, should_visit_custom_message | MIT |
+| fix_fixpp_more.cpp: SKIP lines for should_throw_when_missing_fields_in_repeating_group, should_throw_when_getting_not_present_tag (core has no required fields), should_bring_correct_version_with_message_type, should_compare_version, should_set_tag_if_defined (compile-time fixpp API) | Abc-Arbitrage/fixpp | tests/message_test.cc | same names | MIT |
 | fix_fixpp_more.cpp: fix42_log_quotes | Abc-Arbitrage/fixpp | tests/data/fix42.log | sample data | MIT |
 | fix_fixpp_more.cpp: group_count_*, group_entry_without_delimiter, bad_boolean, bad_char_length, msg_type_mismatch, unknown_tag_strict_vs_lenient, repeated_tag_overwrites, fields_in_any_order, empty_group_omitted_on_write | written for this port (fixpp strict/non-strict visitor semantics) | - | - | glaze MIT |
 

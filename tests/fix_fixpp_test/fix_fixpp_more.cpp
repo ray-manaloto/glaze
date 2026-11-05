@@ -493,3 +493,94 @@ suite fixpp_more_messages = [] {
       expect(roundtrip_ok == total);
    };
 };
+
+// ---- message_test.cc cases expressed as struct definitions ----
+// IndicationOfInterest (35=6) with optional fields (should_optionally_get)
+struct fp_ioi
+{
+   std::string ioi_id{};
+   std::string symbol{};
+   std::optional<double> price{};
+   std::optional<std::string> currency{};
+};
+template <>
+struct glz::meta<fp_ioi>
+{
+   using T = fp_ioi;
+   static constexpr auto fix_msg_type = "6";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value =
+      glz::object("23", &T::ioi_id, "55", &T::symbol, "44", &T::price, "15", &T::currency);
+};
+
+// Logon extended with custom tag 2154 and HeartBtInt retyped as a string
+// (should_extend_message_properly, should_overwrite_tags_in_message, should_visit_custom_message)
+struct fp_logon_ext
+{
+   int encrypt_method{};
+   std::string heart_bt_str{};
+   int my_tag{};
+};
+template <>
+struct glz::meta<fp_logon_ext>
+{
+   using T = fp_logon_ext;
+   static constexpr auto fix_msg_type = "A";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value =
+      glz::object("98", &T::encrypt_method, "108", &T::heart_bt_str, "2154", &T::my_tag);
+};
+
+suite fixpp_more_message_test = [] {
+   "should_optionally_get"_test = [] {
+      fp_ioi in{"I1", "MySymbol", 10.5, std::nullopt};
+      std::string buf;
+      expect(!glz::write<pipe_strict()>(in, buf));
+      expect(buf.find("|15=") == std::string::npos);
+      fp_ioi out{};
+      expect(!glz::read<pipe_strict()>(out, buf));
+      expect(out.symbol == "MySymbol" && out.price == std::optional<double>(10.5));
+      expect(!out.currency.has_value());
+   };
+
+   "should_overwrite_tags_in_message"_test = [] {
+      fp_logon_ext in{0, "30s", 1212};
+      std::string buf;
+      expect(!glz::write<pipe_strict()>(in, buf));
+      expect(buf.find("|108=30s|2154=1212|") != std::string::npos);
+      fp_logon_ext out{};
+      expect(!glz::read<pipe_strict()>(out, buf));
+      expect(out.heart_bt_str == "30s" && out.my_tag == 1212);
+   };
+
+   // should_visit_custom_message: the fixpp frame with custom tag 2154 into the extended type
+   "should_visit_custom_message_struct"_test = [] {
+      fp_logon_ext m{};
+      expect(!glz::read<pipe_lenient()>(
+         m, repair2("8=FIX.4.2|9=84|35=A|34=1|49=ABC|52=20120309-16:54:02|56=TT_ORDER|96=12345678|2154=1212|98=0|"
+                    "108=60|141=Y|10=248")));
+      expect(m.my_tag == 1212 && m.heart_bt_str == "60" && m.encrypt_method == 0);
+   };
+
+   // A previously filled struct is updated in place: present tags overwrite, absent ones are kept.
+   "read_into_filled_struct"_test = [] {
+      fp_ioi m{"OLD", "OLD", 1.0, std::string("EUR")};
+      expect(!glz::read<pipe_strict()>(m, repair2("8=FIX.4.2|9=0|35=6|23=NEW|55=SYM|10=000|")));
+      expect(m.ioi_id == "NEW" && m.symbol == "SYM");
+      expect(m.price == std::optional<double>(1.0) && m.currency == std::optional<std::string>("EUR"));
+   };
+};
+
+namespace
+{
+   struct fixpp_more_skips
+   {
+      fixpp_more_skips()
+      {
+         std::printf("SKIP should_throw_when_missing_fields_in_repeating_group / should_throw_when_getting_not_present_tag: "
+                     "fix/core has no notion of required fields; absent members keep their value\n");
+         std::printf("SKIP should_bring_correct_version_with_message_type / should_compare_version / should_set_tag_if_defined: "
+                     "compile-time fixpp type-list API with no runtime FIX behaviour to test\n");
+      }
+   } const fixpp_more_skips_instance{};
+}
