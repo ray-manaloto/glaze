@@ -475,10 +475,6 @@ suite quickfix_parse_fields = [] {
 suite quickfixj_quickfixn_vectors = [] {
    for (const auto& v : qfjn_vectors::all) {
       const std::string_view src = v.source;
-      if (src.find("ReadXmlDataTest") != std::string_view::npos) {
-         skip(v.source, "212/213 XmlData value contains SOH; the contract has no length-prefixed data fields yet");
-         continue;
-      }
       test(std::string{src}) = [v] {
          const bool ok = is_valid(v.msg);
          expect(ok == v.wire_valid) << v.note;
@@ -497,6 +493,7 @@ suite quickfixj_quickfixn_vectors = [] {
 #if defined(GLZ_FIX_STRUCT_MAPPING)
 #include "fix_quickfix_struct_tests.inl"
 #include "fix_quickfix_more_tests.inl"
+#include "fix_quickfix_v2_tests.inl"
 #else
 suite quickfix_struct_mapping_skipped = [] {
    constexpr const char* why = "FIX core does not define GLZ_FIX_STRUCT_MAPPING (glz::read/write<fix_opts> not available)";
@@ -518,7 +515,7 @@ suite quickfix_dictionary_skipped = [] {
    skip("MessagesTestCase.cpp / MessageTests / headerFieldsFirst (52 after body field 55)", why);
    skip("MessagesTestCase.cpp / MessageTests / setString / strBodyFields with DataDictionary header 11, trailer 60", why);
    skip("MessagesTestCase.cpp / MessageTests / outOfOrder (re-sorting header/body/trailer on write)", why);
-   skip("MessagesTestCase.cpp / MessageTests / setStringWithDataFieldWithoutDataLength / ...GarbageAsDataLength", why);
+   skip("MessagesTestCase.cpp / MessageTests / setStringWithDataFieldWithoutDataLength (96 without 95)", why);
    skip("MessagesTestCase.cpp / MessageTests / setString_SignatureInTrailerWithoutSignatureLength", why);
    skip("GroupTestCase.cpp / FieldMapTestCase.cpp (QuickFIX FieldMap/Group container API, no wire format)", "not applicable: API of QuickFIX's own containers");
 };
@@ -527,12 +524,11 @@ suite quickfix_dictionary_skipped = [] {
 // Contract does not define UTCTimestamp / UTCDateOnly / UTCTimeOnly types yet. The tests exist in
 // fix_quickfix_struct_tests.inl under GLZ_FIX_TIME_TYPES with a proposed std::chrono mapping.
 suite quickfix_time_skipped = [] {
-   constexpr const char* why = "contract defines no UTCTimestamp/UTCDateOnly/UTCTimeOnly C++ type; see docs/fix/sessions/fix-tests-quickfix.md";
-   skip("FieldConvertorsTestCase.cpp / utcTimeStampConvertTo{Second,Milli,Micro,Nano,PrecisionBounds}", why);
-   skip("FieldConvertorsTestCase.cpp / utcTimeStampConvertFrom{Second,Milli,Micro,Nano}", why);
+   constexpr const char* why = "contract defines no UTCDateOnly/UTCTimeOnly C++ type (UTCTimestamp is glz::fix::utc_timestamp); see docs/fix/sessions/fix-tests-quickfix.md";
+   // utcTimeStampConvertTo/From are ported in fix_quickfix_v2_tests.inl (glz::fix::utc_timestamp).
    skip("FieldConvertorsTestCase.cpp / utcTimeOnlyConvertTo* / utcTimeOnlyConvertFrom*", why);
    skip("FieldConvertorsTestCase.cpp / utcDateConvertTo / utcDateConvertFrom", why);
-   skip("UtcTimeStampTestCase.cpp / UtcTimeOnlyTestCase.cpp", why);
+   skip("UtcTimeStampTestCase.cpp / UtcTimeOnlyTestCase.cpp (compare / add / subtract of QuickFIX time objects)", why);
 };
 #endif
 
