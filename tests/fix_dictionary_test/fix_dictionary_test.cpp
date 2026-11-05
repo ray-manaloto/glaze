@@ -29,9 +29,44 @@ namespace
       "8=FIX.4.4|9=164|35=8|49=TARGET|56=SENDER|34=3|52=20261105-07:00:01.000|37=X-77|11=ORD-1|17=E-1|150=F|"
       "39=2|55=MSFT|54=1|38=100|40=2|44=410.25|32=100|31=410.25|151=0|14=100|6=410.25|10=064|";
    constexpr std::string_view md44 =
-      "8=FIX.4.4|9=82|35=W|262=REQ1|55=EUR/USD|268=2|269=0|270=1.085|271=1500|269=1|270=1.0852|"
-      "271=2500|10=167|";
-   constexpr std::string_view logon44 = "8=FIX.4.4|9=23|35=A|98=0|108=30|141=Y|10=012|";
+      "8=FIX.4.4|9=122|35=W|49=SRV|56=CLI|34=5|52=20261105-07:30:00|262=REQ1|55=EUR/USD|268=2|269=0|"
+      "270=1.085|271=1500|269=1|270=1.0852|271=2500|10=192|";
+   constexpr std::string_view logon44 =
+      "8=FIX.4.4|9=63|35=A|49=SRV|56=CLI|34=1|52=20261105-07:30:00|98=0|108=30|141=Y|10=250|";
+
+   // Session layer (FIX 4.4): every message carries the standard header 49/56/34/52.
+   constexpr std::string_view heartbeat44 =
+      "8=FIX.4.4|9=52|35=0|49=SRV|56=CLI|34=2|52=20261105-07:30:00|112=T1|10=003|";
+   constexpr std::string_view test_request44 =
+      "8=FIX.4.4|9=52|35=1|49=SRV|56=CLI|34=3|52=20261105-07:30:00|112=T2|10=006|";
+   constexpr std::string_view resend_request44 =
+      "8=FIX.4.4|9=55|35=2|49=SRV|56=CLI|34=4|52=20261105-07:30:00|7=10|16=0|10=217|";
+   constexpr std::string_view reject44 =
+      "8=FIX.4.4|9=82|35=3|49=SRV|56=CLI|34=5|52=20261105-07:30:00|45=9|371=44|372=D|373=5|58=bad price|"
+      "10=245|";
+   constexpr std::string_view sequence_reset44 =
+      "8=FIX.4.4|9=57|35=4|49=SRV|56=CLI|34=6|52=20261105-07:30:00|123=Y|36=20|10=106|";
+   constexpr std::string_view logout44 =
+      "8=FIX.4.4|9=52|35=5|49=SRV|56=CLI|34=7|52=20261105-07:30:00|58=bye|10=161|";
+   constexpr std::string_view logon42 =
+      "8=FIX.4.2|9=57|35=A|49=SRV|56=CLI|34=1|52=20261105-07:30:00|98=0|108=30|10=083|";
+
+   // Reads `msg` into T, checks the header fields, writes it back and expects the same bytes.
+   template <class T>
+   T exact(std::string_view msg, int64_t seq)
+   {
+      T m{};
+      auto ec = glz::read<pipe_opts>(m, msg);
+      expect(not ec) << ec.custom_error_message;
+      expect(m.sender_comp_id == "SRV");
+      expect(m.target_comp_id == "CLI");
+      expect(m.msg_seq_num == seq);
+      expect(m.sending_time == "20261105-07:30:00");
+      std::string out;
+      expect(not glz::write<pipe_opts>(m, out));
+      expect(out == msg) << out;
+      return m;
+   }
    constexpr std::string_view nos42 =
       "8=FIX.4.2|9=110|35=D|49=SENDER|56=TARGET|34=2|52=20261105-07:00:00|11=ORD-42|21=1|55=IBM|54=2|"
       "60=20261105-07:00:00|38=50|40=1|10=158|";
@@ -144,6 +179,60 @@ suite fix44_round_trip = [] {
       o.no_party_ids.push_back({.party_id = "P1", .party_id_source = d::PartyIDSource::Proprietary,
                                 .party_role = d::PartyRole::ClientID});
       expect(round_trip(o) == o);
+   };
+};
+
+suite session_layer = [] {
+   namespace d = glz::fix::fix44;
+   "Logon"_test = [] {
+      auto m = exact<d::Logon>(logon44, 1);
+      expect(m.heart_bt_int == 30);
+   };
+   "Heartbeat"_test = [] { expect(exact<d::Heartbeat>(heartbeat44, 2).test_req_id == "T1"); };
+   "TestRequest"_test = [] { expect(exact<d::TestRequest>(test_request44, 3).test_req_id == "T2"); };
+   "ResendRequest"_test = [] {
+      auto m = exact<d::ResendRequest>(resend_request44, 4);
+      expect(m.begin_seq_no == 10);
+      expect(m.end_seq_no == 0); // 0 = infinity
+   };
+   "Reject"_test = [] {
+      auto m = exact<d::Reject>(reject44, 5);
+      expect(m.ref_seq_num == 9);
+      expect(m.ref_tag_id == 44);
+      expect(m.ref_msg_type == "D");
+      expect(m.session_reject_reason == d::SessionRejectReason::ValueIsIncorrect);
+      expect(m.text == "bad price");
+   };
+   "SequenceReset"_test = [] {
+      auto m = exact<d::SequenceReset>(sequence_reset44, 6);
+      expect(m.gap_fill_flag == true);
+      expect(m.new_seq_no == 20);
+   };
+   "Logout"_test = [] { expect(exact<d::Logout>(logout44, 7).text == "bye"); };
+   "Heartbeat built from scratch"_test = [] {
+      d::Heartbeat hb{};
+      hb.sender_comp_id = "SRV";
+      hb.target_comp_id = "CLI";
+      hb.msg_seq_num = 2;
+      hb.sending_time = "20261105-07:30:00";
+      hb.test_req_id = "T1";
+      std::string out;
+      expect(not glz::write<pipe_opts>(hb, out));
+      expect(out == heartbeat44) << out;
+   };
+   "PossDupFlag in the header"_test = [] {
+      d::Heartbeat hb{};
+      hb.sender_comp_id = "SRV";
+      hb.target_comp_id = "CLI";
+      hb.msg_seq_num = 2;
+      hb.poss_dup_flag = true;
+      hb.sending_time = "20261105-07:30:00";
+      hb.orig_sending_time = "20261105-07:29:00";
+      expect(round_trip(hb) == hb);
+   };
+   "FIX 4.2 Logon"_test = [] {
+      auto m = exact<glz::fix::fix42::Logon>(logon42, 1);
+      expect(m.encrypt_method == glz::fix::fix42::EncryptMethod::None);
    };
 };
 

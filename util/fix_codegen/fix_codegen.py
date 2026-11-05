@@ -40,6 +40,9 @@ INT_TYPES = {"int", "Length", "SeqNum", "TagNum", "DayOfMonth", "NumInGroup"}
 FLOAT_TYPES = {"float", "Price", "Qty", "Amt", "Percentage", "PriceOffset"}
 MULTI_TYPES = {"MultipleValueString", "MultipleCharValue", "MultipleStringValue"}
 
+# ApplVerID(1128) code values (FIX 5.0 SP2 code set ApplVerID).
+APPL_VER_IDS = {"FIX.5.0": "7", "FIX.5.0SP1": "8", "FIX.5.0SP2": "9"}
+
 CPP_KEYWORDS = set(
     """alignas alignof and and_eq asm auto bitand bitor bool break case catch char char8_t char16_t
     char32_t class compl concept const consteval constexpr constinit const_cast continue co_await
@@ -171,9 +174,15 @@ def load(path: str) -> Repo:
 
 
 class Gen:
-    def __init__(self, repo: Repo, ns: str, source: str = ""):
+    def __init__(self, repo: Repo, ns: str, source: str = "", with_header: bool = True):
         self.r = repo
         self.source = source
+        self.with_header = with_header
+        # FIX 5.0 and later run over the FIXT.1.1 session layer: 8=FIXT.1.1 on the wire, and the
+        # application version travels in ApplVerID(1128). FIX 4.x puts its own version in 8.
+        n = repo.name
+        self.wire_begin = "FIXT.1.1" if (n.startswith("FIX.5") or n.startswith("FIX.Latest")) else n
+        self.appl_ver_id = APPL_VER_IDS.get(n.split("_")[0], "")
         self.ns = ns
         self.used_names: set[str] = set()
         self.enum_names: dict[str, str] = {}  # codeset name -> C++ enum name
@@ -343,7 +352,9 @@ class Gen:
         out = ["template <>", f"struct glz::meta<{full}>", "{", f"   using T = {full};"]
         if msg_type is not None:
             out.append(f"   static constexpr std::string_view fix_msg_type = {cpp_str(msg_type)};")
-            out.append(f"   static constexpr std::string_view fix_begin_string = {cpp_str(self.r.name)};")
+            out.append(f"   static constexpr std::string_view fix_begin_string = {cpp_str(self.wire_begin)};")
+            if self.appl_ver_id:
+                out.append(f"   static constexpr std::string_view fix_appl_ver_id = {cpp_str(self.appl_ver_id)};")
         if members:
             pairs = ", ".join(f'"{tag}", &T::{m}' for _, tag, _, m, _ in members)
             out.append(f"   static constexpr auto value = glz::object({pairs});")
@@ -361,11 +372,18 @@ class Gen:
             # skipped when flattening messages.
             members = self.collect(elem, [], set())
             comps.append(self.emit_struct(self.unique(cname), members, None))
+        # StandardHeader fields (other than 8, 9 and 35, which the codec owns) are flattened into
+        # every message ahead of its body, so sender/target/seq num/sending time read and write
+        # through the message struct. Their wire order then matches the standard header order.
+        header_members, header_tags = [], {8, 9, 35, 10}
+        hdr = [e for _, (n, e) in self.r.components.items() if n == "StandardHeader"]
+        if self.with_header and hdr:
+            header_members = self.collect(hdr[0], [], header_tags)
         msgs = []
         for mname, mtype, structure in self.r.messages:
             if structure is None:
                 continue
-            members = self.collect(structure, [], set())
+            members = list(header_members) + self.collect(structure, [], set(header_tags))
             msgs.append(self.emit_struct(self.unique(mname), members, mtype))
 
         o = []
@@ -391,7 +409,10 @@ class Gen:
         o.append("")
         o.append(f"namespace glz::fix::{self.ns}")
         o.append("{")
-        o.append(f"   inline constexpr std::string_view begin_string = {cpp_str(self.r.name)};")
+        o.append(f"   inline constexpr std::string_view begin_string = {cpp_str(self.wire_begin)}; // tag 8 on the wire")
+        o.append(f"   inline constexpr std::string_view dictionary_version = {cpp_str(self.r.name)};")
+        if self.appl_ver_id:
+            o.append(f"   inline constexpr std::string_view appl_ver_id = {cpp_str(self.appl_ver_id)}; // tag 1128")
         o.append("")
         o.append("   namespace tag")
         o.append("   {")
@@ -429,8 +450,10 @@ def main(argv=None) -> int:
     ap.add_argument("--xml", required=True, help="Orchestra repository XML, or a Repository 2010 Unified XML")
     ap.add_argument("--namespace", required=True, help="C++ namespace under glz::fix, e.g. fix44")
     ap.add_argument("--out", required=True, help="output header path")
+    ap.add_argument("--no-header", action="store_true",
+                    help="do not flatten StandardHeader fields (49, 56, 34, 52, ...) into messages")
     a = ap.parse_args(argv)
-    text = Gen(load(a.xml), a.namespace, os.path.basename(a.xml)).run()
+    text = Gen(load(a.xml), a.namespace, os.path.basename(a.xml), not a.no_header).run()
     with open(a.out, "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
     return 0
