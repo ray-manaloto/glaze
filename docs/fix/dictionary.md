@@ -9,6 +9,7 @@ The FIX tag=value codec reads and writes these types (see the API contract in `d
 | FIX 4.2  | `include/glaze/fix/dict/fix42.hpp`   | `glz::fix::fix42`  | `OrchestraFIX42.xml` (FIX.4.2_EP311)  |
 | FIX 4.4  | `include/glaze/fix/dict/fix44.hpp`   | `glz::fix::fix44`  | `OrchestraFIX44.xml` (FIX.4.4_EP311)  |
 | FIXT 1.1 session | `include/glaze/fix/dict/fixt11.hpp` | `glz::fix::fixt11` | `FIXTSession.xml` (FIXT, as of FIX.5.0SP2_EP247) |
+| FIXT 1.1 session, typed | `include/glaze/fix/dict/fixt11_typed.hpp` | `glz::fix::fixt11_typed` | `FIXTSession.xml`, `--typed` |
 | FIX 5.0 SP2 | generated on demand (~5.6 MB), not committed | `glz::fix::fix50sp2` | `FixRepositoryUnifiedEP247.xml` (FIX.5.0SP2_EP247, Repository 2010 Unified format) |
 | FIX Latest (5.0 SP2 + later extension packs) | generated on demand (~6 MB), not committed | `glz::fix::fixlatest` | `OrchestraFIXLatest.xml` |
 
@@ -151,6 +152,13 @@ template <> struct glz::meta<glz::fix::fix44::NewOrderSingle> {
   member is `std::optional<std::string>`. The application sets it (e.g. to
   `std::string(fix50sp2::appl_ver_id)`) or leaves it absent when the session's
   DefaultApplVerID applies.
+* **`--typed`.** Maps float-like fields (Price, Qty, Amt, Percentage, PriceOffset, float) to
+  `glz::fix::decimal` and UTCTimestamp fields to `glz::fix::utc_timestamp`, both from `fix/core`'s
+  `glaze/fix/types.hpp`. Decimal keeps the scale as written (`1.0850` stays `1.0850`, `1000000`
+  stays `1000000`), so typed headers write byte-exact prices and quantities. The plain
+  (`double`) headers hit `fix/core`'s exponent output for large values (below). The committed
+  `fix42`/`fix44`/`fixt11` headers are plain. `fixt11_typed.hpp` is committed as the tested
+  typed example.
 * **Name clashes** between structs and enums are resolved by appending `2`, `3`, ....
 
 ## Relation to the `fix/core` contract

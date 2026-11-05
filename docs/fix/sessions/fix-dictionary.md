@@ -36,12 +36,16 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
   ApplVerID value (`fix_appl_ver_id`, `"9"` for SP2), and the namespace has
   `dictionary_version`. What `fix/core` would need for full FIXT support is recorded in
   `docs/fix/dictionary.md` ("Needed from `fix/core` for FIXT"). `fix/core` itself is unchanged.
-* **Merged `fix/core`** (07:17 UTC). The local contract stub this branch used until then was
+* **`--typed` generator option** (uses `fix/core`'s v2 `decimal` / `utc_timestamp`). Scratch
+  check: a typed FIX 4.4 header (compiles in about 6 s) read and wrote
+  `...|52=20261105-07:30:00.000|...|270=1.0850|271=1000000|...|271=500000|` byte for byte. The
+  plain `double` path cannot do that (`1e+06`, `1.085`).
+* **Merged `fix/core`** (again at 07:37 UTC, v2: typed values and field_cursor). Before that: (07:17 UTC). The local contract stub this branch used until then was
   replaced by `fix/core`'s `include/glaze/fix/fix.hpp`. To fit `fix/core`'s enum handling
   (underlying value), the generator now emits `bool` for Boolean code sets and `std::string` for
   String code sets. Only char and int code sets are enum members.
 * **Test** `tests/fix_dictionary_test/` (registered in `tests/CMakeLists.txt`, boost-ext ut via
-  `ut/ut.hpp`), 24 tests and 156 asserts, all passing against `fix/core`'s codec with the `gcc-debug` preset (GCC 13,
+  `ut/ut.hpp`), 25 tests and 161 asserts, all passing against `fix/core`'s codec with the `gcc-debug` preset (GCC 13,
   `-Werror`, ASan/UBSan on):
   * generated metadata: tags, enum wire values, enum names through glaze JSON, msg types;
   * FIX 4.4 round trips: NewOrderSingle with a Parties group, ExecutionReport,
@@ -50,7 +54,7 @@ round-trip test (`tests/fix_dictionary_test/`). The design is in `docs/fix/dicti
   * session layer (FIX 4.4): Logon, Heartbeat, TestRequest, ResendRequest, Reject,
     SequenceReset and Logout, each read, checked (header 49/56/34/52 plus body fields) and
     written back byte for byte; a Heartbeat built from scratch; PossDupFlag/OrigSendingTime
-    round trip; a FIXT.1.1 Logon (`fixt11`, 1137=9) byte for byte;
+    round trip; a FIXT.1.1 Logon (`fixt11`, 1137=9) byte for byte, and again through the typed header with SendingTime as `utc_timestamp`;
   * errors: bad checksum, wrong MsgType, stream framing.
   * Before the merge, two more tests checked enum code-set validation in the stub. They were
     removed because `fix/core` does not validate enums (see `docs/fix/dictionary.md`).
@@ -99,7 +103,7 @@ validates. Field values (order IDs, symbols, prices) are made up.
 
 ## Next steps
 
-1. Keep merging `fix/core`. Ask it to adopt `fix_values` (enum validation, String code-set
+1. Consider making `--typed` the default for the committed headers (it is exact). Keep merging `fix/core`. Ask it to adopt `fix_values` (enum validation, String code-set
    enums) and fixed-notation float writing. Then restore the 1000000-sized MD sample.
 2. Test the remaining `fixt11` session messages. Ask `fix/core` for the three FIXT items in
    `docs/fix/dictionary.md`.

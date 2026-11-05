@@ -12,6 +12,7 @@
 #include "glaze/fix/dict/fix42.hpp"
 #include "glaze/fix/dict/fix44.hpp"
 #include "glaze/fix/dict/fixt11.hpp"
+#include "glaze/fix/dict/fixt11_typed.hpp"
 #include "glaze/fix/fix.hpp"
 #include "glaze/json.hpp"
 #include "ut/ut.hpp"
@@ -243,6 +244,19 @@ suite session_layer = [] {
       std::string out;
       expect(not glz::write<pipe_opts>(m, out));
       expect(out.starts_with("8=FIXT.1.1|"));
+   };
+   "FIXT.1.1 Logon, typed header (utc_timestamp)"_test = [] {
+      namespace t = glz::fix::fixt11_typed;
+      t::Logon m{};
+      auto ec = glz::read<pipe_opts>(m, logon_fixt);
+      expect(not ec) << ec.custom_error_message;
+      using namespace std::chrono;
+      const auto expected = sys_days{year{2026} / 11 / 5} + hours{7} + minutes{30};
+      expect(m.sending_time.time == expected);
+      expect(m.sending_time.precision == 0);
+      std::string out;
+      expect(not glz::write<pipe_opts>(m, out));
+      expect(out == logon_fixt) << out;
    };
    "FIX 4.2 Logon"_test = [] {
       auto m = exact<glz::fix::fix42::Logon>(logon42, 1);
