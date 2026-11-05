@@ -29,6 +29,7 @@
 #include "glaze/core/write.hpp"
 #include "glaze/fix/opts.hpp"
 #include "glaze/fix/scan.hpp"
+#include "glaze/fix/types.hpp"
 #include "glaze/util/for_each.hpp"
 
 namespace glz::fix::detail
@@ -133,6 +134,22 @@ namespace glz::fix::detail
       }
       else if constexpr (std::same_as<T, std::string>) {
          v.assign(s.data(), s.size());
+         return true;
+      }
+      else if constexpr (std::same_as<T, utc_timestamp>) {
+         if (!parse_utc_timestamp(s, v)) {
+            ctx.error = error_code::syntax_error;
+            ctx.custom_error_message = "fix: invalid UTCTimestamp";
+            return false;
+         }
+         return true;
+      }
+      else if constexpr (std::same_as<T, decimal>) {
+         if (!parse_decimal(s, v)) {
+            ctx.error = error_code::parse_number_failure;
+            ctx.custom_error_message = "fix: invalid decimal";
+            return false;
+         }
          return true;
       }
       else if constexpr (std::same_as<T, std::string_view>) {
@@ -277,6 +294,12 @@ namespace glz::fix::detail
       }
       else if constexpr (std::same_as<T, std::string> || std::same_as<T, std::string_view>) {
          out.append(v.data(), v.size());
+      }
+      else if constexpr (std::same_as<T, utc_timestamp>) {
+         append_utc_timestamp(out, v);
+      }
+      else if constexpr (std::same_as<T, decimal>) {
+         append_decimal(out, v);
       }
       else if constexpr (std::is_enum_v<T>) {
          return encode_scalar(out, std::underlying_type_t<T>(v));
