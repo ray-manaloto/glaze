@@ -660,3 +660,95 @@ suite quickfix_more_message_strings = [] {
       expect(bool(glz::read<glz::fix_opts{}>(m, execReport)));
    };
 };
+
+// MessagesTestCase.cpp / MessageTests / newOrderListGetString, newOrderListSetString (FIX 4.2 NoOrders 73)
+namespace qf_more
+{
+   struct ListOrder42
+   {
+      std::string cl_ord_id; // 11
+      int32_t list_seq_no{}; // 67
+      std::string symbol; // 55
+      char side{}; // 54
+   };
+   struct NewOrderList42
+   {
+      std::string list_id; // 66
+      int32_t tot_no_orders{}; // 68
+      std::vector<ListOrder42> orders; // 73
+      int32_t bid_type{-1}; // 394
+   };
+}
+template <>
+struct glz::meta<qf_more::ListOrder42>
+{
+   using T = qf_more::ListOrder42;
+   static constexpr auto value =
+      glz::object("11", &T::cl_ord_id, "67", &T::list_seq_no, "55", &T::symbol, "54", &T::side);
+};
+template <>
+struct glz::meta<qf_more::NewOrderList42>
+{
+   using T = qf_more::NewOrderList42;
+   static constexpr auto fix_msg_type = "E";
+   static constexpr auto fix_begin_string = "FIX.4.2";
+   static constexpr auto value =
+      glz::object("66", &T::list_id, "68", &T::tot_no_orders, "73", &T::orders, "394", &T::bid_type);
+};
+
+suite quickfix_more_groups = [] {
+   using namespace qf_more;
+
+   "MessagesTestCase.cpp / MessageTests / newOrderListGetString"_test = [] {
+      constexpr std::string_view expected = "8=FIX.4.2\0019=95\00135=E\00166=1\00168=3\00173=3\001"
+                                            "11=A\00167=1\00155=DELL\00154=1\001"
+                                            "11=B\00167=2\00155=LNUX\00154=2\001"
+                                            "11=C\00167=3\00155=RHAT\00154=3\001"
+                                            "394=0\00110=233\001";
+      NewOrderList42 m{"1", 3, {{"A", 1, "DELL", '1'}, {"B", 2, "LNUX", '2'}, {"C", 3, "RHAT", '3'}}, 0};
+      std::string buf;
+      expect(not glz::write<glz::fix_opts{}>(m, buf));
+      expect(buf == expected) << buf;
+   };
+
+   "MessagesTestCase.cpp / MessageTests / newOrderListSetString (fields in other order inside entries)"_test = [] {
+      constexpr std::string_view msg = "8=FIX.4.2\0019=95\00135=E\00166=1\00168=3\00173=3\001"
+                                       "11=A\00154=1\00155=DELL\00167=1\001"
+                                       "11=B\00154=2\00155=LNUX\00167=2\001"
+                                       "11=C\00154=3\00155=RHAT\00167=3\001"
+                                       "394=0\00110=233\001";
+      NewOrderList42 m{};
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.list_id == "1" and m.tot_no_orders == 3 and m.bid_type == 0);
+      expect(m.orders.size() == 3u);
+      if (m.orders.size() == 3u) {
+         expect(m.orders[0].cl_ord_id == "A" and m.orders[0].list_seq_no == 1 and m.orders[0].symbol == "DELL" and
+                m.orders[0].side == '1');
+         expect(m.orders[1].cl_ord_id == "B" and m.orders[1].list_seq_no == 2 and m.orders[1].symbol == "LNUX" and
+                m.orders[1].side == '2');
+         expect(m.orders[2].cl_ord_id == "C" and m.orders[2].list_seq_no == 3 and m.orders[2].symbol == "RHAT" and
+                m.orders[2].side == '3');
+      }
+   };
+
+   "MessagesTestCase.cpp / MessageTests / newOrderListSetString (73=0)"_test = [] {
+      constexpr std::string_view msg = "8=FIX.4.2\0019=26\00135=E\00166=1\00168=3\00173=0\001394=0\00110=137\001";
+      expect(is_valid(msg));
+      NewOrderList42 m{};
+      m.orders.resize(2);
+      expect(not glz::read<glz::fix_opts{}>(m, msg));
+      expect(m.orders.empty());
+      expect(m.bid_type == 0);
+   };
+
+   "MessagesTestCase.cpp / MessageTests / newOrderList: count 3 with 2 entries is rejected"_test = [] {
+      const auto msg = make_msg("FIX.4.2", "35=E|66=1|68=3|73=3|11=A|67=1|55=DELL|54=1|11=B|67=2|55=LNUX|54=2|394=0|");
+      NewOrderList42 m{};
+      expect(bool(glz::read<glz::fix_opts{}>(m, msg)));
+   };
+
+   "MessagesTestCase.cpp / MessageTests / massQuoteParseGetString, massQuoteSetString"_test = [] {
+      skip("MessagesTestCase.cpp / massQuoteParseGetString / massQuoteSetString (364/365 encoded data with SOH)",
+           "fix/core does not support length-prefixed data fields yet (docs/fix/api.md)");
+   };
+};
