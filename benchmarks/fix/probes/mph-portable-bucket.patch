@@ -1,0 +1,174 @@
+--- mph/mph	2026-11-08 19:29:10
++++ mph-patched/mph	2026-11-09 13:22:46
+@@ -595,8 +595,18 @@
+ #pragma once
+ #pragma GCC system_header
+ 
+-#if __has_include(<experimental/simd>)
++// patched: the scalar bucket search is the default on every compiler (it measured faster than the
++// std::experimental::simd path on Apple M2 with GCC 16.2). Define MPH_USE_EXPERIMENTAL_SIMD=1 to opt back in
++// where libstdc++ provides <experimental/simd>.
++#include <cstdint>  // patched: UINT32_MAX; was only pulled in through <experimental/simd>
++#ifndef MPH_USE_EXPERIMENTAL_SIMD
++#define MPH_USE_EXPERIMENTAL_SIMD 0
++#endif
++#if MPH_USE_EXPERIMENTAL_SIMD && __has_include(<experimental/simd>) && defined(__GLIBCXX__)
+ #include <experimental/simd>
++#define MPH_HAS_EXPERIMENTAL_SIMD 1
++#else
++#define MPH_HAS_EXPERIMENTAL_SIMD 0
+ #endif
+ 
+ namespace mph::inline v5_0_5 {
+@@ -1099,9 +1109,17 @@
+   using result_type = optional<mapped_type>;
+ 
+   constexpr find$pext() noexcept {
++    utility::array<bool, mask_type(1) << __builtin_popcountl(mask)> used{};
+     for (const auto& [key, value] : detail::traits<entries>::mappings) {
+       lut[detail::pext(key, mask)] = {key, value};
++      used[detail::pext(key, mask)] = true;
+     }
++    // patched: an empty slot held key 0, so an absent key 0 was found. Give it an entry from another slot:
++    // a query equal to that key hashes to that entry's own slot.
++    const auto& [k0, v0] = detail::traits<entries>::mappings[0];
++    for (u32 i = 0; i < lut.size(); ++i) {
++      if (not used[i]) { lut[i] = {k0, v0}; }
++    }
+   }
+ 
+   template<u8 probability = 50u> requires (probability >= 0u and probability <= 100u)
+@@ -1114,7 +1132,7 @@
+   utility::array<key_mapped_type, mask_type(1) << __builtin_popcountl(mask)> lut{};
+ };
+ 
+-#if __has_include(<experimental/simd>)
++#if MPH_HAS_EXPERIMENTAL_SIMD
+ template<const auto& entries, u32 BucketSize>
+ struct find$simd {
+   using key_type = typename detail::traits<entries>::key_type;
+@@ -1125,11 +1143,24 @@
+   using result_type = optional<mapped_type>;
+ 
+   constexpr find$simd() noexcept {
++    utility::array<bool, size> used{};  // patched: occupancy, so key 0 is a normal key
+     for (const auto& [key, value] : detail::traits<entries>::mappings) {
+       auto slot = BucketSize * detail::pext(key, mask);
+-      while (keys[slot]) slot++;
++      while (used[slot]) slot++;
+       keys[slot] = key;
+       values[slot] = value;
++      used[slot] = true;
++    }
++    // patched: an empty slot must never match a key that is not in entries (it used to hold key 0, so an
++    // absent key 0 was found). Fill it with an entry that is already in the same bucket, or, for an empty
++    // bucket, with an entry from another bucket: a query equal to that key hashes to its own bucket instead.
++    {
++      const auto& [k0, v0] = detail::traits<entries>::mappings[0];
++      for (u32 b = 0; b < size; b += BucketSize) {
++        for (u32 i = 0; i < BucketSize; ++i) {
++          if (not used[b + i]) { keys[b + i] = used[b] ? keys[b] : key_type(k0); values[b + i] = used[b] ? values[b] : v0; }
++        }
++      }
+     }
+   }
+ 
+@@ -1153,6 +1184,58 @@
+ };
+ #endif
+ 
++
++template<const auto& entries, u32 BucketSize>
++struct find$bucket {
++  using key_type = typename detail::traits<entries>::key_type;
++  using mapped_type = typename detail::traits<entries>::mapped_type;
++  static constexpr auto mask = type_traits::constant_v<detail::narrow_mask<detail::traits<entries>::mappings>()>;
++  using mask_type = type_traits::conditional_t<sizeof(mask.value) <= sizeof(u32), u32, u64>;
++  using result_type = optional<mapped_type>;
++
++  constexpr find$bucket() noexcept {
++    utility::array<bool, size> used{};  // patched: occupancy, so key 0 is a normal key
++    for (const auto& [key, value] : detail::traits<entries>::mappings) {
++      auto slot = BucketSize * detail::pext(key, mask);
++      while (used[slot]) slot++;
++      keys[slot] = key;
++      values[slot] = value;
++      used[slot] = true;
++    }
++    // patched: an empty slot must never match a key that is not in entries (it used to hold key 0, so an
++    // absent key 0 was found). Fill it with an entry that is already in the same bucket, or, for an empty
++    // bucket, with an entry from another bucket: a query equal to that key hashes to its own bucket instead.
++    {
++      const auto& [k0, v0] = detail::traits<entries>::mappings[0];
++      for (u32 b = 0; b < size; b += BucketSize) {
++        for (u32 i = 0; i < BucketSize; ++i) {
++          if (not used[b + i]) { keys[b + i] = used[b] ? keys[b] : key_type(k0); values[b + i] = used[b] ? values[b] : v0; }
++        }
++      }
++    }
++  }
++
++  template<u8 probability = 50u> requires (probability >= 0u and probability <= 100u)
++  [[nodiscard]] constexpr auto operator()(const auto& key, const auto&... ts) const noexcept -> result_type {
++    auto&& value = to<mask_type>(key);
++    auto&& index = BucketSize * detail::pext(value, mask);
++    #if defined(__GNUC__) && !defined(__clang__)
++    // patched: GCC otherwise re-vectorizes this early-exit loop (slower on Apple M2) and leaves it rolled;
++    // clang unrolls it on its own.
++    #pragma GCC novector
++    #pragma GCC unroll 16
++    #endif
++    for (u32 i = 0; i < BucketSize; ++i) {
++      if (keys[index + i] == key_type(value)) return result_type(values[index + i]);
++    }
++    return result_type(ts...);
++  }
++
++  static constexpr auto size = BucketSize * (mask_type(1) << __builtin_popcountl(mask));
++  utility::array<key_type, size> keys{};
++  utility::array<mapped_type, size> values{};
++};
++
+ /**
+  * Static [minimal] perfect hash lookup function
+  * @tparam entries constexpr array of keys or key/value pairs
+@@ -1180,9 +1263,6 @@
+ template<const auto& entries> inline constexpr auto find =
+   []<u8 probability = 50u>
+     requires (probability >= 0u and probability <= 100u)
+-    #if not __has_include(<experimental/simd>)
+-    and (entries.size() <= 64u)
+-    #endif
+     ([[maybe_unused]] const auto& key, [[maybe_unused]] const auto&... ts) {
+     using key_type = typename detail::traits<entries>::key_type;
+     using mapped_type = typename detail::traits<entries>::mapped_type;
+@@ -1197,10 +1277,16 @@
+       return type_traits::constant_t<find$pext<entries>>::value.template
+         operator()<probability>(key, ts...);
+     }
+-    #if __has_include(<experimental/simd>)
++    #if MPH_HAS_EXPERIMENTAL_SIMD
+     else {
+       constexpr auto bucket_size = std::experimental::simd_size_v<key_type, std::experimental::simd_abi::native<key_type>>;
+       return type_traits::constant_t<find$simd<entries, bucket_size>>::value.template
++        operator()<probability>(key, ts...);
++    }
++    #else
++    else {
++      // patched: portable scalar bucket search (default; see MPH_USE_EXPERIMENTAL_SIMD)
++      return type_traits::constant_t<find$bucket<entries, 16u / sizeof(key_type)>>::value.template
+         operator()<probability>(key, ts...);
+     }
+     #endif
+@@ -1208,6 +1294,11 @@
+ } // namespace mph
+ 
+ #ifndef NTEST
++// patched: the self-tests use these; upstream only got them through <experimental/simd>
++#include <array>
++#include <span>
++#include <string_view>
++#include <utility>
+ static_assert(([] {
+   constexpr auto expect = [](bool cond) { if (not cond) { void failed(); failed(); } };
+ 

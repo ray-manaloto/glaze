@@ -1,0 +1,9 @@
+# binaries built by run.sh and tag_lookup_mac.sh
+tl_*
+*_G
+*_C
+struct_size
+rfl_gcc
+rfl_p2996
+orchestra_model
+*.o
