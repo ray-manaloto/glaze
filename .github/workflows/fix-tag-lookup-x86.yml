@@ -8,20 +8,31 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
   bench:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         cxx: [g++-14, clang++-18]
         arch: ["", "-march=native"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
       - name: CPU
-        run: lscpu | grep -E "Model name|Flags" | sed 's/Flags:.*\(bmi2\).*/Flags: ... bmi2 .../'
+        run: |
+          lscpu | grep "Model name"
+          grep -o -w -m1 bmi2 /proc/cpuinfo || echo "no bmi2"
       - name: Fetch libraries (pinned)
         run: |
           mkdir libs && cd libs
@@ -36,7 +47,7 @@ jobs:
         run: |
           set -o pipefail
           benchmarks/fix/tag_lookup/run.sh "$PWD/libs" ${{ matrix.cxx }} ${{ matrix.arch }} | tee result.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: always()
         with:
           name: tag-lookup-${{ matrix.cxx }}${{ matrix.arch }}
