@@ -1,0 +1,43 @@
+name: fix tag lookup (x86)
+
+on:
+  push:
+    branches: [spike/tag-lookup-x86]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bench:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        cxx: [g++-14, clang++-18]
+        arch: ["", "-march=native"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: CPU
+        run: lscpu | grep -E "Model name|Flags" | sed 's/Flags:.*\(bmi2\).*/Flags: ... bmi2 .../'
+      - name: Fetch libraries (pinned)
+        run: |
+          mkdir libs && cd libs
+          get() { git init -q "$1" && git -C "$1" fetch -q --depth 1 "https://github.com/$2" "$3" && git -C "$1" checkout -q FETCH_HEAD; }
+          get mph qlibs/mph d6e79cd3970f54844c790ca0fd2cf5be50024834
+          get compile-time-init-build intel/compile-time-init-build 1b87fba9188fa6d6706f793d74cf1ba27b7d86bb
+          get cpp-std-extensions intel/cpp-std-extensions d6e517f86d5d4997c3c4fe78a29f41433cfb5c6d
+          get mp11 boostorg/mp11 ef7608b463298b881bc82eae4f45a4385ed74fca
+          cp -r mp11/include/boost cpp-std-extensions/include/
+          get frozen serge-sans-paille/frozen 6791f856c7ff69010004e0a456af8ac43935ed80
+      - name: Run
+        run: |
+          set -o pipefail
+          benchmarks/fix/tag_lookup/run.sh "$PWD/libs" ${{ matrix.cxx }} ${{ matrix.arch }} | tee result.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tag-lookup-${{ matrix.cxx }}${{ matrix.arch }}
+          path: result.txt
