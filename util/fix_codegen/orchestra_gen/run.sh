@@ -72,7 +72,7 @@ lock)  # stage 2: names and widths pinned by Orchestra id in lock/fix44.lock (ch
   # 1. a synthetic EP (new code, renamed code, PartyRole code 256) is refused with exactly 3 changes; the rename is kept
   out=$(./$B/orchestra_gen --xml $L/ep.xml --namespace fix44 --out $L/ep --strict on --lock lock/fix44.lock 2>&1); rc=$?
   want=$'lock: added code 54 Z: synthetic -\nlock: type enum 452 (PartyRole): std::uint8_t -> std::uint16_t\nlock: added code 452 256: synthetic_role -'
-  got=$(grep -E '^lock: (added|removed|renamed|type) ' <<<"$out")
+  got=$(grep -E '^lock: (added|removed|renamed|type|reordered) ' <<<"$out")
   if [ $rc -ne 0 ] && [ "$got" = "$want" ] && [ ! -e $L/ep ] && grep -q '^lock: kept code 40 1: market ' <<<"$out"; then
     echo "== lock: synthetic EP refused, exactly 3 changes  ok"; passes+=(lock-refuse)
   else echo "== lock: synthetic EP                              FAILED (exit $rc): $got"; fails+=(lock-refuse); fi
@@ -88,7 +88,15 @@ lock)  # stage 2: names and widths pinned by Orchestra id in lock/fix44.lock (ch
      ./$B/orchestra_gen --xml $L/ep.xml --namespace fix44 --out $L/up --strict on --lock $L/copy.lock 2>&1 | grep -q 'copy.lock: unchanged' &&
      grep -q $'^enum 452\tPartyRole\tstd::uint16_t$' $L/copy.lock && grep -q $'^code 40 1\tmarket_order\t-$' $L/copy.lock; then
     echo "== lock: --update-lock accepts, then unchanged    ok"; passes+=(lock-update)
-  else echo "== lock: --update-lock                             FAILED"; fails+=(lock-update); fi;;
+  else echo "== lock: --update-lock                             FAILED"; fails+=(lock-update); fi
+  # 4. layout only (a group turns required, two fields swap): refused as 1 type change and 1 reordered part
+  python3 -I tests/synthetic_ep.py "$XML" $L/ly.xml layout
+  out=$(./$B/orchestra_gen --xml $L/ly.xml --namespace fix44 --out $L/ly --strict on --lock lock/fix44.lock 2>&1); rc=$?
+  want=$'lock: type member message 14 453 (parties): ?S:Parties -> S:Parties\nlock: reordered part message 14 (NewOrderSingle): members changed wire order'
+  got=$(grep -E '^lock: (added|removed|renamed|type|reordered) ' <<<"$out")
+  if [ $rc -ne 0 ] && [ "$got" = "$want" ] && [ ! -e $L/ly ]; then
+    echo "== lock: group presence and order change refused  ok"; passes+=(lock-layout)
+  else echo "== lock: layout                                    FAILED (exit $rc): $got"; fails+=(lock-layout); fi;;
 targets)  # the annotation is written directly where the compiler has annotations; the macro only where it has not
   if ! grep -q GLZ_FIX3_TAG "$O/fix44.hpp" && ! grep -q GLZ_FIX3_TAG "$OP/fix44.hpp" && grep -q '\[\[=glz::fix3::tag{11}\]\] std::string_view cl_ord_id' "$O/fix44.hpp" \
      && grep -q 'GLZ_FIX3_TAG(11) std::string_view cl_ord_id' "$OL/fix44.hpp" && ! grep -q '\[\[=' "$OL/fix44.hpp"; then

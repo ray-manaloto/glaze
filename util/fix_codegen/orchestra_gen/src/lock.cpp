@@ -18,10 +18,16 @@ std::string_view kind_name(part_kind k) {
   return "?";
 }
 
+// A member's locked type: its digest type, with "?" on an optional group (the digest's S:<entry> has none) and
+// " open" when its codeSet accepts values beyond the codes (unionDataType; an enum or a String codeSet).
+std::string lock_type(const Member& m) {
+  return std::format("{}{}{}", m.kind == member_kind::group && !m.required ? "?" : "", m.type.digest, m.open_enum ? " open" : "");
+}
+
 void add_part(std::string& s, const Part& p) {
   const auto k = kind_name(p.kind);
   s += std::format("part {} {}\t{}\t{}\n", k, p.id, p.name, p.msg_type.empty() ? "-" : p.msg_type);
-  for (const auto& m : p.wire_order) s += std::format("member {} {} {}\t{}\t{}\n", k, p.id, m.tag, m.name, m.type.digest);
+  for (const auto& m : p.wire_order) s += std::format("member {} {} {}\t{}\t{}\n", k, p.id, m.tag, m.name, lock_type(m));
 }
 
 struct Item { std::string name, type; };
@@ -173,6 +179,18 @@ std::vector<std::string> diff_lock(std::string_view old_text, std::string_view n
       const auto& na = a.items.at(key);
       out.push_back(std::format("removed {}: {} {}", key, na.name, na.type));
     }
+  // Wire order: the members both files share must keep their order in each part (it also drives the layout).
+  auto shared_order = [](const Parsed& x, const Parsed& other) {
+    std::map<std::string, std::vector<std::string>> by_part;  // "part <kind> <id>" -> member keys in order
+    for (const auto& key : x.order)
+      if (key.starts_with("member ") && other.items.contains(key))
+        by_part["part " + key.substr(7, key.rfind(' ') - 7)].push_back(key);
+    return by_part;
+  };
+  const auto oa = shared_order(a, b), ob = shared_order(b, a);
+  for (const auto& key : b.order)
+    if (const auto it = ob.find(key); key.starts_with("part ") && it != ob.end() && oa.at(key) != it->second)
+      out.push_back(std::format("reordered {} ({}): members changed wire order", key, b.items.at(key).name));
   return out;
 }
 

@@ -16,7 +16,8 @@ namespace gen {
 //   enum <codeSet id>                  name = C++ enum,       type = underlying type
 //   code <codeSet id> <wire value>     name = enumerator,     type = -
 //   part <component|group|message> <id>  name = C++ struct,  type = MsgType or -
-//   member <part kind> <part id> <tag>    name = C++ member,  type = digest type (? = optional)
+//   member <part kind> <part id> <tag>    name = C++ member,  type = digest type (? = optional, also on a
+//                                         group), then " open" when its codeSet accepts values beyond its codes
 std::string emit_lock(const Output& o);
 
 // Keep the locked names (owner, 2026-11-10): for every id already in the lock, use the lock's name instead
@@ -32,6 +33,7 @@ void check_unique_names(const Output& o);
 
 // The reviewed changes between two lock texts, one line each, in the new file's order (removals last):
 //   added <key>: NAME TYPE | removed <key>: NAME TYPE | renamed <key>: OLD -> NEW | type <key> (NAME): OLD -> NEW
+//   reordered part <kind> <id> (NAME): members changed wire order   (members in both files, compared in order)
 std::vector<std::string> diff_lock(std::string_view old_text, std::string_view new_text);
 
 }  // namespace gen
