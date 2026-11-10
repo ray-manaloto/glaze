@@ -52,7 +52,7 @@ cmake --preset gcc16-release -B build/nv-gcc16-release -DCMAKE_TOOLCHAIN_FILE=$P
 
 Glaze's tests find their optional libraries with `find_package` and fall back to their own downloads, so the FIX tests build either way.
 
-## Known test results (2026-11-09)
+## Known test results (2026-11-09, debug presets 2026-11-10)
 
 `cmake --workflow --preset gcc16-release` through vcpkg passes 172 of 173 tests. The FIX suites pass, and so do the SSL and websocket tests, which use vcpkg's openssl and asio. The one failure is `exceptions_test` (7 of 48 checks). It also fails with plain GCC 16 at C++23 without any of these files, so it is an existing glaze issue on GCC 16, not this setup.
 
@@ -60,11 +60,17 @@ The clang23 workflows each run 171 tests:
 
 | Preset | Passed | Failures |
 |---|---|---|
+| clang23-debug | 171 | none |
 | clang23-release | 171 | none |
 | clang23-asan | 169 | `json_performance`, `json_perf_benchmark`: UBSan, test-data generator at `tests/json_performance/json_performance.cpp:667` divides by a random count that can be 0, then converts infinity to `int` |
 | clang23-tsan | 169 | `asio_repe`: threads write `std::cout` at once; `http_client_test`: worker threads call `expect`, and the `ut` reporter's counters are not thread-safe |
 
-| gcc16-asan | 172 of 173 | `exceptions_test`: SEGV inside UBSan's `vptr` check (`__ubsan::checkDynamicType` -> `__dynamic_cast`) while constructing `std::bad_variant_access`; the same test already fails on GCC 16 without sanitizers |
+The gcc16 workflows each run 173 tests:
+
+| Preset | Passed | Failures |
+|---|---|---|
+| gcc16-debug | 172 | `exceptions_test`, as in gcc16-release |
+| gcc16-asan | 172 | `exceptions_test`: SEGV inside UBSan's `vptr` check (`__ubsan::checkDynamicType` -> `__dynamic_cast`) while constructing `std::bad_variant_access`; the same test already fails on GCC 16 without sanitizers |
 
 The clang failures above are in test code, not in the glaze headers. Two more fail only sometimes:
 
@@ -79,7 +85,7 @@ Two GCC 16 workarounds are in the setup:
 Two things to know when running several presets:
 
 - **`lib_test` shares one library across build directories.** It writes its shared library to `<source>/bin/`, not the build directory, so every preset with the same build type uses the same file (Release writes `libtest_lib.dylib`, the Debug-based presets `libtest_lib_d.dylib`). If presets build one after another, each overwrites it. Running two presets' tests at the same time, or testing one preset after building another, can load a library built by a different compiler; the symptom is `std::bad_function_call`. Rebuild the preset before testing it.
-- **The clang-p2996 compiler crashes on 13 FIX test files.** It hits an internal assertion in `SemaTemplateInstantiate.cpp` ("Instantiated local in inner and outer scopes"), even at C++23 without reflection flags. The p2996 presets configure, but the FIX tests do not build until the compiler is fixed.
+- **The clang-p2996 compiler crashes on 13 FIX test files.** It hits an internal assertion in `SemaTemplateInstantiate.cpp` ("Instantiated local in inner and outer scopes"), even at C++23 without reflection flags. The p2996 presets configure, but the FIX tests do not build until the compiler is fixed. In `p2996-debug` the same assertion also hits core glaze tests (`test_lib`, `api_test`, the `beve_test` targets and `glaze_ide`), so the debug build stops before any test runs.
 
 ## reflect-cpp's C++26 backend
 
