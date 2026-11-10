@@ -51,6 +51,11 @@ Thumbs.db
 
 # Allow mock test data
 !tests/mock_json_test/json/*.json
+# Allow the glaze-fix build setup (docs/fix/build.md): presets, vcpkg manifests, overlay ports
+!/cmake/presets/*.json
+!/vcpkg.json
+!/vcpkg-configuration.json
+!/ports/*/vcpkg.json
 *.jsonc
 *.csv
 *.beve

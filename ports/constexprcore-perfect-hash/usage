@@ -1,0 +1,4 @@
+constexprcore-perfect-hash is header-only and provides CMake target ConstexprCore::perfect_hash:
+
+  find_package(constexprcore-perfect-hash CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE ConstexprCore::perfect_hash)

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "glaze-fix",
+  "version": "9.1.0",
+  "description": "Dependencies for the glaze fork's FIX work: tests, benchmarks, tag-lookup probes and the Orchestra generator. Glaze itself is header-only and needs none.",
+  "builtin-baseline": "245d37306671ea67d8f313081a81aae8079f8916",
+  "dependencies": [],
+  "default-features": [
+    "tests"
+  ],
+  "features": {
+    "tests": {
+      "description": "Optional libraries glaze's own tests find with find_package (networking, SSL, SQLite)",
+      "dependencies": [
+        "asio",
+        "openssl",
+        "sqlite3"
+      ]
+    },
+    "fix-bench": {
+      "description": "FIX benchmark comparisons (benchmarks/fix)",
+      "dependencies": [
+        "hffix",
+        "quickfix"
+      ]
+    },
+    "lookup": {
+      "description": "Tag-lookup libraries compared in the layout probes",
+      "dependencies": [
+        "qlibs-mph",
+        "frozen",
+        "intel-cpp-std-extensions",
+        "intel-cib",
+        "constexprcore-perfect-hash"
+      ]
+    },
+    "orchestra": {
+      "description": "FIX Orchestra XML reading for the code generator. On the gcc16 triplets reflect-cpp is built with its C++26 reflection backend (see triplets/arm64-osx-gcc16.cmake).",
+      "dependencies": [
+        {
+          "name": "reflectcpp",
+          "features": [
+            "xml"
+          ]
+        },
+        "pugixml"
+      ]
+    }
+  }
+}

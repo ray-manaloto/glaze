@@ -1,0 +1,7 @@
+{
+  "name": "constexprcore-useful-abstractions",
+  "version-date": "2026-09-13",
+  "description": "ConstexprCore useful_abstractions: fixed_string, constexpr hashing and type-name helpers used by perfect_hash (header-only).",
+  "homepage": "https://github.com/ConstexprCore/useful_abstractions",
+  "license": "MIT"
+}

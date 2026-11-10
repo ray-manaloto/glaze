@@ -1,0 +1,562 @@
+{
+  "version": 10,
+  "$comment": "glaze-fix presets: compiler (gcc16, clang23, p2996) x config (debug, release, asan; tsan on the clang compilers only). Included from CMakePresets.json. Run: cmake --workflow --preset gcc16-release",
+  "configurePresets": [
+    {
+      "name": "gf-base",
+      "hidden": true,
+      "description": "glaze-fix base: Ninja, vcpkg manifest mode chain-loading cmake/toolchains/glaze-fix.cmake",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchains/glaze-fix.cmake",
+        "CMAKE_PROJECT_INCLUDE": "${sourceDir}/cmake/glaze-fix-check.cmake",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "glaze_DEVELOPER_MODE": true,
+        "BUILD_TESTING": true,
+        "glaze_ENABLE_SANITIZERS": false,
+        "glaze_ENABLE_FUZZING": false
+      }
+    },
+    {
+      "name": "gf-gcc16",
+      "hidden": true,
+      "cacheVariables": {
+        "GLAZE_FIX_COMPILER": "gcc16",
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-gcc16"
+      }
+    },
+    {
+      "name": "gf-clang23",
+      "hidden": true,
+      "cacheVariables": {
+        "GLAZE_FIX_COMPILER": "clang23",
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-clang23"
+      }
+    },
+    {
+      "name": "gf-p2996",
+      "hidden": true,
+      "cacheVariables": {
+        "GLAZE_FIX_COMPILER": "p2996",
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-p2996"
+      }
+    },
+    {
+      "name": "gf-debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "GLAZE_FIX_SANITIZER": "none",
+        "GLAZE_FIX_HARDENING": "debug"
+      }
+    },
+    {
+      "name": "gf-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "GLAZE_FIX_SANITIZER": "none",
+        "GLAZE_FIX_HARDENING": "none"
+      }
+    },
+    {
+      "name": "gf-asan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "GLAZE_FIX_SANITIZER": "asan",
+        "GLAZE_FIX_HARDENING": "debug"
+      }
+    },
+    {
+      "name": "gf-tsan",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "GLAZE_FIX_SANITIZER": "tsan",
+        "GLAZE_FIX_HARDENING": "debug"
+      }
+    },
+    {
+      "name": "gcc16-debug",
+      "displayName": "GCC 16.2 debug",
+      "inherits": [
+        "gf-gcc16",
+        "gf-debug",
+        "gf-base"
+      ]
+    },
+    {
+      "name": "gcc16-release",
+      "displayName": "GCC 16.2 release",
+      "inherits": [
+        "gf-gcc16",
+        "gf-release",
+        "gf-base"
+      ]
+    },
+    {
+      "name": "gcc16-asan",
+      "displayName": "GCC 16.2 asan",
+      "inherits": [
+        "gf-gcc16",
+        "gf-asan",
+        "gf-base"
+      ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-gcc16-asan"
+      }
+    },
+    {
+      "name": "clang23-debug",
+      "displayName": "Homebrew LLVM clang 23 debug",
+      "inherits": [
+        "gf-clang23",
+        "gf-debug",
+        "gf-base"
+      ]
+    },
+    {
+      "name": "clang23-release",
+      "displayName": "Homebrew LLVM clang 23 release",
+      "inherits": [
+        "gf-clang23",
+        "gf-release",
+        "gf-base"
+      ]
+    },
+    {
+      "name": "clang23-asan",
+      "displayName": "Homebrew LLVM clang 23 asan",
+      "inherits": [
+        "gf-clang23",
+        "gf-asan",
+        "gf-base"
+      ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-clang23-asan"
+      }
+    },
+    {
+      "name": "clang23-tsan",
+      "displayName": "Homebrew LLVM clang 23 tsan",
+      "inherits": [
+        "gf-clang23",
+        "gf-tsan",
+        "gf-base"
+      ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-clang23-tsan"
+      }
+    },
+    {
+      "name": "p2996-debug",
+      "displayName": "clang-p2996 debug",
+      "inherits": [
+        "gf-p2996",
+        "gf-debug",
+        "gf-base"
+      ]
+    },
+    {
+      "name": "p2996-release",
+      "displayName": "clang-p2996 release",
+      "inherits": [
+        "gf-p2996",
+        "gf-release",
+        "gf-base"
+      ]
+    },
+    {
+      "name": "p2996-asan",
+      "displayName": "clang-p2996 asan",
+      "inherits": [
+        "gf-p2996",
+        "gf-asan",
+        "gf-base"
+      ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-p2996-asan"
+      }
+    },
+    {
+      "name": "p2996-tsan",
+      "displayName": "clang-p2996 tsan",
+      "inherits": [
+        "gf-p2996",
+        "gf-tsan",
+        "gf-base"
+      ],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "arm64-osx-p2996-tsan"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "gcc16-debug",
+      "configurePreset": "gcc16-debug"
+    },
+    {
+      "name": "gcc16-release",
+      "configurePreset": "gcc16-release"
+    },
+    {
+      "name": "gcc16-asan",
+      "configurePreset": "gcc16-asan"
+    },
+    {
+      "name": "clang23-debug",
+      "configurePreset": "clang23-debug"
+    },
+    {
+      "name": "clang23-release",
+      "configurePreset": "clang23-release"
+    },
+    {
+      "name": "clang23-asan",
+      "configurePreset": "clang23-asan"
+    },
+    {
+      "name": "clang23-tsan",
+      "configurePreset": "clang23-tsan"
+    },
+    {
+      "name": "p2996-debug",
+      "configurePreset": "p2996-debug"
+    },
+    {
+      "name": "p2996-release",
+      "configurePreset": "p2996-release"
+    },
+    {
+      "name": "p2996-asan",
+      "configurePreset": "p2996-asan"
+    },
+    {
+      "name": "p2996-tsan",
+      "configurePreset": "p2996-tsan"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "gcc16-debug",
+      "configurePreset": "gcc16-debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "gcc16-release",
+      "configurePreset": "gcc16-release",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "gcc16-asan",
+      "configurePreset": "gcc16-asan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=0:abort_on_error=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+      }
+    },
+    {
+      "name": "clang23-debug",
+      "configurePreset": "clang23-debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "clang23-release",
+      "configurePreset": "clang23-release",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "clang23-asan",
+      "configurePreset": "clang23-asan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=1:abort_on_error=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+      }
+    },
+    {
+      "name": "clang23-tsan",
+      "configurePreset": "clang23-tsan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "environment": {
+        "TSAN_OPTIONS": "halt_on_error=1:second_deadlock_stack=1"
+      }
+    },
+    {
+      "name": "p2996-debug",
+      "configurePreset": "p2996-debug",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "p2996-release",
+      "configurePreset": "p2996-release",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      }
+    },
+    {
+      "name": "p2996-asan",
+      "configurePreset": "p2996-asan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=1:abort_on_error=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1"
+      }
+    },
+    {
+      "name": "p2996-tsan",
+      "configurePreset": "p2996-tsan",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "environment": {
+        "TSAN_OPTIONS": "halt_on_error=1:second_deadlock_stack=1"
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "gcc16-debug",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "gcc16-debug"
+        },
+        {
+          "type": "build",
+          "name": "gcc16-debug"
+        },
+        {
+          "type": "test",
+          "name": "gcc16-debug"
+        }
+      ]
+    },
+    {
+      "name": "gcc16-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "gcc16-release"
+        },
+        {
+          "type": "build",
+          "name": "gcc16-release"
+        },
+        {
+          "type": "test",
+          "name": "gcc16-release"
+        }
+      ]
+    },
+    {
+      "name": "gcc16-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "gcc16-asan"
+        },
+        {
+          "type": "build",
+          "name": "gcc16-asan"
+        },
+        {
+          "type": "test",
+          "name": "gcc16-asan"
+        }
+      ]
+    },
+    {
+      "name": "clang23-debug",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "clang23-debug"
+        },
+        {
+          "type": "build",
+          "name": "clang23-debug"
+        },
+        {
+          "type": "test",
+          "name": "clang23-debug"
+        }
+      ]
+    },
+    {
+      "name": "clang23-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "clang23-release"
+        },
+        {
+          "type": "build",
+          "name": "clang23-release"
+        },
+        {
+          "type": "test",
+          "name": "clang23-release"
+        }
+      ]
+    },
+    {
+      "name": "clang23-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "clang23-asan"
+        },
+        {
+          "type": "build",
+          "name": "clang23-asan"
+        },
+        {
+          "type": "test",
+          "name": "clang23-asan"
+        }
+      ]
+    },
+    {
+      "name": "clang23-tsan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "clang23-tsan"
+        },
+        {
+          "type": "build",
+          "name": "clang23-tsan"
+        },
+        {
+          "type": "test",
+          "name": "clang23-tsan"
+        }
+      ]
+    },
+    {
+      "name": "p2996-debug",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "p2996-debug"
+        },
+        {
+          "type": "build",
+          "name": "p2996-debug"
+        },
+        {
+          "type": "test",
+          "name": "p2996-debug"
+        }
+      ]
+    },
+    {
+      "name": "p2996-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "p2996-release"
+        },
+        {
+          "type": "build",
+          "name": "p2996-release"
+        },
+        {
+          "type": "test",
+          "name": "p2996-release"
+        }
+      ]
+    },
+    {
+      "name": "p2996-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "p2996-asan"
+        },
+        {
+          "type": "build",
+          "name": "p2996-asan"
+        },
+        {
+          "type": "test",
+          "name": "p2996-asan"
+        }
+      ]
+    },
+    {
+      "name": "p2996-tsan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "p2996-tsan"
+        },
+        {
+          "type": "build",
+          "name": "p2996-tsan"
+        },
+        {
+          "type": "test",
+          "name": "p2996-tsan"
+        }
+      ]
+    }
+  ]
+}

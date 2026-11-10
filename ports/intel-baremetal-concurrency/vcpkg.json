@@ -1,0 +1,7 @@
+{
+  "name": "intel-baremetal-concurrency",
+  "version-date": "2026-07-21",
+  "description": "Intel cpp-baremetal-concurrency: portable concurrency primitives for bare-metal C++ (header-only).",
+  "homepage": "https://github.com/intel/cpp-baremetal-concurrency",
+  "license": "BSL-1.0"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "constexprcore-perfect-hash",
+  "version-date": "2026-11-04",
+  "description": "ConstexprCore perfect_hash: compile-time perfect hashing for string keys (header-only).",
+  "homepage": "https://github.com/ConstexprCore/perfect_hash",
+  "license": "MIT",
+  "dependencies": [
+    "constexprcore-useful-abstractions"
+  ]
+}

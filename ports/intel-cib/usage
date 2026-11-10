@@ -1,0 +1,4 @@
+intel-cib is header-only and provides CMake target intel::cib:
+
+  find_package(intel-cib CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE intel::cib)

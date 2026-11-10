@@ -1,0 +1,14 @@
+{
+  "name": "intel-cib",
+  "version-date": "2026-11-04",
+  "description": "Intel compile-time-init-build (cib): compile-time composition, including the lookup/ perfect-hash tables used by the tag-lookup probes (header-only). Installs headers only; the Python string-catalog tooling is not included.",
+  "homepage": "https://github.com/intel/compile-time-init-build",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "intel-cpp-std-extensions",
+    "intel-baremetal-senders-and-receivers",
+    "intel-baremetal-concurrency",
+    "boost-mp11",
+    "fmt"
+  ]
+}

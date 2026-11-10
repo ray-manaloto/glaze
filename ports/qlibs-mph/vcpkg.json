@@ -1,0 +1,7 @@
+{
+  "name": "qlibs-mph",
+  "version-date": "2025-07-20",
+  "description": "qlibs/mph: static [minimal] perfect hash, C++20, single header. Patched for glaze-fix: scalar bucket search by default (no std::experimental::simd needed), self-contained includes, no 64-entry limit, and absent key 0 is no longer found.",
+  "homepage": "https://github.com/qlibs/mph",
+  "license": "MIT"
+}

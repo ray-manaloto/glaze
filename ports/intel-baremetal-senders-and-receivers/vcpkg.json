@@ -1,0 +1,12 @@
+{
+  "name": "intel-baremetal-senders-and-receivers",
+  "version-date": "2026-07-21",
+  "description": "Intel cpp-baremetal-senders-and-receivers: a senders/receivers implementation for bare-metal C++ (header-only).",
+  "homepage": "https://github.com/intel/cpp-baremetal-senders-and-receivers",
+  "license": "BSL-1.0",
+  "dependencies": [
+    "intel-cpp-std-extensions",
+    "boost-mp11",
+    "intel-baremetal-concurrency"
+  ]
+}

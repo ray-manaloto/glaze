@@ -1,0 +1,4 @@
+intel-cpp-std-extensions is header-only and provides CMake target intel::stdx:
+
+  find_package(intel-cpp-std-extensions CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE intel::stdx)

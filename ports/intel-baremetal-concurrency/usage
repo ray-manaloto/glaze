@@ -1,0 +1,4 @@
+intel-baremetal-concurrency is header-only and provides CMake target intel::concurrency:
+
+  find_package(intel-baremetal-concurrency CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE intel::concurrency)

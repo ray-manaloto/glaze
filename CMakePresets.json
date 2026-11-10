@@ -1,5 +1,6 @@
 {
-    "version": 3,
+    "version": 4,
+    "include": ["cmake/presets/glaze-fix.json"],
     "cmakeMinimumRequired": {
         "major": 3,
         "minor": 23,

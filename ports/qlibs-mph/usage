@@ -1,0 +1,4 @@
+qlibs-mph is header-only and provides CMake target mph::mph:
+
+  find_package(qlibs-mph CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE mph::mph)   # #include <mph>

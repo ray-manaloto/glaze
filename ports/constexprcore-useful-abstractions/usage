@@ -1,0 +1,4 @@
+constexprcore-useful-abstractions is header-only and provides CMake target ConstexprCore::useful_abstractions:
+
+  find_package(constexprcore-useful-abstractions CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE ConstexprCore::useful_abstractions)
