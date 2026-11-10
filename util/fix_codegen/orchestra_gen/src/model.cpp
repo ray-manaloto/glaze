@@ -69,6 +69,7 @@ struct Builder {
     const auto& t = cs.type.value();
     if (!cs.code || cs.code->empty()) return std::nullopt;
     Enum e;
+    e.id = cs.id.value();
     std::string nm = cs.name.value();
     if (nm.ends_with("CodeSet")) nm.resize(nm.size() - 7);
     if (t == "char" || base_of(t) == "char") {
@@ -220,6 +221,8 @@ struct Builder {
   std::string build_entry(const orch::Structure& g) {
     if (auto it = entry_name.find(g.id); it != entry_name.end()) return it->second;
     Part p;
+    p.kind = part_kind::group;
+    p.id = g.id;
     p.fix_name = g.name;
     std::set<std::int32_t> tags;
     flatten(g.refs, false, p, tags, {}, false);
@@ -274,6 +277,8 @@ struct Builder {
     if (it == repo.components.end()) throw std::runtime_error(std::string("no component ") + name);
     Part p;
     p.name = unique_type_name(name, "Part");
+    p.kind = part_kind::component;
+    p.id = it->first;
     p.fix_name = name;
     p.templated = true;
     std::set<std::int32_t> tags;
@@ -324,6 +329,8 @@ Output build(const orch::Repository& repo, const Options& opt, const std::string
   for (const auto& m : repo.messages) {
     if (!opt.msg_types.empty() && !opt.msg_types.contains(m.msg_type)) continue;
     Part p;
+    p.kind = part_kind::message;
+    p.id = m.id;
     p.fix_name = m.name;
     p.msg_type = m.msg_type;
     p.templated = true;

@@ -33,7 +33,7 @@ FetchContent_Declare(reflectcpp
   GIT_SHALLOW    FALSE)
 FetchContent_MakeAvailable(reflectcpp)
 
-add_executable(orchestra_gen src/main.cpp src/orchestra.cpp src/model.cpp src/emit.cpp)
+add_executable(orchestra_gen src/main.cpp src/orchestra.cpp src/model.cpp src/emit.cpp src/lock.cpp)
 target_include_directories(orchestra_gen PRIVATE src)
 target_link_libraries(orchestra_gen PRIVATE reflectcpp pugixml::pugixml)
 # -freflection: GCC's P2996 switch, needed by reflect-cpp's C++26 backend.

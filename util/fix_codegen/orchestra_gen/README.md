@@ -14,6 +14,22 @@ underneath, built with reflect-cpp's C++26 backend (`REFLECTCPP_USE_CPP26_REFLEC
 | `<ns>.digest` | `#embed` path | the same layout as text: `P` part lines, `M` member lines |
 | `<ns>_embed.cppm` | `#embed` path (GCC 16.2, clang-p2996) | a module that `#embed`s the digest; `define_aggregate` builds every struct at compile time |
 
+## Name and width lock (`--lock FILE`, stage 2)
+
+`lock/fix44.lock` is checked in. It holds every generated C++ name and type, one line per item, keyed by
+Orchestra ids: `tag <tag>` (tag constants), `enum <codeSet id>` (name and underlying type), `code <codeSet id>
+<value>` (enumerator), `part <component|group|message> <id>` (struct) and `member <part kind> <part id> <tag>`
+(member name and type). It is compared before anything is written:
+
+- **Renamed** (same id, new Orchestra name): the locked name is kept (owner, 2026-11-10) and the run goes on.
+  Each kept name is printed as `lock: kept ...`; type spellings that mention a kept enum or struct name follow it.
+  The FIX-name strings (`fix_fields` entries and a struct's own `fix_name`) are not C++ names and show the
+  new Orchestra name.
+- **Added, removed, or a changed type or width:** refused with one `lock: added|removed|type ...` line each, and
+  nothing is written. After review, `--update-lock` writes the new lock and adopts the new names on purpose.
+
+A missing lock file is an error unless `--update-lock` is given, which creates it.
+
 ## How the XML is read
 
 - Every element prefix is stripped first, so the binding works for the `/2020/` and `/2026/` namespaces and any prefix.
@@ -30,7 +46,7 @@ Put machine paths in `local.env` (git-ignored), or export them: `GCC`, `CLANG` (
 clang), `ORCH` (the orchestrations repo's `FIX Standard` folder), `BOOST_INC`. Then:
 
 ```sh
-./run.sh                 # gen guards headers visit annotations oracle negative
+./run.sh                 # gen lock guards targets headers visit annotations oracle negative
 ./run.sh embed latest    # opt-in: the #embed module + layout diff (~45 s each, GCC up to 6.4 GB); FIX Latest
 ./run.sh oracle          # one step; ORACLE_MESSAGES="D 8" picks messages
 ```
@@ -50,6 +66,7 @@ The codec contract for the output is in `CONTRACT.md`.
 | `tests/diff_test.cpp` | GCC 16.2, clang-p2996 | layout only: every struct from the `#embed` module has the same members, types, offsets, bit widths, size and alignment as the header's (static members and clang annotations are not compared) |
 | `run.sh guards` | GCC 16.2 | an unknown attribute is refused; FIXReferenceData (non-base scenario) is refused; two runs are byte-identical |
 | `run.sh negative` | GCC 16.2 | a digest naming a missing enum is rejected at compile time |
+| `run.sh lock` | GCC 16.2 (generator only) | a synthetic EP (`tests/synthetic_ep.py`: Side code Z added, OrdType code 1 renamed, PartyRole code 256) is refused with exactly 3 changes and writes nothing, keeping the renamed code's name; renames only (ClOrdID field, Side codeSet, OrdType code) keep all 4 locked names and give the same output as `out/fix44`; `--update-lock` accepts the EP into a copy, after which the run is clean |
 
 ## Independent check against the XML (`oracle/`)
 
@@ -65,6 +82,8 @@ Side removed, and checks that both are reported.
 
 ## Not done yet
 
+- A lock for FIX Latest (only FIX 4.4 has one), and the rest of stage 2: one naming pass, `[[deprecated]]` from
+  the `deprecated` attribute, checked-in output with a regenerate-and-diff CI job.
 - L3 per-field timestamp write format (s/ms/us/ns) is not emitted; the strict-vs-lenient question is open.
 - Unknown tags inside group entries (entries are not templated over the policy).
 - Codec integration: nothing reads or writes these structs yet.

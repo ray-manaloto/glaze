@@ -13,6 +13,7 @@ namespace gen {
 enum class enum_kind { char_, int_ };
 struct Enumerator { std::string name; std::string value; };  // value: wire char or integer text
 struct Enum {
+  std::int32_t id = 0;         // Orchestra codeSet id (the lock file's key)
   std::string name;            // C++ name (codeSet name without "CodeSet")
   enum_kind kind;
   std::string underlying;      // char, std::uint8_t, std::uint16_t, std::uint32_t, std::int32_t...
@@ -42,7 +43,10 @@ struct Member {
   bool open_enum = false;     // int enum whose field allows values beyond its codes (unionDataType)
 };
 
+enum class part_kind { component, group, message };
 struct Part {
+  part_kind kind = part_kind::message;
+  std::int32_t id = 0;     // Orchestra id of the component, group or message (the lock file's key)
   std::string name;        // C++ struct name
   std::string fix_name;    // Orchestra name
   std::string msg_type;    // messages only

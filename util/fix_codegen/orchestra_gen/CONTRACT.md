@@ -51,6 +51,12 @@ What a codec may rely on in a generated `<ns>.hpp`. Anything not listed here is 
 | char | `char` | absent = `'\0'` |
 | everything else (String, data, dates, String codeSets, MultipleValueString, ...) | `std::string_view` | absent = empty view (FIX forbids empty values) |
 
+## Stable names
+
+Every C++ name in the output (tag constants, enums, enumerators, structs, members) and every member type is
+pinned by Orchestra id in the checked-in lock (`lock/<ns>.lock`, see README). A rename in a new Orchestra file keeps the
+locked name; an addition, a removal or a changed type is refused. `--update-lock`, run after review, accepts both.
+
 ## Not in the contract yet
 
 Per-field timestamp write precision (L3); unknown tags inside group entries; enum name tables; the `#embed`

@@ -1,9 +1,11 @@
 // orchestra_gen: FIX Orchestra XML -> glaze-fix 3-part structs (layout rules L1-L6).
 //
 //   orchestra_gen --xml OrchestraFIX44.xml --namespace fix44 --out DIR [--messages D,8,...]
+//                 [--lock FILE [--update-lock]]
 //
 // Writes DIR/<ns>_enums.hpp, DIR/<ns>.hpp, DIR/<ns>.digest and DIR/<ns>_embed.cppm.
 #include "emit.hpp"
+#include "lock.hpp"
 #include "model.hpp"
 #include "orchestra.hpp"
 
@@ -11,6 +13,7 @@
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <print>
 #include <string>
 
@@ -23,23 +26,26 @@ void write_file(const std::filesystem::path& p, const std::string& text) {
 }
 
 int usage() {
-  std::println(stderr, "usage: orchestra_gen --xml FILE --namespace NS --out DIR [--messages D,8,...] [--strict on] [--target gcc16|p2996|clang23]");
+  std::println(stderr, "usage: orchestra_gen --xml FILE --namespace NS --out DIR [--messages D,8,...] [--strict on] [--target gcc16|p2996|clang23] [--lock FILE [--update-lock]]");
   return 2;
 }
 
 }  // namespace
 
 int main(int argc, char** argv) {
-  std::string xml, out_dir;
+  std::string xml, out_dir, lock_path;
+  bool update_lock = false;
   gen::Options opt;
   gen::target tgt = gen::target::gcc16;
   for (int i = 1; i < argc; ++i) {
     const std::string a = argv[i];
+    if (a == "--update-lock") { update_lock = true; continue; }
     if (i + 1 >= argc) return usage();
     const std::string v = argv[++i];
     if (a == "--xml") xml = v;
     else if (a == "--namespace") opt.ns = v;
     else if (a == "--out") out_dir = v;
+    else if (a == "--lock") lock_path = v;
     else if (a == "--strict") { opt.strict = v == "1" || v == "on"; }
     else if (a == "--target") {
       const auto t = gen::parse_target(v);
@@ -55,13 +61,41 @@ int main(int argc, char** argv) {
       }
     } else return usage();
   }
-  if (xml.empty() || opt.ns.empty() || out_dir.empty()) return usage();
+  if (xml.empty() || opt.ns.empty() || out_dir.empty() || (update_lock && lock_path.empty())) return usage();
 
   try {
     const auto t0 = std::chrono::steady_clock::now();
     const auto repo = orch::load(xml);
     const auto t1 = std::chrono::steady_clock::now();
-    const auto o = gen::build(repo, opt, std::filesystem::path(xml).filename().string());
+    auto o = gen::build(repo, opt, std::filesystem::path(xml).filename().string());
+    // Stage 2: compare with the checked-in lock before writing anything. Without --update-lock, names already
+    // in the lock are kept (a rename is only reported), and any other change is refused until reviewed.
+    if (!lock_path.empty()) {
+      std::string before;
+      const bool exists = std::filesystem::exists(lock_path);
+      if (std::ifstream f(lock_path, std::ios::binary); exists && f) before.assign(std::istreambuf_iterator<char>(f), {});
+      else if (!update_lock) {
+        std::println(stderr, "orchestra_gen: lock file {} not found (create it with --update-lock)", lock_path);
+        return 1;
+      }
+      if (!update_lock)
+        for (const auto& k : gen::apply_lock(o, before)) std::println("lock: {}", k);
+      const auto now = gen::emit_lock(o);
+      const auto changes = gen::diff_lock(before, now);
+      if (exists)  // a new lock lists everything: report only its size
+        for (const auto& c : changes) std::println(stderr, "lock: {}", c);
+      if (!changes.empty() && !update_lock) {
+        std::println(stderr, "orchestra_gen: {} change(s) against {}; nothing written. Review them, then rerun with --update-lock",
+                     changes.size(), lock_path);
+        return 1;
+      }
+      gen::check_unique_names(o);  // after the refusal, so refused changes are reported first
+      if (update_lock && now != before) write_file(lock_path, now);
+      std::println("lock {}: {}", lock_path,
+                   !exists           ? std::format("created, {} items", changes.size())
+                   : changes.empty() ? std::string("unchanged")
+                                     : std::format("{} change(s) accepted", changes.size()));
+    }
     std::filesystem::create_directories(out_dir);
     const std::filesystem::path d = out_dir;
     write_file(d / (opt.ns + "_enums.hpp"), gen::emit_enums(o));
