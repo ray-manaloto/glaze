@@ -157,9 +157,9 @@ embed)  # opt-in: the #embed + define_aggregate module and the layout differenti
     check timed "embed module: clang-p2996" "$CLANG" "${CF[@]}" --embed-dir="$O" "${CLIM[@]}" --precompile -x c++-module "$O/fix44_embed.cppm" -o $T/fix44_embed.pcm
     check compile_run "layout diff: clang-p2996" $T/c_diff "$CLANG" "${CF[@]}" "${CLIM[@]}" -fmodule-file=fix44_embed=$T/fix44_embed.pcm tests/diff_test.cpp $T/fix44_embed.pcm
   fi;;
-latest)  # FIX Latest EP312, every message, headers path on three compilers
+latest)  # FIX Latest EP312, every message, checked against lock/fixlatest.lock, headers path on three compilers
   for tg in gcc16 p2996 clang23; do
-    check timed "generate FIX Latest for $tg" ./$B/orchestra_gen --xml "$ORCH/OrchestraFIXLatest.xml" --namespace fixlatest --out out/fixlatest-$tg --target $tg
+    check timed "generate FIX Latest for $tg" ./$B/orchestra_gen --xml "$ORCH/OrchestraFIXLatest.xml" --namespace fixlatest --out out/fixlatest-$tg --target $tg --lock lock/fixlatest.lock
   done
   printf '#include "fixlatest.hpp"\nint main() { return sizeof(fixlatest::NewOrderSingle<glz::fix3::count_unknown>) == 0; }\n' > $T/latest.cpp
   check compile_run "FIX Latest headers: GCC 16.2" $T/g_latest "$GCC" "${GF[@]}" -Iout/fixlatest-gcc16 $T/latest.cpp

@@ -16,7 +16,7 @@ underneath, built with reflect-cpp's C++26 backend (`REFLECTCPP_USE_CPP26_REFLEC
 
 ## Name and width lock (`--lock FILE`, stage 2)
 
-`lock/fix44.lock` is checked in. It holds every generated C++ name and type, one line per item, keyed by
+`lock/fix44.lock` and `lock/fixlatest.lock` (FIX Latest EP312, used by `run.sh latest`) are checked in. Each holds every generated C++ name and type, one line per item, keyed by
 Orchestra ids: `tag <tag>` (tag constants), `enum <codeSet id>` (name and underlying type), `code <codeSet id>
 <value>` (enumerator), `part <component|group|message> <id>` (struct) and `member <part kind> <part id> <tag>`
 (member name and type). It is compared before anything is written:
@@ -82,7 +82,7 @@ Side removed, and checks that both are reported.
 
 ## Not done yet
 
-- A lock for FIX Latest (only FIX 4.4 has one), and the rest of stage 2: one naming pass, `[[deprecated]]` from
+- The rest of stage 2: one naming pass, `[[deprecated]]` from
   the `deprecated` attribute, checked-in output with a regenerate-and-diff CI job.
 - L3 per-field timestamp write format (s/ms/us/ns) is not emitted; the strict-vs-lenient question is open.
 - Unknown tags inside group entries (entries are not templated over the policy).
