@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Build orchestra_gen, generate FIX code, and test both output paths on the three compilers.
 #
-#   ./run.sh [step ...]      steps: gen lock guards targets headers visit annotations oracle negative embed latest
-#                            (default: all but embed and latest)
+#   ./run.sh [step ...]      steps: gen lock guards targets headers visit annotations oracle negative embed latest ci
+#                            (default: all but embed, latest and ci; ci is what the GitHub job runs: GCC only)
 #
 # Every step's exit status counts: the script exits 1 if any step failed, and prints a summary.
 # Machine-specific paths come from the environment or from ./local.env (git-ignored), never from this file:
@@ -10,19 +10,24 @@
 #   CLANG   clang-p2996 clang++                 (default: clang++-p2996 on PATH; steps that need it are skipped if unset)
 #   LLVM    upstream clang++ (no reflection)    (default: clang++ on PATH; must accept -stdlib=libc++)
 #   ORCH    the orchestrations repo's "FIX Standard" folder   (required)
-#   BOOST_INC  include dir holding boost/decimal.hpp          (required)
+#   BOOST_INC  include dir holding boost/decimal.hpp          (required except for gen, lock, guards and ci)
 set -uo pipefail
 cd "$(dirname "$0")"
 [ -f local.env ] && . ./local.env
 GCC=${GCC:-$(command -v g++-16 || true)}
 CLANG=${CLANG:-$(command -v clang++-p2996 || true)}
 LLVM=${LLVM:-$(command -v clang++ || true)}
+for v in GCC CLANG LLVM; do  # a bare name (GCC=g++, as in the CI job) is looked up on PATH
+  [ -n "${!v}" ] && [[ ${!v} != */* ]] && printf -v "$v" '%s' "$(command -v "${!v}" || echo "${!v}")"
+done
 : "${ORCH:?set ORCH to the FIX Standard folder of the orchestrations repo (or put it in local.env)}"
-: "${BOOST_INC:?set BOOST_INC to an include dir with boost/decimal.hpp (or put it in local.env)}"
 XML=${XML:-$ORCH/OrchestraFIX44.xml}
 STDX_REV=d6e517f86d5d4997c3c4fe78a29f41433cfb5c6d   # intel/cpp-std-extensions (stdx::optional, BSL-1.0)
 B=build; O=out/fix44; T=$B/tests; mkdir -p "$T"
 steps=("$@"); [ ${#steps[@]} -eq 0 ] && steps=(gen lock guards targets headers visit annotations oracle negative)
+for s in "${steps[@]}"; do case $s in gen|lock|guards|ci) ;;  # these only run the generator: no Boost needed
+  *) : "${BOOST_INC:?set BOOST_INC to an include dir with boost/decimal.hpp (or put it in local.env)}";; esac; done
+BOOST_INC=${BOOST_INC:-}
 fails=(); passes=()
 
 timed() {  # timed LABEL CMD...: run, keep the full log, print wall time and peak memory, return the command's status
@@ -30,7 +35,8 @@ timed() {  # timed LABEL CMD...: run, keep the full log, print wall time and pea
   local log; log=$(logname "$label")
   local t0=$SECONDS rc
   if [ "$(uname)" = Darwin ]; then /usr/bin/time -l "$@" >"$log" 2>&1; rc=$?
-  else /usr/bin/time -v "$@" >"$log" 2>&1; rc=$?; fi
+  elif [ -x /usr/bin/time ]; then /usr/bin/time -v "$@" >"$log" 2>&1; rc=$?
+  else "$@" >"$log" 2>&1; rc=$?; fi  # no GNU time (e.g. the gcc container): no memory figure
   local mem; mem=$(grep -E "maximum resident set size|Maximum resident set size" "$log" | grep -oE '[0-9]+' | head -1)
   [ "$(uname)" = Darwin ] || mem=$(( ${mem:-0} * 1024 ))
   printf '== %-44s %4ss  %6s MB  %s\n' "$label" $((SECONDS - t0)) $(( ${mem:-0} / 1048576 )) "$([ $rc -eq 0 ] && echo ok || echo "FAILED (log: $log)")"
@@ -170,9 +176,24 @@ latest)  # FIX Latest EP312, every message, checked against lock/fixlatest.lock,
     check timed "generate FIX Latest for $tg" ./$B/orchestra_gen --xml "$ORCH/OrchestraFIXLatest.xml" --namespace fixlatest --out out/fixlatest-$tg --target $tg --lock lock/fixlatest.lock
   done
   printf '#include "fixlatest.hpp"\nint main() { return sizeof(fixlatest::NewOrderSingle<glz::fix3::count_unknown>) == 0; }\n' > $T/latest.cpp
+  for tg in gcc16 p2996 clang23; do  # the checked-in copy (generated/) must match; refresh it only after review
+    if diff -r out/fixlatest-$tg generated/fixlatest-$tg >/dev/null; then echo "== FIX Latest $tg matches generated/              ok"; passes+=(latest-match-$tg)
+    else echo "== FIX Latest $tg differs from generated/          FAILED"; fails+=(latest-match-$tg); fi
+  done
   check compile_run "FIX Latest headers: GCC 16.2" $T/g_latest "$GCC" "${GF[@]}" -Iout/fixlatest-gcc16 $T/latest.cpp
   need CLANG && check compile_run "FIX Latest headers: clang-p2996" $T/c_latest "$CLANG" "${CF[@]}" -Iout/fixlatest-p2996 $T/latest.cpp
   need LLVM && check compile_run "FIX Latest headers: upstream clang" $T/l_latest "$LLVM" "${LF[@]}" -Iout/fixlatest-clang23 $T/latest.cpp;;
+ci)  # the GitHub job (.github/workflows/orchestra-gen.yml): GCC only, no Boost, no other compiler
+  need GCC || { fails+=(ci); continue; }
+  [ -f $B/build.ninja ] || cmake -S . -B $B -G Ninja -DCMAKE_CXX_COMPILER="$GCC" -DCMAKE_BUILD_TYPE=Release >/dev/null
+  check timed "build orchestra_gen (GCC)" cmake --build $B
+  C=$T/ci; rm -rf $C
+  for tg in gcc16 p2996 clang23; do
+    check timed "CI: FIX 4.4 $tg against lock/fix44.lock" ./$B/orchestra_gen --xml "$XML" --namespace fix44 --out $C/fix44-$tg --strict on --target $tg --lock lock/fix44.lock
+    check timed "CI: FIX Latest $tg against lock/fixlatest.lock" ./$B/orchestra_gen --xml "$ORCH/OrchestraFIXLatest.xml" --namespace fixlatest --out $C/fixlatest-$tg --strict on --target $tg --lock lock/fixlatest.lock
+    if diff -r $C/fixlatest-$tg generated/fixlatest-$tg; then echo "== CI: FIX Latest $tg equals generated/            ok"; passes+=(ci-diff-$tg)
+    else echo "== CI: FIX Latest $tg differs from generated/       FAILED"; fails+=(ci-diff-$tg); fi
+  done;;
 *) echo "unknown step '$step'"; fails+=("$step");;
 esac; done
 

@@ -31,6 +31,19 @@ codes). It is compared before anything is written:
 
 A missing lock file is an error unless `--update-lock` is given, which creates it.
 
+## Checked-in output and CI (`generated/`, `run.sh ci`)
+
+`generated/fixlatest-gcc16`, `generated/fixlatest-p2996` and `generated/fixlatest-clang23` hold the FIX Latest
+output for each target (owner, 2026-11-10: FIX Latest rather than FIX 4.4). `run.sh latest` fails when its fresh
+output differs from them. After reviewing a difference, refresh them from that run's output:
+`rm -rf generated/fixlatest-* && cp -R out/fixlatest-gcc16 out/fixlatest-p2996 out/fixlatest-clang23 generated/`.
+
+`.github/workflows/orchestra-gen.yml` runs `run.sh ci` on every push to `spike/orchestra-embed` that touches this
+folder, and by hand (`workflow_dispatch`). It uses the `gcc:16.2.0` image (pinned by digest), CMake and Ninja
+from mise, and the orchestrations repository at a pinned commit; it needs no secrets and no Boost. `ci` builds the
+generator, generates FIX 4.4 and FIX Latest for all three targets against both locks with `--strict on`, and
+fails on any lock change or any difference from `generated/`.
+
 ## How the XML is read
 
 - Every element prefix is stripped first, so the binding works for the `/2020/` and `/2026/` namespaces and any prefix.
@@ -50,6 +63,7 @@ clang), `ORCH` (the orchestrations repo's `FIX Standard` folder), `BOOST_INC`. T
 ./run.sh                 # gen lock guards targets headers visit annotations oracle negative
 ./run.sh embed latest    # opt-in: the #embed module + layout diff (~45 s each, GCC up to 6.4 GB); FIX Latest
 ./run.sh oracle          # one step; ORACLE_MESSAGES="D 8" picks messages
+./run.sh ci              # what the GitHub job runs: GCC only, no Boost
 ```
 
 Every step counts: the script prints `passed: N   failed: M` and exits 1 on any failure. Full compiler logs are
@@ -84,7 +98,7 @@ Side removed, and checks that both are reported.
 ## Not done yet
 
 - The rest of stage 2: one naming pass, `[[deprecated]]` from
-  the `deprecated` attribute, checked-in output with a regenerate-and-diff CI job.
+  the `deprecated` attribute.
 - L3 per-field timestamp write format (s/ms/us/ns) is not emitted; the strict-vs-lenient question is open.
 - Unknown tags inside group entries (entries are not templated over the policy).
 - Codec integration: nothing reads or writes these structs yet.

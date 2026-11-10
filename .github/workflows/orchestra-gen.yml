@@ -1,0 +1,56 @@
+# orchestra_gen (spike): regenerate the FIX structs from the FIX Orchestra files and fail on any difference.
+# FIX 4.4 and FIX Latest are checked against their name and width locks (util/fix_codegen/orchestra_gen/lock/),
+# and FIX Latest's generated headers must equal the checked-in copy (util/fix_codegen/orchestra_gen/generated/).
+# Runs only on pushes to the spike branch and by hand; it uses no secrets.
+name: orchestra_gen regenerate
+
+on:
+  push:
+    branches:
+      - spike/orchestra-embed
+    paths:
+      - 'util/fix_codegen/orchestra_gen/**'
+      - '.github/workflows/orchestra-gen.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orchestra-gen-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # GCC 16.2: the generator needs -freflection (reflect-cpp's C++26 backend).
+    container: gcc:16.2.0@sha256:b8a42d6804296fbe7a54e17e9d60c3100d9e8dbe7ef88c748cae2ddb00d63ba2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check out the FIX Orchestra files (pinned)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          repository: FIXTradingCommunity/orchestrations
+          ref: cd24169a2abd8daba7c360987c7a46ca11873a12
+          path: orchestrations
+          persist-credentials: false
+
+      - name: Install CMake and Ninja with mise
+        uses: jdx/mise-action@b44d12e7d0d8ee7461bb893e1b1993500433185b  # v5.2.7
+        with:
+          mise_toml: |
+            [tools]
+            "aqua:Kitware/CMake" = "4.4.5"
+            "aqua:ninja-build/ninja" = "1.13.2"
+
+      - name: Regenerate and compare
+        working-directory: util/fix_codegen/orchestra_gen
+        shell: bash
+        env:
+          GCC: g++
+        # GITHUB_WORKSPACE, not github.workspace: inside a container job only the variable has the container path.
+        run: ORCH="$GITHUB_WORKSPACE/orchestrations/FIX Standard" ./run.sh ci
