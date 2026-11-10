@@ -2,6 +2,11 @@
 # vcpkg chain-loads our toolchain, so ports get the same compiler and standard library as the
 # project (each port keeps its own C++ standard; see the toolchain). The libraries are built with the same sanitizer as the tsan presets: TSan reports
 # false data races on synchronization done inside uninstrumented library code.
+# Make-based ports such as OpenSSL take CC and CXX from the environment over the compiler vcpkg
+# detected from our toolchain, so a shell that exports them would build those ports with another
+# compiler. Clear them for the port build (the triplet runs inside it).
+unset(ENV{CC})
+unset(ENV{CXX})
 set(VCPKG_TARGET_ARCHITECTURE arm64)
 set(VCPKG_CRT_LINKAGE dynamic)
 set(VCPKG_LIBRARY_LINKAGE static)

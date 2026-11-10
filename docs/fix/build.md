@@ -64,7 +64,17 @@ The clang23 workflows each run 171 tests:
 | clang23-asan | 169 | `json_performance`, `json_perf_benchmark`: UBSan, test-data generator at `tests/json_performance/json_performance.cpp:667` divides by a random count that can be 0, then converts infinity to `int` |
 | clang23-tsan | 169 | `asio_repe`: threads write `std::cout` at once; `http_client_test`: worker threads call `expect`, and the `ut` reporter's counters are not thread-safe |
 
-All four are in test code, not in the glaze headers. The asan presets turn off `-fsanitize=function` for vcpkg ports only (OpenSSL calls functions through mismatched pointer types on purpose); glaze's own code keeps it.
+| gcc16-asan | 172 of 173 | `exceptions_test`: SEGV inside UBSan's `vptr` check (`__ubsan::checkDynamicType` -> `__dynamic_cast`) while constructing `std::bad_variant_access`; the same test already fails on GCC 16 without sanitizers |
+
+The clang failures above are in test code, not in the glaze headers. Two more fail only sometimes:
+
+- `json_test_non_null` has a timing check (`tests/speculation_guard.hpp:55`) that fails when the machine is heavily loaded; it passed on rerun.
+- `websocket_client_test` under clang23-tsan sometimes reports a data race in glaze's `include/glaze/net/websocket_connection.hpp`. In the workflow run, `schedule_close()` calls `shutdown()` on the socket (line 1261) while `do_close()` calls `close()` on it (line 1413). A separate rerun reported `schedule_close()` copying `socket_` (line 1258) while another thread reset it. Both come from the same gap in the source: `schedule_close()` uses `socket_` without taking `socket_op_mutex_`, which `do_close()` holds. The asan presets turn off `-fsanitize=function` for vcpkg ports only (OpenSSL calls functions through mismatched pointer types on purpose); glaze's own code keeps it.
+
+Two GCC 16 workarounds are in the setup:
+
+- **GCC 16's UBSan `null`, `nonnull-attribute` and `returns-nonnull-attribute` checks break constant evaluation.** With any of them, a null check on a pointer into a template parameter object is "not a constant expression", so `std::string_view::find` on a `string_literal` template argument (glaze's jmespath) does not compile. The toolchain turns those three checks off for GCC only.
+- **Make-based ports read `CC` and `CXX` from the environment.** vcpkg fills them in from our toolchain only when they are unset, so a shell that exports `CC=clang` built OpenSSL with clang inside a GCC build. The triplets unset both before each port build.
 
 Two things to know when running several presets:
 

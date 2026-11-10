@@ -112,6 +112,12 @@ if(GLAZE_FIX_SANITIZER STREQUAL "asan")
   if(GLAZE_FIX_PORT_BUILD AND NOT GLAZE_FIX_COMPILER STREQUAL "gcc16")
     list(APPEND _glaze_fix_flags -fno-sanitize=function)
   endif()
+  # GCC 16 bug: with -fsanitize=null, nonnull-attribute or returns-nonnull-attribute, a null check on a
+  # pointer into a template parameter object is "not a constant expression", so valid constexpr code
+  # (std::string_view::find on a string_literal NTTP, as in glaze's jmespath) fails to compile.
+  if(GLAZE_FIX_COMPILER STREQUAL "gcc16")
+    list(APPEND _glaze_fix_flags -fno-sanitize=null,nonnull-attribute,returns-nonnull-attribute)
+  endif()
 elseif(GLAZE_FIX_SANITIZER STREQUAL "tsan")
   if(GLAZE_FIX_COMPILER STREQUAL "gcc16" AND CMAKE_HOST_APPLE)
     message(FATAL_ERROR "GCC 16 on macOS has no ThreadSanitizer runtime (___tsan_* undefined at link); use clang23 or p2996")
