@@ -90,7 +90,8 @@ vector was written from scratch from the FIX 4.4 and FIX 5.0 SP2 / FIXT.1.1 spec
     cmake --build build --target fix_property_test fix_test
     ctest --test-dir build -R fix_ --output-on-failure        # 2/2 pass
 
-    # clang 19 (apt install clang-19 libclang-rt-19-dev). Module scanning is off because the
+    # clang 19 (apt install clang-19 libclang-rt-19-dev, from Ubuntu's own archive; LLVM
+    # on Linux now comes from apt.llvm.org). Module scanning is off because the
     # container has no clang-scan-deps-19; that flag is not needed where it is installed.
     cmake -B build-fuzz -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=Off \
           -DCMAKE_CXX_COMPILER=clang++-19 -DCMAKE_CXX_SCAN_FOR_MODULES=OFF

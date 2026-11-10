@@ -55,6 +55,9 @@ Workaround used: `apt-get install clang-19` (19.1.1 from Ubuntu noble), configur
 `clang-scan-deps-19`, so CMake's module scanning fails without that option). The Clang build uses
 the test project's `-fno-exceptions -fno-rtti -Werror` and ASan/UBSan.
 
+This note is a record of that session. LLVM on Linux now comes from apt.llvm.org, not Ubuntu's own
+archive (`clang-19` there is 19.1.1).
+
 ## Results (state at 07:50 UTC, final merge state)
 
 `ctest -R '^fix_'`: GCC 7/7 pass, Clang 19 7/7 pass.
