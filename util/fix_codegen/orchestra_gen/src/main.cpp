@@ -1,13 +1,15 @@
 // orchestra_gen: FIX Orchestra XML -> glaze-fix 3-part structs (layout rules L1-L6).
 //
 //   orchestra_gen --xml OrchestraFIX44.xml --namespace fix44 --out DIR [--messages D,8,...]
-//                 [--lock FILE [--update-lock]]
+//                 [--lock FILE [--update-lock]] [--profiles PDIR]
 //
-// Writes DIR/<ns>_enums.hpp, DIR/<ns>.hpp, DIR/<ns>.digest and DIR/<ns>_embed.cppm.
+// Writes DIR/<ns>_enums.hpp, DIR/<ns>.hpp, DIR/<ns>.digest and DIR/<ns>_embed.cppm; with --profiles, also
+// DIR/<ns>_profiles.hpp from PDIR/*.json (partner write settings, see profiles.cpp).
 #include "emit.hpp"
 #include "lock.hpp"
 #include "model.hpp"
 #include "orchestra.hpp"
+#include "profiles.hpp"
 
 #include <chrono>
 #include <cstdio>
@@ -26,14 +28,14 @@ void write_file(const std::filesystem::path& p, const std::string& text) {
 }
 
 int usage() {
-  std::println(stderr, "usage: orchestra_gen --xml FILE --namespace NS --out DIR [--messages D,8,...] [--strict on] [--target gcc16|p2996|clang23] [--lock FILE [--update-lock]]");
+  std::println(stderr, "usage: orchestra_gen --xml FILE --namespace NS --out DIR [--messages D,8,...] [--strict on] [--target gcc16|p2996|clang23] [--lock FILE [--update-lock]] [--profiles DIR]");
   return 2;
 }
 
 }  // namespace
 
 int main(int argc, char** argv) {
-  std::string xml, out_dir, lock_path;
+  std::string xml, out_dir, lock_path, profiles_dir;
   bool update_lock = false;
   gen::Options opt;
   gen::target tgt = gen::target::gcc16;
@@ -46,6 +48,7 @@ int main(int argc, char** argv) {
     else if (a == "--namespace") opt.ns = v;
     else if (a == "--out") out_dir = v;
     else if (a == "--lock") lock_path = v;
+    else if (a == "--profiles") profiles_dir = v;
     else if (a == "--strict") { opt.strict = v == "1" || v == "on"; }
     else if (a == "--target") {
       const auto t = gen::parse_target(v);
@@ -68,6 +71,8 @@ int main(int argc, char** argv) {
     const auto repo = orch::load(xml);
     const auto t1 = std::chrono::steady_clock::now();
     auto o = gen::build(repo, opt, std::filesystem::path(xml).filename().string());
+    // Profiles are checked first: a bad field name stops the run before the lock or any output is written.
+    const auto profiles = profiles_dir.empty() ? std::string{} : gen::emit_profiles(repo, opt.ns, o.source, profiles_dir);
     // Stage 2: compare with the checked-in lock before writing anything. Without --update-lock, names already
     // in the lock are kept (a rename is only reported), and any other change is refused until reviewed.
     if (!lock_path.empty()) {
@@ -98,6 +103,8 @@ int main(int argc, char** argv) {
     }
     std::filesystem::create_directories(out_dir);
     const std::filesystem::path d = out_dir;
+    if (!profiles.empty()) write_file(d / (opt.ns + "_profiles.hpp"), profiles);
+    else std::filesystem::remove(d / (opt.ns + "_profiles.hpp"));  // no stale profiles from an earlier run
     write_file(d / (opt.ns + "_enums.hpp"), gen::emit_enums(o));
     write_file(d / (opt.ns + ".hpp"), gen::emit_structs(o, tgt));
     write_file(d / (opt.ns + ".digest"), gen::emit_digest(o));

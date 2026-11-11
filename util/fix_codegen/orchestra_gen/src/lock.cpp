@@ -110,12 +110,11 @@ std::vector<std::string> apply_lock(Output& o, std::string_view lock_text) {
   parts([&](Part& p) {
     for (auto* list : {&p.wire_order, &p.layout})
       for (auto& m : *list) {
-        if (m.kind != member_kind::unknown)
-          if (const auto it = lock.items.find(std::format("member {} {} {}", kind_name(p.kind), p.id, m.tag));
-              it != lock.items.end() && it->second.name != m.name) {
-            if (list == &p.wire_order) ++members_kept[{m.tag, it->second.name, m.name}];
-            m.name = it->second.name;
-          }
+        if (const auto it = lock.items.find(std::format("member {} {} {}", kind_name(p.kind), p.id, m.tag));
+            it != lock.items.end() && it->second.name != m.name) {
+          if (list == &p.wire_order) ++members_kept[{m.tag, it->second.name, m.name}];
+          m.name = it->second.name;
+        }
         if (!type_names.empty()) { rename_idents(m.type.cpp, type_names); rename_idents(m.type.digest, type_names); }
       }
   });

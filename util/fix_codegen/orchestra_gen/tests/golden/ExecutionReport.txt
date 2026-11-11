@@ -1,0 +1,671 @@
+struct ExecutionReport {
+  [[=glz::fix3::tag{37}]] std::string_view order_id;
+  [[=glz::fix3::tag{198}]] stdx::optional<std::string_view> secondary_order_id;
+  [[=glz::fix3::tag{526}]] stdx::optional<std::string_view> secondary_cl_ord_id;
+  [[=glz::fix3::tag{527}]] stdx::optional<std::string_view> secondary_exec_id;
+  [[=glz::fix3::tag{11}]] stdx::optional<std::string_view> cl_ord_id;
+  [[=glz::fix3::tag{41}]] stdx::optional<std::string_view> orig_cl_ord_id;
+  [[=glz::fix3::tag{583}]] stdx::optional<std::string_view> cl_ord_link_id;
+  [[=glz::fix3::tag{693}]] stdx::optional<std::string_view> quote_resp_id;
+  [[=glz::fix3::tag{790}]] stdx::optional<std::string_view> ord_status_req_id;
+  [[=glz::fix3::tag{584}]] stdx::optional<std::string_view> mass_status_req_id;
+  [[=glz::fix3::tag{911}]] glz::fix3::opt_int<std::int64_t> tot_num_reports;
+  [[=glz::fix3::tag{453}]] std::span<const Parties> parties;
+  [[=glz::fix3::tag{229}]] stdx::optional<std::string_view> trade_origination_date;
+  [[=glz::fix3::tag{382}]] std::span<const ContraGrp> contra_grp;
+  [[=glz::fix3::tag{66}]] stdx::optional<std::string_view> list_id;
+  [[=glz::fix3::tag{548}]] stdx::optional<std::string_view> cross_id;
+  [[=glz::fix3::tag{551}]] stdx::optional<std::string_view> orig_cross_id;
+  [[=glz::fix3::tag{17}]] std::string_view exec_id;
+  [[=glz::fix3::tag{19}]] stdx::optional<std::string_view> exec_ref_id;
+  [[=glz::fix3::tag{1}]] stdx::optional<std::string_view> account;
+  [[=glz::fix3::tag{64}]] stdx::optional<std::string_view> settl_date;
+  [[=glz::fix3::tag{635}]] stdx::optional<std::string_view> clearing_fee_indicator;
+  [[=glz::fix3::tag{55}]] stdx::optional<std::string_view> symbol;
+  [[=glz::fix3::tag{65}]] stdx::optional<std::string_view> symbol_sfx;
+  [[=glz::fix3::tag{48}]] stdx::optional<std::string_view> security_id;
+  [[=glz::fix3::tag{22}]] stdx::optional<std::string_view> security_id_source;
+  [[=glz::fix3::tag{454}]] std::span<const SecAltIDGrp> sec_alt_id_grp;
+  [[=glz::fix3::tag{461}]] stdx::optional<std::string_view> cfi_code;
+  [[=glz::fix3::tag{167}]] stdx::optional<std::string_view> security_type;
+  [[=glz::fix3::tag{762}]] stdx::optional<std::string_view> security_sub_type;
+  [[=glz::fix3::tag{200}]] stdx::optional<std::string_view> maturity_month_year;
+  [[=glz::fix3::tag{541}]] stdx::optional<std::string_view> maturity_date;
+  [[=glz::fix3::tag{224}]] stdx::optional<std::string_view> coupon_payment_date;
+  [[=glz::fix3::tag{225}]] stdx::optional<std::string_view> issue_date;
+  [[=glz::fix3::tag{239}]] stdx::optional<std::string_view> repo_collateral_security_type;
+  [[=glz::fix3::tag{226}]] glz::fix3::opt_int<std::int64_t> repurchase_term;
+  [[=glz::fix3::tag{227}]] stdx::optional<dec::decimal64_t> repurchase_rate;
+  [[=glz::fix3::tag{228}]] stdx::optional<dec::decimal64_t> factor;
+  [[=glz::fix3::tag{255}]] stdx::optional<std::string_view> credit_rating;
+  [[=glz::fix3::tag{543}]] stdx::optional<std::string_view> instr_registry;
+  [[=glz::fix3::tag{470}]] stdx::optional<std::string_view> country_of_issue;
+  [[=glz::fix3::tag{471}]] stdx::optional<std::string_view> state_or_province_of_issue;
+  [[=glz::fix3::tag{472}]] stdx::optional<std::string_view> locale_of_issue;
+  [[=glz::fix3::tag{240}]] stdx::optional<std::string_view> redemption_date;
+  [[=glz::fix3::tag{202}]] stdx::optional<dec::decimal64_t> strike_price;
+  [[=glz::fix3::tag{947}]] stdx::optional<std::string_view> strike_currency;
+  [[=glz::fix3::tag{231}]] stdx::optional<dec::decimal64_t> contract_multiplier;
+  [[=glz::fix3::tag{223}]] stdx::optional<dec::decimal64_t> coupon_rate;
+  [[=glz::fix3::tag{207}]] stdx::optional<std::string_view> security_exchange;
+  [[=glz::fix3::tag{106}]] stdx::optional<std::string_view> issuer;
+  [[=glz::fix3::tag{349}]] stdx::optional<std::string_view> encoded_issuer;
+  [[=glz::fix3::tag{107}]] stdx::optional<std::string_view> security_desc;
+  [[=glz::fix3::tag{351}]] stdx::optional<std::string_view> encoded_security_desc;
+  [[=glz::fix3::tag{691}]] stdx::optional<std::string_view> pool;
+  [[=glz::fix3::tag{667}]] stdx::optional<std::string_view> contract_settl_month;
+  [[=glz::fix3::tag{876}]] stdx::optional<std::string_view> cp_reg_type;
+  [[=glz::fix3::tag{864}]] std::span<const EvntGrp> evnt_grp;
+  [[=glz::fix3::tag{873}]] stdx::optional<std::string_view> dated_date;
+  [[=glz::fix3::tag{874}]] stdx::optional<std::string_view> interest_accrual_date;
+  [[=glz::fix3::tag{913}]] stdx::optional<std::string_view> agreement_desc;
+  [[=glz::fix3::tag{914}]] stdx::optional<std::string_view> agreement_id;
+  [[=glz::fix3::tag{915}]] stdx::optional<std::string_view> agreement_date;
+  [[=glz::fix3::tag{918}]] stdx::optional<std::string_view> agreement_currency;
+  [[=glz::fix3::tag{916}]] stdx::optional<std::string_view> start_date;
+  [[=glz::fix3::tag{917}]] stdx::optional<std::string_view> end_date;
+  [[=glz::fix3::tag{898}]] stdx::optional<dec::decimal64_t> margin_ratio;
+  [[=glz::fix3::tag{711}]] std::span<const UndInstrmtGrp> und_instrmt_grp;
+  [[=glz::fix3::tag{232}]] std::span<const Stipulations> stipulations;
+  [[=glz::fix3::tag{38}]] stdx::optional<dec::decimal64_t> order_qty;
+  [[=glz::fix3::tag{152}]] stdx::optional<dec::decimal64_t> cash_order_qty;
+  [[=glz::fix3::tag{516}]] stdx::optional<dec::decimal64_t> order_percent;
+  [[=glz::fix3::tag{469}]] stdx::optional<dec::decimal64_t> rounding_modulus;
+  [[=glz::fix3::tag{44}]] stdx::optional<dec::decimal64_t> price;
+  [[=glz::fix3::tag{99}]] stdx::optional<dec::decimal64_t> stop_px;
+  [[=glz::fix3::tag{211}]] stdx::optional<dec::decimal64_t> peg_offset_value;
+  [[=glz::fix3::tag{389}]] stdx::optional<dec::decimal64_t> discretion_offset_value;
+  [[=glz::fix3::tag{839}]] stdx::optional<dec::decimal64_t> pegged_price;
+  [[=glz::fix3::tag{845}]] stdx::optional<dec::decimal64_t> discretion_price;
+  [[=glz::fix3::tag{848}]] stdx::optional<std::string_view> target_strategy_parameters;
+  [[=glz::fix3::tag{849}]] stdx::optional<dec::decimal64_t> participation_rate;
+  [[=glz::fix3::tag{850}]] stdx::optional<dec::decimal64_t> target_strategy_performance;
+  [[=glz::fix3::tag{15}]] stdx::optional<std::string_view> currency;
+  [[=glz::fix3::tag{376}]] stdx::optional<std::string_view> compliance_id;
+  [[=glz::fix3::tag{168}]] stdx::optional<glz::fix3::timestamp> effective_time;
+  [[=glz::fix3::tag{432}]] stdx::optional<std::string_view> expire_date;
+  [[=glz::fix3::tag{126}]] stdx::optional<glz::fix3::timestamp> expire_time;
+  [[=glz::fix3::tag{18}]] stdx::optional<std::string_view> exec_inst;
+  [[=glz::fix3::tag{529}]] stdx::optional<std::string_view> order_restrictions;
+  [[=glz::fix3::tag{32}]] stdx::optional<dec::decimal64_t> last_qty;
+  [[=glz::fix3::tag{652}]] stdx::optional<dec::decimal64_t> underlying_last_qty;
+  [[=glz::fix3::tag{31}]] stdx::optional<dec::decimal64_t> last_px;
+  [[=glz::fix3::tag{651}]] stdx::optional<dec::decimal64_t> underlying_last_px;
+  [[=glz::fix3::tag{669}]] stdx::optional<dec::decimal64_t> last_par_px;
+  [[=glz::fix3::tag{194}]] stdx::optional<dec::decimal64_t> last_spot_rate;
+  [[=glz::fix3::tag{195}]] stdx::optional<dec::decimal64_t> last_forward_points;
+  [[=glz::fix3::tag{30}]] stdx::optional<std::string_view> last_mkt;
+  [[=glz::fix3::tag{336}]] stdx::optional<std::string_view> trading_session_id;
+  [[=glz::fix3::tag{625}]] stdx::optional<std::string_view> trading_session_sub_id;
+  [[=glz::fix3::tag{943}]] stdx::optional<std::string_view> time_bracket;
+  [[=glz::fix3::tag{151}]] dec::decimal64_t leaves_qty;
+  [[=glz::fix3::tag{14}]] dec::decimal64_t cum_qty;
+  [[=glz::fix3::tag{6}]] dec::decimal64_t avg_px;
+  [[=glz::fix3::tag{424}]] stdx::optional<dec::decimal64_t> day_order_qty;
+  [[=glz::fix3::tag{425}]] stdx::optional<dec::decimal64_t> day_cum_qty;
+  [[=glz::fix3::tag{426}]] stdx::optional<dec::decimal64_t> day_avg_px;
+  [[=glz::fix3::tag{75}]] stdx::optional<std::string_view> trade_date;
+  [[=glz::fix3::tag{60}]] stdx::optional<glz::fix3::timestamp> transact_time;
+  [[=glz::fix3::tag{12}]] stdx::optional<dec::decimal64_t> commission;
+  [[=glz::fix3::tag{479}]] stdx::optional<std::string_view> comm_currency;
+  [[=glz::fix3::tag{218}]] stdx::optional<dec::decimal64_t> spread;
+  [[=glz::fix3::tag{220}]] stdx::optional<std::string_view> benchmark_curve_currency;
+  [[=glz::fix3::tag{221}]] stdx::optional<std::string_view> benchmark_curve_name;
+  [[=glz::fix3::tag{222}]] stdx::optional<std::string_view> benchmark_curve_point;
+  [[=glz::fix3::tag{662}]] stdx::optional<dec::decimal64_t> benchmark_price;
+  [[=glz::fix3::tag{663}]] glz::fix3::opt_int<std::int64_t> benchmark_price_type;
+  [[=glz::fix3::tag{699}]] stdx::optional<std::string_view> benchmark_security_id;
+  [[=glz::fix3::tag{761}]] stdx::optional<std::string_view> benchmark_security_id_source;
+  [[=glz::fix3::tag{235}]] stdx::optional<std::string_view> yield_type;
+  [[=glz::fix3::tag{236}]] stdx::optional<dec::decimal64_t> yield;
+  [[=glz::fix3::tag{701}]] stdx::optional<std::string_view> yield_calc_date;
+  [[=glz::fix3::tag{696}]] stdx::optional<std::string_view> yield_redemption_date;
+  [[=glz::fix3::tag{697}]] stdx::optional<dec::decimal64_t> yield_redemption_price;
+  [[=glz::fix3::tag{698}]] glz::fix3::opt_int<std::int64_t> yield_redemption_price_type;
+  [[=glz::fix3::tag{381}]] stdx::optional<dec::decimal64_t> gross_trade_amt;
+  [[=glz::fix3::tag{157}]] glz::fix3::opt_int<std::int64_t> num_days_interest;
+  [[=glz::fix3::tag{230}]] stdx::optional<std::string_view> ex_date;
+  [[=glz::fix3::tag{158}]] stdx::optional<dec::decimal64_t> accrued_interest_rate;
+  [[=glz::fix3::tag{159}]] stdx::optional<dec::decimal64_t> accrued_interest_amt;
+  [[=glz::fix3::tag{738}]] stdx::optional<dec::decimal64_t> interest_at_maturity;
+  [[=glz::fix3::tag{920}]] stdx::optional<dec::decimal64_t> end_accrued_interest_amt;
+  [[=glz::fix3::tag{921}]] stdx::optional<dec::decimal64_t> start_cash;
+  [[=glz::fix3::tag{922}]] stdx::optional<dec::decimal64_t> end_cash;
+  [[=glz::fix3::tag{259}]] stdx::optional<std::string_view> basis_feature_date;
+  [[=glz::fix3::tag{260}]] stdx::optional<dec::decimal64_t> basis_feature_price;
+  [[=glz::fix3::tag{238}]] stdx::optional<dec::decimal64_t> concession;
+  [[=glz::fix3::tag{237}]] stdx::optional<dec::decimal64_t> total_takedown;
+  [[=glz::fix3::tag{118}]] stdx::optional<dec::decimal64_t> net_money;
+  [[=glz::fix3::tag{119}]] stdx::optional<dec::decimal64_t> settl_curr_amt;
+  [[=glz::fix3::tag{120}]] stdx::optional<std::string_view> settl_currency;
+  [[=glz::fix3::tag{155}]] stdx::optional<dec::decimal64_t> settl_curr_fx_rate;
+  [[=glz::fix3::tag{110}]] stdx::optional<dec::decimal64_t> min_qty;
+  [[=glz::fix3::tag{111}]] stdx::optional<dec::decimal64_t> max_floor;
+  [[=glz::fix3::tag{210}]] stdx::optional<dec::decimal64_t> max_show;
+  [[=glz::fix3::tag{58}]] stdx::optional<std::string_view> text;
+  [[=glz::fix3::tag{355}]] stdx::optional<std::string_view> encoded_text;
+  [[=glz::fix3::tag{193}]] stdx::optional<std::string_view> settl_date2;
+  [[=glz::fix3::tag{192}]] stdx::optional<dec::decimal64_t> order_qty2;
+  [[=glz::fix3::tag{641}]] stdx::optional<dec::decimal64_t> last_forward_points2;
+  [[=glz::fix3::tag{513}]] stdx::optional<std::string_view> regist_id;
+  [[=glz::fix3::tag{494}]] stdx::optional<std::string_view> designation;
+  [[=glz::fix3::tag{483}]] stdx::optional<glz::fix3::timestamp> trans_bkd_time;
+  [[=glz::fix3::tag{515}]] stdx::optional<glz::fix3::timestamp> exec_valuation_point;
+  [[=glz::fix3::tag{485}]] stdx::optional<dec::decimal64_t> exec_price_adjustment;
+  [[=glz::fix3::tag{639}]] stdx::optional<dec::decimal64_t> price_improvement;
+  [[=glz::fix3::tag{518}]] std::span<const ContAmtGrp> cont_amt_grp;
+  [[=glz::fix3::tag{555}]] std::span<const InstrmtLegExecGrp> instrmt_leg_exec_grp;
+  [[=glz::fix3::tag{136}]] std::span<const MiscFeesGrp> misc_fees_grp;
+  [[=glz::fix3::tag{348}]] glz::fix3::opt_int<std::uint32_t> encoded_issuer_len;
+  [[=glz::fix3::tag{350}]] glz::fix3::opt_int<std::uint32_t> encoded_security_desc_len;
+  [[=glz::fix3::tag{847}]] stdx::optional<TargetStrategy> target_strategy;
+  [[=glz::fix3::tag{354}]] glz::fix3::opt_int<std::uint32_t> encoded_text_len;
+  [[=glz::fix3::tag{912}]] stdx::optional<glz::fix3::yes_no> last_rpt_requested;
+  [[=glz::fix3::tag{549}]] stdx::optional<CrossType> cross_type;
+  [[=glz::fix3::tag{150}]] ExecType exec_type;
+  [[=glz::fix3::tag{39}]] OrdStatus ord_status;
+  [[=glz::fix3::tag{636}]] stdx::optional<glz::fix3::yes_no> working_indicator;
+  [[=glz::fix3::tag{103}]] stdx::optional<OrdRejReason> ord_rej_reason;
+  [[=glz::fix3::tag{378}]] stdx::optional<ExecRestatementReason> exec_restatement_reason;
+  [[=glz::fix3::tag{660}]] stdx::optional<AcctIDSource> acct_id_source;
+  [[=glz::fix3::tag{581}]] stdx::optional<AccountType> account_type;
+  [[=glz::fix3::tag{589}]] stdx::optional<DayBookingInst> day_booking_inst;
+  [[=glz::fix3::tag{590}]] stdx::optional<BookingUnit> booking_unit;
+  [[=glz::fix3::tag{591}]] stdx::optional<PreallocMethod> prealloc_method;
+  [[=glz::fix3::tag{63}]] stdx::optional<SettlType> settl_type;
+  [[=glz::fix3::tag{544}]] stdx::optional<CashMargin> cash_margin;
+  [[=glz::fix3::tag{460}]] stdx::optional<Product> product;
+  [[=glz::fix3::tag{201}]] stdx::optional<PutOrCall> put_or_call;
+  [[=glz::fix3::tag{206}]] glz::fix3::opt_char opt_attribute;
+  [[=glz::fix3::tag{875}]] stdx::optional<CPProgram> cp_program;
+  [[=glz::fix3::tag{788}]] stdx::optional<TerminationType> termination_type;
+  [[=glz::fix3::tag{919}]] stdx::optional<DeliveryType> delivery_type;
+  [[=glz::fix3::tag{54}]] Side side;
+  [[=glz::fix3::tag{854}]] stdx::optional<QtyType> qty_type;
+  [[=glz::fix3::tag{468}]] stdx::optional<RoundingDirection> rounding_direction;
+  [[=glz::fix3::tag{40}]] stdx::optional<OrdType> ord_type;
+  [[=glz::fix3::tag{423}]] stdx::optional<PriceType> price_type;
+  [[=glz::fix3::tag{835}]] stdx::optional<PegMoveType> peg_move_type;
+  [[=glz::fix3::tag{836}]] stdx::optional<PegOffsetType> peg_offset_type;
+  [[=glz::fix3::tag{837}]] stdx::optional<PegLimitType> peg_limit_type;
+  [[=glz::fix3::tag{838}]] stdx::optional<PegRoundDirection> peg_round_direction;
+  [[=glz::fix3::tag{840}]] stdx::optional<PegScope> peg_scope;
+  [[=glz::fix3::tag{388}]] stdx::optional<DiscretionInst> discretion_inst;
+  [[=glz::fix3::tag{841}]] stdx::optional<DiscretionMoveType> discretion_move_type;
+  [[=glz::fix3::tag{842}]] stdx::optional<DiscretionOffsetType> discretion_offset_type;
+  [[=glz::fix3::tag{843}]] stdx::optional<DiscretionLimitType> discretion_limit_type;
+  [[=glz::fix3::tag{844}]] stdx::optional<DiscretionRoundDirection> discretion_round_direction;
+  [[=glz::fix3::tag{846}]] stdx::optional<DiscretionScope> discretion_scope;
+  [[=glz::fix3::tag{377}]] stdx::optional<glz::fix3::yes_no> solicited_flag;
+  [[=glz::fix3::tag{59}]] stdx::optional<TimeInForce> time_in_force;
+  [[=glz::fix3::tag{528}]] stdx::optional<OrderCapacity> order_capacity;
+  [[=glz::fix3::tag{582}]] stdx::optional<CustOrderCapacity> cust_order_capacity;
+  [[=glz::fix3::tag{29}]] stdx::optional<LastCapacity> last_capacity;
+  [[=glz::fix3::tag{427}]] stdx::optional<GTBookingInst> gt_booking_inst;
+  [[=glz::fix3::tag{113}]] stdx::optional<glz::fix3::yes_no> report_to_exch;
+  [[=glz::fix3::tag{13}]] stdx::optional<CommType> comm_type;
+  [[=glz::fix3::tag{497}]] stdx::optional<FundRenewWaiv> fund_renew_waiv;
+  [[=glz::fix3::tag{258}]] stdx::optional<glz::fix3::yes_no> traded_flat_switch;
+  [[=glz::fix3::tag{156}]] stdx::optional<SettlCurrFxRateCalc> settl_curr_fx_rate_calc;
+  [[=glz::fix3::tag{21}]] stdx::optional<HandlInst> handl_inst;
+  [[=glz::fix3::tag{77}]] stdx::optional<PositionEffect> position_effect;
+  [[=glz::fix3::tag{775}]] stdx::optional<BookingType> booking_type;
+  [[=glz::fix3::tag{442}]] stdx::optional<MultiLegReportingType> multi_leg_reporting_type;
+  [[=glz::fix3::tag{480}]] stdx::optional<CancellationRights> cancellation_rights;
+  [[=glz::fix3::tag{481}]] stdx::optional<MoneyLaunderingStatus> money_laundering_status;
+  [[=glz::fix3::tag{484}]] stdx::optional<ExecPriceType> exec_price_type;
+  [[=glz::fix3::tag{638}]] stdx::optional<PriorityIndicator> priority_indicator;
+  [[=glz::fix3::tag{851}]] stdx::optional<LastLiquidityInd> last_liquidity_ind;
+  [[=glz::fix3::tag{797}]] stdx::optional<glz::fix3::yes_no> copy_msg_indicator;
+
+  static constexpr std::string_view fix_msg_type = "8";
+  static constexpr std::string_view fix_name = "ExecutionReport";
+  // Codec contract (CONTRACT.md): the tag table in dictionary (wire) order. member = the member's
+  // position in declaration (layout) order, the same index fix_visit passes and reflection sees.
+  //   {tag, member, name, fix_name, required, group, length_tag, max_entries, deprecated, open_enum, datatype}
+  static constexpr std::array<glz::fix3::field_info, 218> fix_fields{{
+      {37, 0, "order_id", "OrderID", true, false, 0, 0, false, false, "String"},
+      {198, 1, "secondary_order_id", "SecondaryOrderID", false, false, 0, 0, false, false, "String"},
+      {526, 2, "secondary_cl_ord_id", "SecondaryClOrdID", false, false, 0, 0, false, false, "String"},
+      {527, 3, "secondary_exec_id", "SecondaryExecID", false, false, 0, 0, false, false, "String"},
+      {11, 4, "cl_ord_id", "ClOrdID", false, false, 0, 0, false, false, "String"},
+      {41, 5, "orig_cl_ord_id", "OrigClOrdID", false, false, 0, 0, false, false, "String"},
+      {583, 6, "cl_ord_link_id", "ClOrdLinkID", false, false, 0, 0, false, false, "String"},
+      {693, 7, "quote_resp_id", "QuoteRespID", false, false, 0, 0, false, false, "String"},
+      {790, 8, "ord_status_req_id", "OrdStatusReqID", false, false, 0, 0, false, false, "String"},
+      {584, 9, "mass_status_req_id", "MassStatusReqID", false, false, 0, 0, false, false, "String"},
+      {911, 10, "tot_num_reports", "TotNumReports", false, false, 0, 0, false, false, "int"},
+      {912, 161, "last_rpt_requested", "LastRptRequested", false, false, 0, 0, false, false, "Boolean"},
+      {453, 11, "parties", "Parties", false, true, 0, 0, false, false, ""},
+      {229, 12, "trade_origination_date", "TradeOriginationDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {382, 13, "contra_grp", "ContraGrp", false, true, 0, 0, false, false, ""},
+      {66, 14, "list_id", "ListID", false, false, 0, 0, false, false, "String"},
+      {548, 15, "cross_id", "CrossID", false, false, 0, 0, false, false, "String"},
+      {551, 16, "orig_cross_id", "OrigCrossID", false, false, 0, 0, false, false, "String"},
+      {549, 162, "cross_type", "CrossType", false, false, 0, 0, false, false, "int"},
+      {17, 17, "exec_id", "ExecID", true, false, 0, 0, false, false, "String"},
+      {19, 18, "exec_ref_id", "ExecRefID", false, false, 0, 0, false, false, "String"},
+      {150, 163, "exec_type", "ExecType", true, false, 0, 0, false, false, "char"},
+      {39, 164, "ord_status", "OrdStatus", true, false, 0, 0, false, false, "char"},
+      {636, 165, "working_indicator", "WorkingIndicator", false, false, 0, 0, false, false, "Boolean"},
+      {103, 166, "ord_rej_reason", "OrdRejReason", false, false, 0, 0, false, false, "int"},
+      {378, 167, "exec_restatement_reason", "ExecRestatementReason", false, false, 0, 0, false, false, "int"},
+      {1, 19, "account", "Account", false, false, 0, 0, false, false, "String"},
+      {660, 168, "acct_id_source", "AcctIDSource", false, false, 0, 0, false, false, "int"},
+      {581, 169, "account_type", "AccountType", false, false, 0, 0, false, false, "int"},
+      {589, 170, "day_booking_inst", "DayBookingInst", false, false, 0, 0, false, false, "char"},
+      {590, 171, "booking_unit", "BookingUnit", false, false, 0, 0, false, false, "char"},
+      {591, 172, "prealloc_method", "PreallocMethod", false, false, 0, 0, false, false, "char"},
+      {63, 173, "settl_type", "SettlType", false, false, 0, 0, false, false, "char"},
+      {64, 20, "settl_date", "SettlDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {544, 174, "cash_margin", "CashMargin", false, false, 0, 0, false, false, "char"},
+      {635, 21, "clearing_fee_indicator", "ClearingFeeIndicator", false, false, 0, 0, false, false, "String"},
+      {55, 22, "symbol", "Symbol", false, false, 0, 0, false, false, "String"},
+      {65, 23, "symbol_sfx", "SymbolSfx", false, false, 0, 0, false, false, "String"},
+      {48, 24, "security_id", "SecurityID", false, false, 0, 0, false, false, "String"},
+      {22, 25, "security_id_source", "SecurityIDSource", false, false, 0, 0, false, true, "String"},
+      {454, 26, "sec_alt_id_grp", "SecAltIDGrp", false, true, 0, 0, false, false, ""},
+      {460, 175, "product", "Product", false, false, 0, 0, false, false, "int"},
+      {461, 27, "cfi_code", "CFICode", false, false, 0, 0, false, false, "String"},
+      {167, 28, "security_type", "SecurityType", false, false, 0, 0, false, false, "String"},
+      {762, 29, "security_sub_type", "SecuritySubType", false, false, 0, 0, false, false, "String"},
+      {200, 30, "maturity_month_year", "MaturityMonthYear", false, false, 0, 0, false, false, "MonthYear"},
+      {541, 31, "maturity_date", "MaturityDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {201, 176, "put_or_call", "PutOrCall", false, false, 0, 0, false, false, "int"},
+      {224, 32, "coupon_payment_date", "CouponPaymentDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {225, 33, "issue_date", "IssueDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {239, 34, "repo_collateral_security_type", "RepoCollateralSecurityType", false, false, 0, 0, true, false, "String"},
+      {226, 35, "repurchase_term", "RepurchaseTerm", false, false, 0, 0, false, false, "int"},
+      {227, 36, "repurchase_rate", "RepurchaseRate", false, false, 0, 0, false, false, "Percentage"},
+      {228, 37, "factor", "Factor", false, false, 0, 0, false, false, "float"},
+      {255, 38, "credit_rating", "CreditRating", false, false, 0, 0, false, false, "String"},
+      {543, 39, "instr_registry", "InstrRegistry", false, false, 0, 0, false, false, "String"},
+      {470, 40, "country_of_issue", "CountryOfIssue", false, false, 0, 0, false, false, "Country"},
+      {471, 41, "state_or_province_of_issue", "StateOrProvinceOfIssue", false, false, 0, 0, false, false, "String"},
+      {472, 42, "locale_of_issue", "LocaleOfIssue", false, false, 0, 0, false, false, "String"},
+      {240, 43, "redemption_date", "RedemptionDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {202, 44, "strike_price", "StrikePrice", false, false, 0, 0, false, false, "Price"},
+      {947, 45, "strike_currency", "StrikeCurrency", false, false, 0, 0, false, false, "Currency"},
+      {206, 177, "opt_attribute", "OptAttribute", false, false, 0, 0, false, false, "char"},
+      {231, 46, "contract_multiplier", "ContractMultiplier", false, false, 0, 0, false, false, "float"},
+      {223, 47, "coupon_rate", "CouponRate", false, false, 0, 0, false, false, "Percentage"},
+      {207, 48, "security_exchange", "SecurityExchange", false, false, 0, 0, false, false, "Exchange"},
+      {106, 49, "issuer", "Issuer", false, false, 0, 0, false, false, "String"},
+      {348, 157, "encoded_issuer_len", "EncodedIssuerLen", false, false, 0, 0, false, false, "Length"},
+      {349, 50, "encoded_issuer", "EncodedIssuer", false, false, 348, 0, false, false, "data"},
+      {107, 51, "security_desc", "SecurityDesc", false, false, 0, 0, false, false, "String"},
+      {350, 158, "encoded_security_desc_len", "EncodedSecurityDescLen", false, false, 0, 0, false, false, "Length"},
+      {351, 52, "encoded_security_desc", "EncodedSecurityDesc", false, false, 350, 0, false, false, "data"},
+      {691, 53, "pool", "Pool", false, false, 0, 0, false, false, "String"},
+      {667, 54, "contract_settl_month", "ContractSettlMonth", false, false, 0, 0, false, false, "MonthYear"},
+      {875, 178, "cp_program", "CPProgram", false, false, 0, 0, false, false, "int"},
+      {876, 55, "cp_reg_type", "CPRegType", false, false, 0, 0, false, false, "String"},
+      {864, 56, "evnt_grp", "EvntGrp", false, true, 0, 0, false, false, ""},
+      {873, 57, "dated_date", "DatedDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {874, 58, "interest_accrual_date", "InterestAccrualDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {913, 59, "agreement_desc", "AgreementDesc", false, false, 0, 0, false, false, "String"},
+      {914, 60, "agreement_id", "AgreementID", false, false, 0, 0, false, false, "String"},
+      {915, 61, "agreement_date", "AgreementDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {918, 62, "agreement_currency", "AgreementCurrency", false, false, 0, 0, false, false, "Currency"},
+      {788, 179, "termination_type", "TerminationType", false, false, 0, 0, false, false, "int"},
+      {916, 63, "start_date", "StartDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {917, 64, "end_date", "EndDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {919, 180, "delivery_type", "DeliveryType", false, false, 0, 0, false, false, "int"},
+      {898, 65, "margin_ratio", "MarginRatio", false, false, 0, 0, false, false, "Percentage"},
+      {711, 66, "und_instrmt_grp", "UndInstrmtGrp", false, true, 0, 0, false, false, ""},
+      {54, 181, "side", "Side", true, false, 0, 0, false, false, "char"},
+      {232, 67, "stipulations", "Stipulations", false, true, 0, 0, false, false, ""},
+      {854, 182, "qty_type", "QtyType", false, false, 0, 0, false, false, "int"},
+      {38, 68, "order_qty", "OrderQty", false, false, 0, 0, false, false, "Qty"},
+      {152, 69, "cash_order_qty", "CashOrderQty", false, false, 0, 0, false, false, "Qty"},
+      {516, 70, "order_percent", "OrderPercent", false, false, 0, 0, false, false, "Percentage"},
+      {468, 183, "rounding_direction", "RoundingDirection", false, false, 0, 0, false, false, "char"},
+      {469, 71, "rounding_modulus", "RoundingModulus", false, false, 0, 0, false, false, "float"},
+      {40, 184, "ord_type", "OrdType", false, false, 0, 0, false, false, "char"},
+      {423, 185, "price_type", "PriceType", false, false, 0, 0, false, false, "int"},
+      {44, 72, "price", "Price", false, false, 0, 0, false, false, "Price"},
+      {99, 73, "stop_px", "StopPx", false, false, 0, 0, false, false, "Price"},
+      {211, 74, "peg_offset_value", "PegOffsetValue", false, false, 0, 0, false, false, "float"},
+      {835, 186, "peg_move_type", "PegMoveType", false, false, 0, 0, false, false, "int"},
+      {836, 187, "peg_offset_type", "PegOffsetType", false, false, 0, 0, false, false, "int"},
+      {837, 188, "peg_limit_type", "PegLimitType", false, false, 0, 0, false, false, "int"},
+      {838, 189, "peg_round_direction", "PegRoundDirection", false, false, 0, 0, false, false, "int"},
+      {840, 190, "peg_scope", "PegScope", false, false, 0, 0, false, false, "int"},
+      {388, 191, "discretion_inst", "DiscretionInst", false, false, 0, 0, false, false, "char"},
+      {389, 75, "discretion_offset_value", "DiscretionOffsetValue", false, false, 0, 0, false, false, "float"},
+      {841, 192, "discretion_move_type", "DiscretionMoveType", false, false, 0, 0, false, false, "int"},
+      {842, 193, "discretion_offset_type", "DiscretionOffsetType", false, false, 0, 0, false, false, "int"},
+      {843, 194, "discretion_limit_type", "DiscretionLimitType", false, false, 0, 0, false, false, "int"},
+      {844, 195, "discretion_round_direction", "DiscretionRoundDirection", false, false, 0, 0, false, false, "int"},
+      {846, 196, "discretion_scope", "DiscretionScope", false, false, 0, 0, false, false, "int"},
+      {839, 76, "pegged_price", "PeggedPrice", false, false, 0, 0, false, false, "Price"},
+      {845, 77, "discretion_price", "DiscretionPrice", false, false, 0, 0, false, false, "Price"},
+      {847, 159, "target_strategy", "TargetStrategy", false, false, 0, 0, false, true, "int"},
+      {848, 78, "target_strategy_parameters", "TargetStrategyParameters", false, false, 0, 0, false, false, "String"},
+      {849, 79, "participation_rate", "ParticipationRate", false, false, 0, 0, false, false, "Percentage"},
+      {850, 80, "target_strategy_performance", "TargetStrategyPerformance", false, false, 0, 0, false, false, "float"},
+      {15, 81, "currency", "Currency", false, false, 0, 0, false, false, "Currency"},
+      {376, 82, "compliance_id", "ComplianceID", false, false, 0, 0, false, false, "String"},
+      {377, 197, "solicited_flag", "SolicitedFlag", false, false, 0, 0, false, false, "Boolean"},
+      {59, 198, "time_in_force", "TimeInForce", false, false, 0, 0, false, false, "char"},
+      {168, 83, "effective_time", "EffectiveTime", false, false, 0, 0, false, false, "UTCTimestamp"},
+      {432, 84, "expire_date", "ExpireDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {126, 85, "expire_time", "ExpireTime", false, false, 0, 0, false, false, "UTCTimestamp"},
+      {18, 86, "exec_inst", "ExecInst", false, false, 0, 0, false, false, "MultipleValueString"},
+      {528, 199, "order_capacity", "OrderCapacity", false, false, 0, 0, false, false, "char"},
+      {529, 87, "order_restrictions", "OrderRestrictions", false, false, 0, 0, false, false, "MultipleValueString"},
+      {582, 200, "cust_order_capacity", "CustOrderCapacity", false, false, 0, 0, false, false, "int"},
+      {32, 88, "last_qty", "LastQty", false, false, 0, 0, false, false, "Qty"},
+      {652, 89, "underlying_last_qty", "UnderlyingLastQty", false, false, 0, 0, false, false, "Qty"},
+      {31, 90, "last_px", "LastPx", false, false, 0, 0, false, false, "Price"},
+      {651, 91, "underlying_last_px", "UnderlyingLastPx", false, false, 0, 0, false, false, "Price"},
+      {669, 92, "last_par_px", "LastParPx", false, false, 0, 0, false, false, "Price"},
+      {194, 93, "last_spot_rate", "LastSpotRate", false, false, 0, 0, false, false, "Price"},
+      {195, 94, "last_forward_points", "LastForwardPoints", false, false, 0, 0, false, false, "PriceOffset"},
+      {30, 95, "last_mkt", "LastMkt", false, false, 0, 0, false, false, "Exchange"},
+      {336, 96, "trading_session_id", "TradingSessionID", false, false, 0, 0, false, false, "String"},
+      {625, 97, "trading_session_sub_id", "TradingSessionSubID", false, false, 0, 0, false, false, "String"},
+      {943, 98, "time_bracket", "TimeBracket", false, false, 0, 0, false, false, "String"},
+      {29, 201, "last_capacity", "LastCapacity", false, false, 0, 0, false, false, "char"},
+      {151, 99, "leaves_qty", "LeavesQty", true, false, 0, 0, false, false, "Qty"},
+      {14, 100, "cum_qty", "CumQty", true, false, 0, 0, false, false, "Qty"},
+      {6, 101, "avg_px", "AvgPx", true, false, 0, 0, false, false, "Price"},
+      {424, 102, "day_order_qty", "DayOrderQty", false, false, 0, 0, false, false, "Qty"},
+      {425, 103, "day_cum_qty", "DayCumQty", false, false, 0, 0, false, false, "Qty"},
+      {426, 104, "day_avg_px", "DayAvgPx", false, false, 0, 0, false, false, "Price"},
+      {427, 202, "gt_booking_inst", "GTBookingInst", false, false, 0, 0, false, false, "int"},
+      {75, 105, "trade_date", "TradeDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {60, 106, "transact_time", "TransactTime", false, false, 0, 0, false, false, "UTCTimestamp"},
+      {113, 203, "report_to_exch", "ReportToExch", false, false, 0, 0, false, false, "Boolean"},
+      {12, 107, "commission", "Commission", false, false, 0, 0, false, false, "Amt"},
+      {13, 204, "comm_type", "CommType", false, false, 0, 0, false, false, "char"},
+      {479, 108, "comm_currency", "CommCurrency", false, false, 0, 0, false, false, "Currency"},
+      {497, 205, "fund_renew_waiv", "FundRenewWaiv", false, false, 0, 0, false, false, "char"},
+      {218, 109, "spread", "Spread", false, false, 0, 0, false, false, "PriceOffset"},
+      {220, 110, "benchmark_curve_currency", "BenchmarkCurveCurrency", false, false, 0, 0, false, false, "Currency"},
+      {221, 111, "benchmark_curve_name", "BenchmarkCurveName", false, false, 0, 0, false, false, "String"},
+      {222, 112, "benchmark_curve_point", "BenchmarkCurvePoint", false, false, 0, 0, false, false, "String"},
+      {662, 113, "benchmark_price", "BenchmarkPrice", false, false, 0, 0, false, false, "Price"},
+      {663, 114, "benchmark_price_type", "BenchmarkPriceType", false, false, 0, 0, false, false, "int"},
+      {699, 115, "benchmark_security_id", "BenchmarkSecurityID", false, false, 0, 0, false, false, "String"},
+      {761, 116, "benchmark_security_id_source", "BenchmarkSecurityIDSource", false, false, 0, 0, false, false, "String"},
+      {235, 117, "yield_type", "YieldType", false, false, 0, 0, false, false, "String"},
+      {236, 118, "yield", "Yield", false, false, 0, 0, false, false, "Percentage"},
+      {701, 119, "yield_calc_date", "YieldCalcDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {696, 120, "yield_redemption_date", "YieldRedemptionDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {697, 121, "yield_redemption_price", "YieldRedemptionPrice", false, false, 0, 0, false, false, "Price"},
+      {698, 122, "yield_redemption_price_type", "YieldRedemptionPriceType", false, false, 0, 0, false, false, "int"},
+      {381, 123, "gross_trade_amt", "GrossTradeAmt", false, false, 0, 0, false, false, "Amt"},
+      {157, 124, "num_days_interest", "NumDaysInterest", false, false, 0, 0, false, false, "int"},
+      {230, 125, "ex_date", "ExDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {158, 126, "accrued_interest_rate", "AccruedInterestRate", false, false, 0, 0, false, false, "Percentage"},
+      {159, 127, "accrued_interest_amt", "AccruedInterestAmt", false, false, 0, 0, false, false, "Amt"},
+      {738, 128, "interest_at_maturity", "InterestAtMaturity", false, false, 0, 0, false, false, "Amt"},
+      {920, 129, "end_accrued_interest_amt", "EndAccruedInterestAmt", false, false, 0, 0, false, false, "Amt"},
+      {921, 130, "start_cash", "StartCash", false, false, 0, 0, false, false, "Amt"},
+      {922, 131, "end_cash", "EndCash", false, false, 0, 0, false, false, "Amt"},
+      {258, 206, "traded_flat_switch", "TradedFlatSwitch", false, false, 0, 0, false, false, "Boolean"},
+      {259, 132, "basis_feature_date", "BasisFeatureDate", false, false, 0, 0, false, false, "LocalMktDate"},
+      {260, 133, "basis_feature_price", "BasisFeaturePrice", false, false, 0, 0, false, false, "Price"},
+      {238, 134, "concession", "Concession", false, false, 0, 0, false, false, "Amt"},
+      {237, 135, "total_takedown", "TotalTakedown", false, false, 0, 0, false, false, "Amt"},
+      {118, 136, "net_money", "NetMoney", false, false, 0, 0, false, false, "Amt"},
+      {119, 137, "settl_curr_amt", "SettlCurrAmt", false, false, 0, 0, false, false, "Amt"},
+      {120, 138, "settl_currency", "SettlCurrency", false, false, 0, 0, false, false, "Currency"},
+      {155, 139, "settl_curr_fx_rate", "SettlCurrFxRate", false, false, 0, 0, false, false, "float"},
+      {156, 207, "settl_curr_fx_rate_calc", "SettlCurrFxRateCalc", false, false, 0, 0, false, false, "char"},
+      {21, 208, "handl_inst", "HandlInst", false, false, 0, 0, false, false, "char"},
+      {110, 140, "min_qty", "MinQty", false, false, 0, 0, false, false, "Qty"},
+      {111, 141, "max_floor", "MaxFloor", false, false, 0, 0, false, false, "Qty"},
+      {77, 209, "position_effect", "PositionEffect", false, false, 0, 0, false, false, "char"},
+      {210, 142, "max_show", "MaxShow", false, false, 0, 0, false, false, "Qty"},
+      {775, 210, "booking_type", "BookingType", false, false, 0, 0, false, false, "int"},
+      {58, 143, "text", "Text", false, false, 0, 0, false, false, "String"},
+      {354, 160, "encoded_text_len", "EncodedTextLen", false, false, 0, 0, false, false, "Length"},
+      {355, 144, "encoded_text", "EncodedText", false, false, 354, 0, false, false, "data"},
+      {193, 145, "settl_date2", "SettlDate2", false, false, 0, 0, false, false, "LocalMktDate"},
+      {192, 146, "order_qty2", "OrderQty2", false, false, 0, 0, false, false, "Qty"},
+      {641, 147, "last_forward_points2", "LastForwardPoints2", false, false, 0, 0, false, false, "PriceOffset"},
+      {442, 211, "multi_leg_reporting_type", "MultiLegReportingType", false, false, 0, 0, false, false, "char"},
+      {480, 212, "cancellation_rights", "CancellationRights", false, false, 0, 0, false, false, "char"},
+      {481, 213, "money_laundering_status", "MoneyLaunderingStatus", false, false, 0, 0, false, false, "char"},
+      {513, 148, "regist_id", "RegistID", false, false, 0, 0, false, false, "String"},
+      {494, 149, "designation", "Designation", false, false, 0, 0, false, false, "String"},
+      {483, 150, "trans_bkd_time", "TransBkdTime", false, false, 0, 0, false, false, "UTCTimestamp"},
+      {515, 151, "exec_valuation_point", "ExecValuationPoint", false, false, 0, 0, false, false, "UTCTimestamp"},
+      {484, 214, "exec_price_type", "ExecPriceType", false, false, 0, 0, false, false, "char"},
+      {485, 152, "exec_price_adjustment", "ExecPriceAdjustment", false, false, 0, 0, false, false, "float"},
+      {638, 215, "priority_indicator", "PriorityIndicator", false, false, 0, 0, false, false, "int"},
+      {639, 153, "price_improvement", "PriceImprovement", false, false, 0, 0, false, false, "PriceOffset"},
+      {851, 216, "last_liquidity_ind", "LastLiquidityInd", false, false, 0, 0, false, false, "int"},
+      {518, 154, "cont_amt_grp", "ContAmtGrp", false, true, 0, 0, false, false, ""},
+      {555, 155, "instrmt_leg_exec_grp", "InstrmtLegExecGrp", false, true, 0, 0, false, false, ""},
+      {797, 217, "copy_msg_indicator", "CopyMsgIndicator", false, false, 0, 0, false, false, "Boolean"},
+      {136, 156, "misc_fees_grp", "MiscFeesGrp", false, true, 0, 0, false, false, ""},
+  }};
+
+  // f(info, member) for every field and group in wire order; no reflection needed. Bit-fields come as
+  // glz::fix3::bit_ref (get/set; a const message gets read_only, so set() does not compile).
+  // Unknown tags are not in the part: they are kept on the envelope, glz::fix3::message::unknown.
+  template <class Self, class F> constexpr void fix_visit(this Self&& self, F&& f) {
+    f(fix_fields[0], self.order_id);
+    f(fix_fields[1], self.secondary_order_id);
+    f(fix_fields[2], self.secondary_cl_ord_id);
+    f(fix_fields[3], self.secondary_exec_id);
+    f(fix_fields[4], self.cl_ord_id);
+    f(fix_fields[5], self.orig_cl_ord_id);
+    f(fix_fields[6], self.cl_ord_link_id);
+    f(fix_fields[7], self.quote_resp_id);
+    f(fix_fields[8], self.ord_status_req_id);
+    f(fix_fields[9], self.mass_status_req_id);
+    f(fix_fields[10], self.tot_num_reports);
+    f(fix_fields[11], self.last_rpt_requested);
+    f(fix_fields[12], self.parties);
+    f(fix_fields[13], self.trade_origination_date);
+    f(fix_fields[14], self.contra_grp);
+    f(fix_fields[15], self.list_id);
+    f(fix_fields[16], self.cross_id);
+    f(fix_fields[17], self.orig_cross_id);
+    f(fix_fields[18], self.cross_type);
+    f(fix_fields[19], self.exec_id);
+    f(fix_fields[20], self.exec_ref_id);
+    f(fix_fields[21], self.exec_type);
+    f(fix_fields[22], self.ord_status);
+    f(fix_fields[23], self.working_indicator);
+    f(fix_fields[24], self.ord_rej_reason);
+    f(fix_fields[25], self.exec_restatement_reason);
+    f(fix_fields[26], self.account);
+    f(fix_fields[27], self.acct_id_source);
+    f(fix_fields[28], self.account_type);
+    f(fix_fields[29], self.day_booking_inst);
+    f(fix_fields[30], self.booking_unit);
+    f(fix_fields[31], self.prealloc_method);
+    f(fix_fields[32], self.settl_type);
+    f(fix_fields[33], self.settl_date);
+    f(fix_fields[34], self.cash_margin);
+    f(fix_fields[35], self.clearing_fee_indicator);
+    f(fix_fields[36], self.symbol);
+    f(fix_fields[37], self.symbol_sfx);
+    f(fix_fields[38], self.security_id);
+    f(fix_fields[39], self.security_id_source);
+    f(fix_fields[40], self.sec_alt_id_grp);
+    f(fix_fields[41], self.product);
+    f(fix_fields[42], self.cfi_code);
+    f(fix_fields[43], self.security_type);
+    f(fix_fields[44], self.security_sub_type);
+    f(fix_fields[45], self.maturity_month_year);
+    f(fix_fields[46], self.maturity_date);
+    f(fix_fields[47], self.put_or_call);
+    f(fix_fields[48], self.coupon_payment_date);
+    f(fix_fields[49], self.issue_date);
+    f(fix_fields[50], self.repo_collateral_security_type);
+    f(fix_fields[51], self.repurchase_term);
+    f(fix_fields[52], self.repurchase_rate);
+    f(fix_fields[53], self.factor);
+    f(fix_fields[54], self.credit_rating);
+    f(fix_fields[55], self.instr_registry);
+    f(fix_fields[56], self.country_of_issue);
+    f(fix_fields[57], self.state_or_province_of_issue);
+    f(fix_fields[58], self.locale_of_issue);
+    f(fix_fields[59], self.redemption_date);
+    f(fix_fields[60], self.strike_price);
+    f(fix_fields[61], self.strike_currency);
+    f(fix_fields[62], self.opt_attribute);
+    f(fix_fields[63], self.contract_multiplier);
+    f(fix_fields[64], self.coupon_rate);
+    f(fix_fields[65], self.security_exchange);
+    f(fix_fields[66], self.issuer);
+    f(fix_fields[67], self.encoded_issuer_len);
+    f(fix_fields[68], self.encoded_issuer);
+    f(fix_fields[69], self.security_desc);
+    f(fix_fields[70], self.encoded_security_desc_len);
+    f(fix_fields[71], self.encoded_security_desc);
+    f(fix_fields[72], self.pool);
+    f(fix_fields[73], self.contract_settl_month);
+    f(fix_fields[74], self.cp_program);
+    f(fix_fields[75], self.cp_reg_type);
+    f(fix_fields[76], self.evnt_grp);
+    f(fix_fields[77], self.dated_date);
+    f(fix_fields[78], self.interest_accrual_date);
+    f(fix_fields[79], self.agreement_desc);
+    f(fix_fields[80], self.agreement_id);
+    f(fix_fields[81], self.agreement_date);
+    f(fix_fields[82], self.agreement_currency);
+    f(fix_fields[83], self.termination_type);
+    f(fix_fields[84], self.start_date);
+    f(fix_fields[85], self.end_date);
+    f(fix_fields[86], self.delivery_type);
+    f(fix_fields[87], self.margin_ratio);
+    f(fix_fields[88], self.und_instrmt_grp);
+    f(fix_fields[89], self.side);
+    f(fix_fields[90], self.stipulations);
+    f(fix_fields[91], self.qty_type);
+    f(fix_fields[92], self.order_qty);
+    f(fix_fields[93], self.cash_order_qty);
+    f(fix_fields[94], self.order_percent);
+    f(fix_fields[95], self.rounding_direction);
+    f(fix_fields[96], self.rounding_modulus);
+    f(fix_fields[97], self.ord_type);
+    f(fix_fields[98], self.price_type);
+    f(fix_fields[99], self.price);
+    f(fix_fields[100], self.stop_px);
+    f(fix_fields[101], self.peg_offset_value);
+    f(fix_fields[102], self.peg_move_type);
+    f(fix_fields[103], self.peg_offset_type);
+    f(fix_fields[104], self.peg_limit_type);
+    f(fix_fields[105], self.peg_round_direction);
+    f(fix_fields[106], self.peg_scope);
+    f(fix_fields[107], self.discretion_inst);
+    f(fix_fields[108], self.discretion_offset_value);
+    f(fix_fields[109], self.discretion_move_type);
+    f(fix_fields[110], self.discretion_offset_type);
+    f(fix_fields[111], self.discretion_limit_type);
+    f(fix_fields[112], self.discretion_round_direction);
+    f(fix_fields[113], self.discretion_scope);
+    f(fix_fields[114], self.pegged_price);
+    f(fix_fields[115], self.discretion_price);
+    f(fix_fields[116], self.target_strategy);
+    f(fix_fields[117], self.target_strategy_parameters);
+    f(fix_fields[118], self.participation_rate);
+    f(fix_fields[119], self.target_strategy_performance);
+    f(fix_fields[120], self.currency);
+    f(fix_fields[121], self.compliance_id);
+    f(fix_fields[122], self.solicited_flag);
+    f(fix_fields[123], self.time_in_force);
+    f(fix_fields[124], self.effective_time);
+    f(fix_fields[125], self.expire_date);
+    f(fix_fields[126], self.expire_time);
+    f(fix_fields[127], self.exec_inst);
+    f(fix_fields[128], self.order_capacity);
+    f(fix_fields[129], self.order_restrictions);
+    f(fix_fields[130], self.cust_order_capacity);
+    f(fix_fields[131], self.last_qty);
+    f(fix_fields[132], self.underlying_last_qty);
+    f(fix_fields[133], self.last_px);
+    f(fix_fields[134], self.underlying_last_px);
+    f(fix_fields[135], self.last_par_px);
+    f(fix_fields[136], self.last_spot_rate);
+    f(fix_fields[137], self.last_forward_points);
+    f(fix_fields[138], self.last_mkt);
+    f(fix_fields[139], self.trading_session_id);
+    f(fix_fields[140], self.trading_session_sub_id);
+    f(fix_fields[141], self.time_bracket);
+    f(fix_fields[142], self.last_capacity);
+    f(fix_fields[143], self.leaves_qty);
+    f(fix_fields[144], self.cum_qty);
+    f(fix_fields[145], self.avg_px);
+    f(fix_fields[146], self.day_order_qty);
+    f(fix_fields[147], self.day_cum_qty);
+    f(fix_fields[148], self.day_avg_px);
+    f(fix_fields[149], self.gt_booking_inst);
+    f(fix_fields[150], self.trade_date);
+    f(fix_fields[151], self.transact_time);
+    f(fix_fields[152], self.report_to_exch);
+    f(fix_fields[153], self.commission);
+    f(fix_fields[154], self.comm_type);
+    f(fix_fields[155], self.comm_currency);
+    f(fix_fields[156], self.fund_renew_waiv);
+    f(fix_fields[157], self.spread);
+    f(fix_fields[158], self.benchmark_curve_currency);
+    f(fix_fields[159], self.benchmark_curve_name);
+    f(fix_fields[160], self.benchmark_curve_point);
+    f(fix_fields[161], self.benchmark_price);
+    f(fix_fields[162], self.benchmark_price_type);
+    f(fix_fields[163], self.benchmark_security_id);
+    f(fix_fields[164], self.benchmark_security_id_source);
+    f(fix_fields[165], self.yield_type);
+    f(fix_fields[166], self.yield);
+    f(fix_fields[167], self.yield_calc_date);
+    f(fix_fields[168], self.yield_redemption_date);
+    f(fix_fields[169], self.yield_redemption_price);
+    f(fix_fields[170], self.yield_redemption_price_type);
+    f(fix_fields[171], self.gross_trade_amt);
+    f(fix_fields[172], self.num_days_interest);
+    f(fix_fields[173], self.ex_date);
+    f(fix_fields[174], self.accrued_interest_rate);
+    f(fix_fields[175], self.accrued_interest_amt);
+    f(fix_fields[176], self.interest_at_maturity);
+    f(fix_fields[177], self.end_accrued_interest_amt);
+    f(fix_fields[178], self.start_cash);
+    f(fix_fields[179], self.end_cash);
+    f(fix_fields[180], self.traded_flat_switch);
+    f(fix_fields[181], self.basis_feature_date);
+    f(fix_fields[182], self.basis_feature_price);
+    f(fix_fields[183], self.concession);
+    f(fix_fields[184], self.total_takedown);
+    f(fix_fields[185], self.net_money);
+    f(fix_fields[186], self.settl_curr_amt);
+    f(fix_fields[187], self.settl_currency);
+    f(fix_fields[188], self.settl_curr_fx_rate);
+    f(fix_fields[189], self.settl_curr_fx_rate_calc);
+    f(fix_fields[190], self.handl_inst);
+    f(fix_fields[191], self.min_qty);
+    f(fix_fields[192], self.max_floor);
+    f(fix_fields[193], self.position_effect);
+    f(fix_fields[194], self.max_show);
+    f(fix_fields[195], self.booking_type);
+    f(fix_fields[196], self.text);
+    f(fix_fields[197], self.encoded_text_len);
+    f(fix_fields[198], self.encoded_text);
+    f(fix_fields[199], self.settl_date2);
+    f(fix_fields[200], self.order_qty2);
+    f(fix_fields[201], self.last_forward_points2);
+    f(fix_fields[202], self.multi_leg_reporting_type);
+    f(fix_fields[203], self.cancellation_rights);
+    f(fix_fields[204], self.money_laundering_status);
+    f(fix_fields[205], self.regist_id);
+    f(fix_fields[206], self.designation);
+    f(fix_fields[207], self.trans_bkd_time);
+    f(fix_fields[208], self.exec_valuation_point);
+    f(fix_fields[209], self.exec_price_type);
+    f(fix_fields[210], self.exec_price_adjustment);
+    f(fix_fields[211], self.priority_indicator);
+    f(fix_fields[212], self.price_improvement);
+    f(fix_fields[213], self.last_liquidity_ind);
+    f(fix_fields[214], self.cont_amt_grp);
+    f(fix_fields[215], self.instrmt_leg_exec_grp);
+    f(fix_fields[216], self.copy_msg_indicator);
+    f(fix_fields[217], self.misc_fees_grp);
+  }
+};
+static_assert(sizeof(ExecutionReport) == 2064 && alignof(ExecutionReport) == 8);

@@ -1,0 +1,50 @@
+struct Logon {
+  [[=glz::fix3::tag{108}]] std::int64_t heart_bt_int;
+  [[=glz::fix3::tag{96}]] stdx::optional<std::string_view> raw_data;
+  [[=glz::fix3::tag{789}]] glz::fix3::opt_int<std::uint64_t> next_expected_msg_seq_num;
+  [[=glz::fix3::tag{384}]] std::span<const MsgTypeGrp> msg_type_grp;
+  [[=glz::fix3::tag{553}]] stdx::optional<std::string_view> username;
+  [[=glz::fix3::tag{554}]] stdx::optional<std::string_view> password;
+  [[=glz::fix3::tag{95}]] glz::fix3::opt_int<std::uint32_t> raw_data_length;
+  [[=glz::fix3::tag{383}]] glz::fix3::opt_int<std::uint32_t> max_message_size;
+  [[=glz::fix3::tag{98}]] EncryptMethod encrypt_method;
+  [[=glz::fix3::tag{141}]] stdx::optional<glz::fix3::yes_no> reset_seq_num_flag;
+  [[=glz::fix3::tag{464}]] stdx::optional<glz::fix3::yes_no> test_message_indicator;
+
+  static constexpr std::string_view fix_msg_type = "A";
+  static constexpr std::string_view fix_name = "Logon";
+  // Codec contract (CONTRACT.md): the tag table in dictionary (wire) order. member = the member's
+  // position in declaration (layout) order, the same index fix_visit passes and reflection sees.
+  //   {tag, member, name, fix_name, required, group, length_tag, max_entries, deprecated, open_enum, datatype}
+  static constexpr std::array<glz::fix3::field_info, 11> fix_fields{{
+      {98, 8, "encrypt_method", "EncryptMethod", true, false, 0, 0, false, false, "int"},
+      {108, 0, "heart_bt_int", "HeartBtInt", true, false, 0, 0, false, false, "int"},
+      {95, 6, "raw_data_length", "RawDataLength", false, false, 0, 0, false, false, "Length"},
+      {96, 1, "raw_data", "RawData", false, false, 95, 0, false, false, "data"},
+      {141, 9, "reset_seq_num_flag", "ResetSeqNumFlag", false, false, 0, 0, false, false, "Boolean"},
+      {789, 2, "next_expected_msg_seq_num", "NextExpectedMsgSeqNum", false, false, 0, 0, false, false, "SeqNum"},
+      {383, 7, "max_message_size", "MaxMessageSize", false, false, 0, 0, false, false, "Length"},
+      {384, 3, "msg_type_grp", "MsgTypeGrp", false, true, 0, 0, false, false, ""},
+      {464, 10, "test_message_indicator", "TestMessageIndicator", false, false, 0, 0, false, false, "Boolean"},
+      {553, 4, "username", "Username", false, false, 0, 0, false, false, "String"},
+      {554, 5, "password", "Password", false, false, 0, 0, false, false, "String"},
+  }};
+
+  // f(info, member) for every field and group in wire order; no reflection needed. Bit-fields come as
+  // glz::fix3::bit_ref (get/set; a const message gets read_only, so set() does not compile).
+  // Unknown tags are not in the part: they are kept on the envelope, glz::fix3::message::unknown.
+  template <class Self, class F> constexpr void fix_visit(this Self&& self, F&& f) {
+    f(fix_fields[0], self.encrypt_method);
+    f(fix_fields[1], self.heart_bt_int);
+    f(fix_fields[2], self.raw_data_length);
+    f(fix_fields[3], self.raw_data);
+    f(fix_fields[4], self.reset_seq_num_flag);
+    f(fix_fields[5], self.next_expected_msg_seq_num);
+    f(fix_fields[6], self.max_message_size);
+    f(fix_fields[7], self.msg_type_grp);
+    f(fix_fields[8], self.test_message_indicator);
+    f(fix_fields[9], self.username);
+    f(fix_fields[10], self.password);
+  }
+};
+static_assert(sizeof(Logon) == 96 && alignof(Logon) == 8);

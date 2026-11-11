@@ -11,9 +11,8 @@ template <class T> consteval std::uint16_t tag_of(std::string_view member) {
           return std::meta::extract<glz::fix3::tag>(a).value;
   return 0;
 }
-using K = glz::fix3::keep_unknown;
-static_assert(tag_of<fix44::NewOrderSingle<K>>("cl_ord_id") == 11);
-static_assert(tag_of<fix44::NewOrderSingle<K>>("side") == 54);
-static_assert(tag_of<fix44::StandardHeader<K>>("sender_comp_id") == 49);
+static_assert(tag_of<fix44::NewOrderSingle>("cl_ord_id") == 11);
+static_assert(tag_of<fix44::NewOrderSingle>("side") == 54);
+static_assert(tag_of<fix44::StandardHeader>("sender_comp_id") == 49);
 static_assert(tag_of<fix44::Parties>("party_role") == 452);
 int main() { std::puts("annotations: tags read back by reflection ok"); }

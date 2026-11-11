@@ -22,7 +22,9 @@ static_assert(sizeof(timestamp) == 8);
 enum class yes_no : char { no = 'N', yes = 'Y' };  // an optional Boolean (a required one is a 1-bit bit-field)
 
 struct tag { std::uint16_t value; };                     // annotation: [[=glz::fix3::tag{49}]]
-struct field { std::uint16_t tag; std::string_view value; };
+// L1, on the message envelope: an unknown tag and where it was read. position counts the message's fields
+// from 0 (8=, 9=, 35= are 0, 1, 2), so an unknown tag inside a group entry is placed by its position.
+struct unknown_field { std::uint32_t position; std::uint16_t tag; std::string_view value; };
 struct field_info {
   std::uint16_t tag;          // FIX tag (the NumInGroup tag for a group)
   std::uint16_t member;       // index in declaration order (fix_visit / reflection)
@@ -34,6 +36,7 @@ struct field_info {
   std::uint16_t max_entries;  // group: implMaxOccurs, 0 = unbounded
   bool deprecated;
   bool open_enum;             // int enum that also accepts values beyond its codes
+  std::string_view datatype;  // Orchestra datatype (a codeSet's datatype for a codeSet field), e.g. UTCTimestamp
 };
 
 // fix_visit's stand-in for a bit-field member (it has no address).
@@ -44,9 +47,11 @@ template <class Get, class Set> struct bit_ref {
 template <class G, class S> bit_ref(G, S) -> bit_ref<G, S>;
 struct read_only {};  // bit_ref::set when fix_visit runs on a const message: calling it does not compile
 
-// L1: the unknown-tag policy. Each message is one template over it.
-struct keep_unknown { using member_type = std::span<const field>; };  // rule A, wire order
-struct count_unknown { using member_type = std::uint16_t; };          // how many were skipped
+// L1: the unknown-tag policy. It lives on the message envelope only: header, body, trailer and group
+// entries are plain structs, and unknown tags anywhere in the message (group entries included) go to
+// message::unknown.
+struct keep_unknown { using member_type = std::span<const unknown_field>; };  // in wire order
+struct count_unknown { using member_type = std::uint32_t; };                  // how many were skipped
 template <class U> concept unknown_policy = requires { typename U::member_type; };
 template <class U> using unknown_t = typename U::member_type;
 
@@ -54,7 +59,22 @@ template <class U> using unknown_t = typename U::member_type;
 template <class I> using opt_int = stdx::optional<I, stdx::tombstone_value<std::numeric_limits<I>::max()>>;
 using opt_char = stdx::optional<char, stdx::tombstone_value<'\0'>>;  // a plain char: '\0' is never a FIX value
 
-template <class H, class B, class T> struct message { H header; B body; T trailer; };
+// Partner profiles (orchestra_gen --profiles): each profile is a type with constexpr settings, so a codec
+// instantiated for it has the settings as constants. with(name, f) runs f.template operator()<P>() for the
+// profile named `name` -- the one runtime choice, made once per session -- and returns false if none matches.
+template <class... P> struct profile_list {
+  static constexpr std::array<std::string_view, sizeof...(P)> names{P::name...};
+  template <class F> static constexpr bool with(std::string_view name, F&& f) {
+    return ((name == P::name ? (f.template operator()<P>(), true) : false) || ...);
+  }
+};
+
+template <class H, class B, class T, unknown_policy U> struct message {
+  H header;
+  B body;
+  T trailer;
+  unknown_t<U> unknown;
+};
 
 }  // namespace glz::fix3
 

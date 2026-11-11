@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Build orchestra_gen, generate FIX code, and test both output paths on the three compilers.
 #
-#   ./run.sh [step ...]      steps: gen lock guards targets headers visit annotations oracle negative embed latest ci
+#   ./run.sh [step ...]      steps: gen lock guards targets golden headers visit profiles annotations oracle negative
+#                            embed latest ci
 #                            (default: all but embed, latest and ci; ci is what the GitHub job runs: GCC only)
 #
 # Every step's exit status counts: the script exits 1 if any step failed, and prints a summary.
@@ -10,7 +11,7 @@
 #   CLANG   clang-p2996 clang++                 (default: clang++-p2996 on PATH; steps that need it are skipped if unset)
 #   LLVM    upstream clang++ (no reflection)    (default: clang++ on PATH; must accept -stdlib=libc++)
 #   ORCH    the orchestrations repo's "FIX Standard" folder   (required)
-#   BOOST_INC  include dir holding boost/decimal.hpp          (required except for gen, lock, guards and ci)
+#   BOOST_INC  include dir holding boost/decimal.hpp          (required except for gen, lock, guards, golden and ci)
 set -uo pipefail
 cd "$(dirname "$0")"
 [ -f local.env ] && . ./local.env
@@ -24,8 +25,8 @@ done
 XML=${XML:-$ORCH/OrchestraFIX44.xml}
 STDX_REV=d6e517f86d5d4997c3c4fe78a29f41433cfb5c6d   # intel/cpp-std-extensions (stdx::optional, BSL-1.0)
 B=build; O=out/fix44; T=$B/tests; mkdir -p "$T"
-steps=("$@"); [ ${#steps[@]} -eq 0 ] && steps=(gen lock guards targets headers visit annotations oracle negative)
-for s in "${steps[@]}"; do case $s in gen|lock|guards|ci) ;;  # these only run the generator: no Boost needed
+steps=("$@"); [ ${#steps[@]} -eq 0 ] && steps=(gen lock guards targets golden headers visit profiles annotations oracle negative)
+for s in "${steps[@]}"; do case $s in gen|lock|guards|golden|ci) ;;  # these only run the generator: no Boost needed
   *) : "${BOOST_INC:?set BOOST_INC to an include dir with boost/decimal.hpp (or put it in local.env)}";; esac; done
 BOOST_INC=${BOOST_INC:-}
 fails=(); passes=()
@@ -122,6 +123,35 @@ targets)  # the annotation is written directly where the compiler has annotation
     if grep -q 'needs C++26 annotations' <<<"$wrong"; then echo "== targets: p2996 header without -fannotation-attributes refused ok"; passes+=(targets-refuse-p2996)
     else echo "== targets: p2996 header without the flag          FAILED: not refused"; fails+=(targets-refuse-p2996); fi
   fi;;
+golden)  # stage 3: the emitted text of a few structs, reviewed and checked in (tests/golden/<struct>.txt)
+  for g in tests/golden/*.txt; do
+    n=$(basename "$g" .txt)
+    awk -v n="$n" '$0 == "struct " n " {" {on=1} on {print} on && index($0, "static_assert(sizeof(" n ")") == 1 {exit}' "$O/fix44.hpp" > $T/golden_$n.txt
+    if [ ! -s $T/golden_$n.txt ]; then echo "== golden: struct $n not found in $O/fix44.hpp     FAILED"; fails+=(golden-$n)
+    elif diff -u "$g" $T/golden_$n.txt > $T/golden_$n.diff; then echo "== golden: $n matches tests/golden/$n.txt"; passes+=(golden-$n)
+    else echo "== golden: $n differs (diff: $T/golden_$n.diff)     FAILED"; head -20 $T/golden_$n.diff | sed 's/^/     /'; fails+=(golden-$n); fi
+  done;;
+profiles)  # stage 3: partner profiles from tests/profiles/*.json, as constexpr types on three compilers
+  for tg in gcc16 p2996 clang23; do
+    check timed "generate FIX 4.4 + profiles for $tg" ./$B/orchestra_gen --xml "$XML" --namespace fix44 --out $T/prof-$tg --strict on --target $tg --lock lock/fix44.lock --profiles tests/profiles
+  done
+  check compile_run "profiles: GCC 16.2" $T/g_prof "$GCC" -std=c++26 -freflection -I$T/prof-gcc16 "${INC[@]}" tests/profiles_test.cpp
+  need CLANG && check compile_run "profiles: clang-p2996" $T/c_prof "$CLANG" -std=c++26 -freflection -fexpansion-statements -fannotation-attributes -stdlib=libc++ -I$T/prof-p2996 "${INC[@]}" tests/profiles_test.cpp
+  need LLVM && check compile_run "profiles: upstream clang" $T/l_prof "$LLVM" -std=c++26 -stdlib=libc++ -I$T/prof-clang23 "${INC[@]}" tests/profiles_test.cpp
+  # a bad profile stops the run before anything is written, naming the file and the problem
+  for bad in 'unknown:{"timestamp_digits": 3, "fields": {"TransactTim": {"timestamp_digits": 9}}}:no field named TransactTim' \
+             'notts:{"timestamp_digits": 3, "fields": {"ClOrdID": {"timestamp_digits": 9}}}:ClOrdID is String, not a timestamp' \
+             'digits:{"timestamp_digits": 12}:timestamp_digits 12 is outside 0-9' \
+             'extra:{"timestamp_digits": 3, "precision": 9}:precision' \
+             'missing:{"fields": {}}:timestamp_digits' \
+             'std:{"timestamp_digits": 3}:must be lowercase letters'; do
+    name=${bad%%:*}; rest=${bad#*:}; want=${rest##*:}; json=${rest%:*}
+    rm -rf $T/badprof $T/badout; mkdir -p $T/badprof; printf '%s\n' "$json" > $T/badprof/$name.json
+    out=$(./$B/orchestra_gen --xml "$XML" --namespace fix44 --out $T/badout --lock lock/fix44.lock --profiles $T/badprof 2>&1); rc=$?
+    if [ $rc -ne 0 ] && [ ! -e $T/badout ] && grep -q "$name.json" <<<"$out" && grep -q -- "$want" <<<"$out"; then
+      echo "== profiles: bad profile ($name) refused, nothing written  ok"; passes+=(profiles-bad-$name)
+    else echo "== profiles: bad profile ($name)                    FAILED (exit $rc): $out"; fails+=(profiles-bad-$name); fi
+  done;;
 headers)
   check compile_run "headers: GCC 16.2" $T/g_headers "$GCC" "${GF[@]}" tests/headers_test.cpp
   need CLANG && check compile_run "headers: clang-p2996" $T/c_headers "$CLANG" "${CF[@]}" tests/headers_test.cpp
@@ -175,7 +205,7 @@ latest)  # FIX Latest EP312, every message, checked against lock/fixlatest.lock,
   for tg in gcc16 p2996 clang23; do
     check timed "generate FIX Latest for $tg" ./$B/orchestra_gen --xml "$ORCH/OrchestraFIXLatest.xml" --namespace fixlatest --out out/fixlatest-$tg --target $tg --lock lock/fixlatest.lock
   done
-  printf '#include "fixlatest.hpp"\nint main() { return sizeof(fixlatest::NewOrderSingle<glz::fix3::count_unknown>) == 0; }\n' > $T/latest.cpp
+  printf '#include "fixlatest.hpp"\nint main() { return sizeof(fixlatest::NewOrderSingle) == 0; }\n' > $T/latest.cpp
   for tg in gcc16 p2996 clang23; do  # the checked-in copy (generated/) must match; refresh it only after review
     if diff -r out/fixlatest-$tg generated/fixlatest-$tg >/dev/null; then echo "== FIX Latest $tg matches generated/              ok"; passes+=(latest-match-$tg)
     else echo "== FIX Latest $tg differs from generated/          FAILED"; fails+=(latest-match-$tg); fi

@@ -37,11 +37,10 @@ consteval std::meta::info find_in(std::meta::info ns, std::string_view name) {
   return {};
 }
 
-consteval std::meta::info decode_type(std::string_view t, std::meta::info enums_ns, std::meta::info parts_ns,
-                                      std::meta::info policy) {
+consteval std::meta::info decode_type(std::string_view t, std::meta::info enums_ns, std::meta::info parts_ns) {
   using namespace std::meta;
   if (t.starts_with("?")) {
-    const auto inner = decode_type(t.substr(1), enums_ns, parts_ns, policy);
+    const auto inner = decode_type(t.substr(1), enums_ns, parts_ns);
     if (t == "?char") return ^^glz::fix3::opt_char;
     const bool integral = t == "?u64" || t == "?u32" || t == "?u16" || t == "?u8" || t == "?i64";
     return integral ? substitute(^^glz::fix3::opt_int, {inner}) : substitute(^^stdx::optional, {inner});
@@ -57,7 +56,6 @@ consteval std::meta::info decode_type(std::string_view t, std::meta::info enums_
   if (t == "char") return ^^char;
   if (t == "bool") return ^^bool;
   if (t == "yn") return ^^glz::fix3::yes_no;
-  if (t == "U") return substitute(^^glz::fix3::unknown_t, {policy});
   if (t.starts_with("E:")) return find_in(enums_ns, t.substr(2));
   if (t.starts_with("S:")) return substitute(^^std::span, {add_const(find_in(parts_ns, t.substr(2)))});
   fail("digest: unknown type code '" + std::string(t) + "'");
@@ -95,10 +93,9 @@ consteval std::string to_str(std::size_t v) {  // std::to_string is not constexp
   return s;
 }
 
-struct part_line { std::string name; bool templated; std::size_t size_keep, size_count, align_keep, align_count; std::vector<std::vector<std::string>> members; };
+struct part_line { std::string name; std::size_t size, align; std::vector<std::vector<std::string>> members; };
 
-consteval void define_one(std::meta::info target, const part_line& p, std::meta::info enums_ns,
-                          std::meta::info parts_ns, std::meta::info policy, std::size_t want_size, std::size_t want_align) {
+consteval void define_one(std::meta::info target, const part_line& p, std::meta::info enums_ns, std::meta::info parts_ns) {
   using namespace std::meta;
   std::vector<info> specs;
   for (const auto& m : p.members) {
@@ -108,14 +105,14 @@ consteval void define_one(std::meta::info target, const part_line& p, std::meta:
     if (bits) o.width = bits;
 #else
     if (bits) o.bit_width = bits;
-    if (m[2] != "U") o.annotations.push_back(reflect_constant(glz::fix3::tag{static_cast<std::uint16_t>(to_int(m[3]))}));
+    o.annotations.push_back(reflect_constant(glz::fix3::tag{static_cast<std::uint16_t>(to_int(m[3]))}));
 #endif
-    specs.push_back(data_member_spec(decode_type(m[2], enums_ns, parts_ns, policy), o));
+    specs.push_back(data_member_spec(decode_type(m[2], enums_ns, parts_ns), o));
   }
   define_aggregate(target, specs);
-  if (size_of(target) != want_size || alignment_of(target) != want_align)
+  if (size_of(target) != p.size || alignment_of(target) != p.align)
     fail("digest: " + p.name + " laid out as " + to_str(size_of(target)) + " bytes (align " +
-         to_str(alignment_of(target)) + "), digest says " + to_str(want_size) + " (align " + to_str(want_align) + ")");
+         to_str(alignment_of(target)) + "), digest says " + to_str(p.size) + " (align " + to_str(p.align) + ")");
 }
 
 // Define every struct the digest lists, in digest order (group entries come before their users).
@@ -124,26 +121,17 @@ template <std::size_t N>
 consteval void define_all(std::meta::info parts_ns, std::meta::info enums_ns, const unsigned char (&digest)[N]) {
   line_reader r{std::span<const unsigned char>(digest, N)};
   const auto v = r.next();
-  if (v.size() != 3 || v[0] != "V" || v[1] != "1") fail("digest: missing or unknown version line");
+  if (v.size() != 3 || v[0] != "V" || v[1] != "2") fail("digest: missing or unknown version line");
   std::vector<part_line> parts;
   while (!r.done()) {
     auto w = r.next();
     if (w.size() == 1 && w[0].empty()) continue;
-    if (w[0] == "P" && w.size() == 7)
-      parts.push_back({w[1], w[2] == "1", static_cast<std::size_t>(to_int(w[3])), static_cast<std::size_t>(to_int(w[4])),
-                       static_cast<std::size_t>(to_int(w[5])), static_cast<std::size_t>(to_int(w[6])), {}});
+    if (w[0] == "P" && w.size() == 4)
+      parts.push_back({w[1], static_cast<std::size_t>(to_int(w[2])), static_cast<std::size_t>(to_int(w[3])), {}});
     else if (w[0] == "M" && w.size() == 5 && !parts.empty()) parts.back().members.push_back(std::move(w));
     else fail("digest: bad line starting '" + w[0] + "'");
   }
-  for (const auto& p : parts) {
-    const auto decl = find_in(parts_ns, p.name);
-    if (p.templated) {
-      define_one(substitute(decl, {^^glz::fix3::keep_unknown}), p, enums_ns, parts_ns, ^^glz::fix3::keep_unknown, p.size_keep, p.align_keep);
-      define_one(substitute(decl, {^^glz::fix3::count_unknown}), p, enums_ns, parts_ns, ^^glz::fix3::count_unknown, p.size_count, p.align_count);
-    } else {
-      define_one(decl, p, enums_ns, parts_ns, ^^glz::fix3::keep_unknown, p.size_keep, p.align_keep);
-    }
-  }
+  for (const auto& p : parts) define_one(find_in(parts_ns, p.name), p, enums_ns, parts_ns);
 }
 
 }  // namespace glz::fix3::embed

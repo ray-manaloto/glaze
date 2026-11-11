@@ -1,0 +1,74 @@
+struct NewOrderList {
+  [[=glz::fix3::tag{66}]] std::string_view list_id;
+  [[=glz::fix3::tag{390}]] stdx::optional<std::string_view> bid_id;
+  [[=glz::fix3::tag{391}]] stdx::optional<std::string_view> client_bid_id;
+  [[=glz::fix3::tag{415}]] glz::fix3::opt_int<std::int64_t> prog_period_interval;
+  [[=glz::fix3::tag{513}]] stdx::optional<std::string_view> regist_id;
+  [[=glz::fix3::tag{69}]] stdx::optional<std::string_view> list_exec_inst;
+  [[=glz::fix3::tag{353}]] stdx::optional<std::string_view> encoded_list_exec_inst;
+  [[=glz::fix3::tag{765}]] stdx::optional<dec::decimal64_t> allowable_one_sidedness_pct;
+  [[=glz::fix3::tag{766}]] stdx::optional<dec::decimal64_t> allowable_one_sidedness_value;
+  [[=glz::fix3::tag{767}]] stdx::optional<std::string_view> allowable_one_sidedness_curr;
+  [[=glz::fix3::tag{68}]] std::int64_t tot_no_orders;
+  [[=glz::fix3::tag{73}]] std::span<const ListOrdGrp> list_ord_grp;
+  [[=glz::fix3::tag{352}]] glz::fix3::opt_int<std::uint32_t> encoded_list_exec_inst_len;
+  [[=glz::fix3::tag{414}]] stdx::optional<ProgRptReqs> prog_rpt_reqs;
+  [[=glz::fix3::tag{394}]] BidType bid_type;
+  [[=glz::fix3::tag{480}]] stdx::optional<CancellationRights> cancellation_rights;
+  [[=glz::fix3::tag{481}]] stdx::optional<MoneyLaunderingStatus> money_laundering_status;
+  [[=glz::fix3::tag{433}]] stdx::optional<ListExecInstType> list_exec_inst_type;
+  [[=glz::fix3::tag{893}]] stdx::optional<glz::fix3::yes_no> last_fragment;
+
+  static constexpr std::string_view fix_msg_type = "E";
+  static constexpr std::string_view fix_name = "NewOrderList";
+  // Codec contract (CONTRACT.md): the tag table in dictionary (wire) order. member = the member's
+  // position in declaration (layout) order, the same index fix_visit passes and reflection sees.
+  //   {tag, member, name, fix_name, required, group, length_tag, max_entries, deprecated, open_enum, datatype}
+  static constexpr std::array<glz::fix3::field_info, 19> fix_fields{{
+      {66, 0, "list_id", "ListID", true, false, 0, 0, false, false, "String"},
+      {390, 1, "bid_id", "BidID", false, false, 0, 0, false, false, "String"},
+      {391, 2, "client_bid_id", "ClientBidID", false, false, 0, 0, false, false, "String"},
+      {414, 13, "prog_rpt_reqs", "ProgRptReqs", false, false, 0, 0, false, false, "int"},
+      {394, 14, "bid_type", "BidType", true, false, 0, 0, false, false, "int"},
+      {415, 3, "prog_period_interval", "ProgPeriodInterval", false, false, 0, 0, false, false, "int"},
+      {480, 15, "cancellation_rights", "CancellationRights", false, false, 0, 0, false, false, "char"},
+      {481, 16, "money_laundering_status", "MoneyLaunderingStatus", false, false, 0, 0, false, false, "char"},
+      {513, 4, "regist_id", "RegistID", false, false, 0, 0, false, false, "String"},
+      {433, 17, "list_exec_inst_type", "ListExecInstType", false, false, 0, 0, false, false, "char"},
+      {69, 5, "list_exec_inst", "ListExecInst", false, false, 0, 0, false, false, "String"},
+      {352, 12, "encoded_list_exec_inst_len", "EncodedListExecInstLen", false, false, 0, 0, false, false, "Length"},
+      {353, 6, "encoded_list_exec_inst", "EncodedListExecInst", false, false, 352, 0, false, false, "data"},
+      {765, 7, "allowable_one_sidedness_pct", "AllowableOneSidednessPct", false, false, 0, 0, false, false, "Percentage"},
+      {766, 8, "allowable_one_sidedness_value", "AllowableOneSidednessValue", false, false, 0, 0, false, false, "Amt"},
+      {767, 9, "allowable_one_sidedness_curr", "AllowableOneSidednessCurr", false, false, 0, 0, false, false, "Currency"},
+      {68, 10, "tot_no_orders", "TotNoOrders", true, false, 0, 0, false, false, "int"},
+      {893, 18, "last_fragment", "LastFragment", false, false, 0, 0, false, false, "Boolean"},
+      {73, 11, "list_ord_grp", "ListOrdGrp", true, true, 0, 0, false, false, ""},
+  }};
+
+  // f(info, member) for every field and group in wire order; no reflection needed. Bit-fields come as
+  // glz::fix3::bit_ref (get/set; a const message gets read_only, so set() does not compile).
+  // Unknown tags are not in the part: they are kept on the envelope, glz::fix3::message::unknown.
+  template <class Self, class F> constexpr void fix_visit(this Self&& self, F&& f) {
+    f(fix_fields[0], self.list_id);
+    f(fix_fields[1], self.bid_id);
+    f(fix_fields[2], self.client_bid_id);
+    f(fix_fields[3], self.prog_rpt_reqs);
+    f(fix_fields[4], self.bid_type);
+    f(fix_fields[5], self.prog_period_interval);
+    f(fix_fields[6], self.cancellation_rights);
+    f(fix_fields[7], self.money_laundering_status);
+    f(fix_fields[8], self.regist_id);
+    f(fix_fields[9], self.list_exec_inst_type);
+    f(fix_fields[10], self.list_exec_inst);
+    f(fix_fields[11], self.encoded_list_exec_inst_len);
+    f(fix_fields[12], self.encoded_list_exec_inst);
+    f(fix_fields[13], self.allowable_one_sidedness_pct);
+    f(fix_fields[14], self.allowable_one_sidedness_value);
+    f(fix_fields[15], self.allowable_one_sidedness_curr);
+    f(fix_fields[16], self.tot_no_orders);
+    f(fix_fields[17], self.last_fragment);
+    f(fix_fields[18], self.list_ord_grp);
+  }
+};
+static_assert(sizeof(NewOrderList) == 176 && alignof(NewOrderList) == 8);

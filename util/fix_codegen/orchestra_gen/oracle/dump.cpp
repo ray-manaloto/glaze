@@ -24,7 +24,7 @@ template <class T> void dump() {
     constexpr auto tn = std::meta::display_string_of(std::meta::type_of(m));
     std::printf("T %.*s %.*s%s\n", int(mn.size()), mn.data(), int(tn.size()), tn.data(), std::meta::is_bit_field(m) ? " :bit" : "");
     using MT = typename[:std::meta::type_of(m):];
-    if constexpr (is_span<MT>::value && !std::is_same_v<typename is_span<MT>::elem, glz::fix3::field>) {
+    if constexpr (is_span<MT>::value) {
       using E = typename is_span<MT>::elem;
       constexpr auto en = std::meta::display_string_of(^^E);
       std::printf("G %.*s %.*s\n", int(mn.size()), mn.data(), int(en.size()), en.data());
@@ -33,21 +33,20 @@ template <class T> void dump() {
   // entries after the parent's own lines, so every PART block is contiguous
   template for (constexpr auto m : std::define_static_array(std::meta::nonstatic_data_members_of(^^T, std::meta::access_context::unchecked()))) {
     using MT = typename[:std::meta::type_of(m):];
-    if constexpr (is_span<MT>::value && !std::is_same_v<typename is_span<MT>::elem, glz::fix3::field>) dump<typename is_span<MT>::elem>();
+    if constexpr (is_span<MT>::value) dump<typename is_span<MT>::elem>();
   }
 }
 
-using C = glz::fix3::count_unknown;
 int main() {
-  dump<fix44::StandardHeader<C>>();
-  dump<fix44::StandardTrailer<C>>();
-  dump<fix44::Logon<C>>();
-  dump<fix44::Heartbeat<C>>();
-  dump<fix44::NewOrderSingle<C>>();
-  dump<fix44::ExecutionReport<C>>();
-  dump<fix44::OrderCancelRequest<C>>();
-  dump<fix44::OrderCancelReplaceRequest<C>>();
-  dump<fix44::MarketDataSnapshotFullRefresh<C>>();
+  dump<fix44::StandardHeader>();
+  dump<fix44::StandardTrailer>();
+  dump<fix44::Logon>();
+  dump<fix44::Heartbeat>();
+  dump<fix44::NewOrderSingle>();
+  dump<fix44::ExecutionReport>();
+  dump<fix44::OrderCancelRequest>();
+  dump<fix44::OrderCancelReplaceRequest>();
+  dump<fix44::MarketDataSnapshotFullRefresh>();
   // enum underlying types, for the width check
 #define E(X) std::printf("ENUM %s %zu\n", #X, sizeof(std::underlying_type_t<fix44::X>));
   E(PosMaintResult) E(PartyRole) E(Side) E(OrdType) E(TargetStrategy) E(PartySubIDType)

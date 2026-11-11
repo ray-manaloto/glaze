@@ -231,14 +231,14 @@ hdr = next(c for c in components.values() if c.get('name') == 'StandardHeader')
 trl = next(c for c in components.values() if c.get('name') == 'StandardTrailer')
 h = expected_part(hdr, 'StandardHeader', 'session'); h.fields = [f for f in h.fields if f[0] not in ENVELOPE]
 t = expected_part(trl, 'StandardTrailer', 'session'); t.fields = [f for f in t.fields if f[0] not in ENVELOPE]
-compare(h, 'fix44::StandardHeader<glz::fix3::count_unknown>', 'StandardHeader')
-compare(t, 'fix44::StandardTrailer<glz::fix3::count_unknown>', 'StandardTrailer')
+compare(h, 'fix44::StandardHeader', 'StandardHeader')
+compare(t, 'fix44::StandardTrailer', 'StandardTrailer')
 summary = []
 for mt in targets:
     m = messages[mt]
     e = expected_part(m, m.get('name'), 'message')
     before = len(failures)
-    compare(e, f'fix44::{m.get("name")}<glz::fix3::count_unknown>', f'{m.get("name")}({mt})')
+    compare(e, f'fix44::{m.get("name")}', f'{m.get("name")}({mt})')
     nf = sum(1 for x in e.fields if x[2] is None)
     summary.append(f'  {m.get("name")} ({mt}): {len(e.fields)} top-level tags ({nf} fields, {len(e.fields)-nf} groups), '
                    f'{len(failures)-before} failures' + (f'; repeated tags in the dictionary, kept first: {sorted(set(e.repeats))}' if e.repeats else ''))

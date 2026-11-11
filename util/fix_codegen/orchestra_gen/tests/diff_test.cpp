@@ -38,17 +38,10 @@ consteval int compare_all() {
     if (!has_identifier(e)) continue;
     info h{};
     for (auto c : members_of(^^fix44, access_context::unchecked()))
-      if (has_identifier(c) && identifier_of(c) == identifier_of(e) && (is_class_template(c) || (is_type(c) && is_class_type(c)))) h = c;
+      if (has_identifier(c) && identifier_of(c) == identifier_of(e) && is_type(c) && is_class_type(c)) h = c;
     if (h == info{}) throw "no header struct for an embed struct";
-    if (is_class_template(e)) {
-      for (auto pol : {^^glz::fix3::keep_unknown, ^^glz::fix3::count_unknown}) {
-        if (!same_layout(substitute(h, {pol}), substitute(e, {pol}))) throw "layout differs";
-        ++n;
-      }
-    } else {
-      if (!same_layout(h, e)) throw "layout differs";
-      ++n;
-    }
+    if (!same_layout(h, e)) throw "layout differs";
+    ++n;
   }
   return n;
 }

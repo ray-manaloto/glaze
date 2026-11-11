@@ -12,7 +12,9 @@ What a codec may rely on in a generated `<ns>.hpp`. Anything not listed here is 
 | `length_data_pairs` | `std::array<std::array<uint16_t, 2>, N>` | every (Length tag, data tag) pair from `lengthId`: the data field's bytes may contain SOH and are framed by the length |
 | `tag::<FixName>` | `inline constexpr std::uint16_t` | every field's tag, by its Orchestra name |
 
-## Per part (group entry, `StandardHeader<U>`, `StandardTrailer<U>`, each message `<Name><U>`)
+## Per part (group entry, `StandardHeader`, `StandardTrailer`, each message)
+
+Every part is a plain struct; none depends on the unknown-tag policy.
 
 - An aggregate. Members are in layout order (alignment 8, 4, 2, 1, then bit-fields). The codec must not
   depend on member order; it uses `fix_fields` / `fix_visit`.
@@ -29,14 +31,31 @@ What a codec may rely on in a generated `<ns>.hpp`. Anything not listed here is 
   | `max_entries` | group: `implMaxOccurs`, 0 = unbounded |
   | `deprecated` | the field carries `deprecated` |
   | `open_enum` | an int enum whose field allows values beyond its codes (`unionDataType` Reserved<N>Plus): accept any value in range, not only the named ones |
+  | `datatype` | the field's Orchestra datatype (for a codeSet field, the codeSet's datatype), e.g. `UTCTimestamp`; empty for a group |
 
 - `fix_visit(f)`: calls `f(const field_info&, member)` for every `fix_fields` entry, in the same order,
   on any compiler, with no reflection. A bit-field member (a required Boolean) is passed as
-  `glz::fix3::bit_ref{get, set}` because it has no address. The unknown-tag member is not visited.
+  `glz::fix3::bit_ref{get, set}` because it has no address (on a const part, `set` is `glz::fix3::read_only`).
 - Messages only: `static constexpr std::string_view fix_msg_type` (tag 35).
-- `unknown` member (templated parts): `glz::fix3::unknown_t<U>` = `std::span<const field>` for
-  `keep_unknown`, `std::uint16_t` for `count_unknown`. Group entries have no unknown member yet.
-- `static_assert`s on `sizeof` and `alignof` for each policy are emitted after each part.
+- A `static_assert` on `sizeof` and `alignof` is emitted after each part.
+
+## The message envelope (L1)
+
+`glz::fix3::message<H, B, T, U>` holds `header`, `body`, `trailer` and `unknown`; `<Msg>_message<U>` names it for
+each message. `U` is the unknown-tag policy, and only the envelope depends on it:
+
+| Policy | `unknown` | Meaning |
+|---|---|---|
+| `keep_unknown` | `std::span<const glz::fix3::unknown_field>` | every unknown tag, in wire order, as `{position, tag, value}`; `position` counts the message's fields from 0 (8=, 9=, 35= are 0, 1, 2), so a tag read inside a group entry is placed by it |
+| `count_unknown` | `std::uint32_t` | how many unknown tags were skipped |
+
+## Partner profiles (`<ns>_profiles.hpp`, with `--profiles`)
+
+- Each profile is a type `<ns>::profiles::<name>` with `static constexpr std::string_view name` and
+  `static constexpr std::uint8_t timestamp_digits(std::uint16_t tag)`: the fraction digits to write for a timestamp
+  field (0-9). Timestamps are always stored in ns; reads accept 0-12 digits.
+- `<ns>::profiles::all` is `glz::fix3::profile_list<P...>`: `names`, and `with(name, f)`, which calls
+  `f.template operator()<P>()` for the matching profile and returns whether one matched.
 
 ## Member types
 
@@ -59,5 +78,5 @@ locked name; an addition, a removal or a changed type is refused. `--update-lock
 
 ## Not in the contract yet
 
-Per-field timestamp write precision (L3); unknown tags inside group entries; enum name tables; the `#embed`
+Profile settings other than timestamp digits; enum name tables; the `#embed`
 module path (its structs match the headers' layout only: no static members, no annotations on clang-p2996).

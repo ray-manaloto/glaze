@@ -1,0 +1,7 @@
+{
+  "timestamp_digits": 3,
+  "fields": {
+    "TransactTime": { "timestamp_digits": 9 },
+    "SendingTime": { "timestamp_digits": 6 }
+  }
+}

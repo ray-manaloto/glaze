@@ -214,6 +214,8 @@ struct Builder {
       m.length_tag = f.lengthId ? f.lengthId->value() : 0;
       m.deprecated = f.deprecated.has_value();
       m.open_enum = f.unionDataType && open_code_sets.contains(f.type.value());
+      const auto cs = repo.code_sets.find(f.type.value());
+      m.datatype = cs != repo.code_sets.end() ? cs->second.type.value() : f.type.value();
       p.wire_order.push_back(std::move(m));
     }
   }
@@ -239,37 +241,30 @@ struct Builder {
     return entry_name[g.id];
   }
 
-  static int layout_size(const std::vector<Member>& ms, int unknown_size, int unknown_align, int& align_out) {
+  static int layout_size(const std::vector<Member>& ms, int& align_out) {
     int off = 0, align = 1, bits = 0;
     for (const auto& m : ms) {
-      int sz = m.type.size, al = m.type.align;
-      if (m.kind == member_kind::unknown) { sz = unknown_size; al = unknown_align; }
       if (m.type.bits > 0) { ++bits; continue; }  // bit-fields come last (L6)
-      off = (off + al - 1) / al * al + sz;
-      align = std::max(align, al);
+      off = (off + m.type.align - 1) / m.type.align * m.type.align + m.type.size;
+      align = std::max(align, m.type.align);
     }
     off += (bits + 7) / 8;
     align_out = align;
-    return (off + align - 1) / align * align;
+    return std::max(1, (off + align - 1) / align * align);  // an empty struct still takes 1 byte
   }
 
   // L6: members ordered by alignment (8, 4, 2, 1), then the bit-fields; stable within a class.
   void finish(Part& p) {
     p.layout = p.wire_order;
-    if (p.templated)
-      p.layout.push_back(Member{"unknown", 0, false, member_kind::unknown, Type{"unknown_t<U>", "U", 16, 8, 0}});
     std::stable_sort(p.layout.begin(), p.layout.end(), [](const Member& a, const Member& b) {
       const int ka = a.type.bits ? 0 : a.type.align, kb = b.type.bits ? 0 : b.type.align;
       return ka > kb;
     });
     for (const auto& w : p.wire_order) {
-      const auto it = std::ranges::find_if(p.layout, [&](const Member& m) { return m.kind != member_kind::unknown && m.tag == w.tag; });
+      const auto it = std::ranges::find_if(p.layout, [&](const Member& m) { return m.tag == w.tag; });
       p.member_index.push_back(static_cast<int>(it - p.layout.begin()));
     }
-    p.size_keep = layout_size(p.layout, 16, 8, p.align);
-    if (p.templated) {
-      p.size_count = layout_size(p.layout, 2, 2, p.align_count);
-    }
+    p.size = layout_size(p.layout, p.align);
   }
 
   Part session_part(const char* name, std::set<std::int32_t> excluded) {
@@ -280,7 +275,6 @@ struct Builder {
     p.kind = part_kind::component;
     p.id = it->first;
     p.fix_name = name;
-    p.templated = true;
     std::set<std::int32_t> tags;
     flatten(it->second.refs, false, p, tags, excluded, false);
     finish(p);
@@ -333,7 +327,6 @@ Output build(const orch::Repository& repo, const Options& opt, const std::string
     p.id = m.id;
     p.fix_name = m.name;
     p.msg_type = m.msg_type;
-    p.templated = true;
     p.name = b.unique_type_name(m.name, "Msg");
     std::set<std::int32_t> tags;
     b.flatten(m.refs, false, p, tags, {8, 9, 35, 10}, true);

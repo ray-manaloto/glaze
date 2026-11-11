@@ -29,7 +29,7 @@ struct Type {
   int bits = 0;        // > 0: a bit-field of this width
 };
 
-enum class member_kind { field, group, unknown };
+enum class member_kind { field, group };
 struct Member {
   std::string name;
   std::int32_t tag = 0;  // FIX tag; for groups the NumInGroup tag
@@ -41,6 +41,7 @@ struct Member {
   std::int32_t max_entries = 0; // groups: implMaxOccurs, 0 = unbounded
   bool deprecated = false;
   bool open_enum = false;     // int enum whose field allows values beyond its codes (unionDataType)
+  std::string datatype;       // Orchestra datatype (a codeSet field: the codeSet's datatype); empty for groups
 };
 
 enum class part_kind { component, group, message };
@@ -50,11 +51,10 @@ struct Part {
   std::string name;        // C++ struct name
   std::string fix_name;    // Orchestra name
   std::string msg_type;    // messages only
-  bool templated = false;  // template over the unknown-tag policy (L1): header, trailer, messages
   std::vector<Member> wire_order;  // dictionary order (the tag table)
   std::vector<Member> layout;      // L6 member order: alignment 8, 4, 2, 1, then bit-fields
-  std::vector<int> member_index;   // wire_order[i] is layout member member_index[i] (unknown excluded)
-  int size_keep = 0, size_count = 0, align = 0, align_count = 0;  // computed layout for each policy (or size_keep only)
+  std::vector<int> member_index;   // wire_order[i] is layout member member_index[i]
+  int size = 0, align = 0;         // computed layout (checked by the emitted static_assert)
 };
 
 struct Output {

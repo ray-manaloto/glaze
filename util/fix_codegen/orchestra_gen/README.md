@@ -10,9 +10,30 @@ underneath, built with reflect-cpp's C++26 backend (`REFLECTCPP_USE_CPP26_REFLEC
 | File | Used by | Contents |
 |---|---|---|
 | `<ns>_enums.hpp` | both paths | codeSet enums. char codeSets: `enum class X : char`, value = wire char. int codeSets: smallest integer type with `max()` free for "absent" (L5) |
-| `<ns>.hpp` | headers path (all three compilers) | group entries, `StandardHeader<U>`, `StandardTrailer<U>`, one `template <unknown_policy U>` per message (L1), tag annotations (D4): `[[=glz::fix3::tag{n}]]` written directly for `--target gcc16` (default) and `--target p2996`, the `GLZ_FIX3_TAG(n)` macro only for `--target clang23` (no annotations); the header stops with `#error` on any other compiler, a `fix_fields` tag table in wire order, `static_assert` on `sizeof`/`alignof` for both policies (L6) |
+| `<ns>.hpp` | headers path (all three compilers) | plain structs: group entries, `StandardHeader`, `StandardTrailer`, one struct per message, and a `<Msg>_message<U>` alias for `glz::fix3::message<StandardHeader, Msg, StandardTrailer, U>`, the envelope that holds the unknown-tag policy (L1), tag annotations (D4): `[[=glz::fix3::tag{n}]]` written directly for `--target gcc16` (default) and `--target p2996`, the `GLZ_FIX3_TAG(n)` macro only for `--target clang23` (no annotations); the header stops with `#error` on any other compiler, a `fix_fields` tag table in wire order, `static_assert` on `sizeof`/`alignof` (L6) |
 | `<ns>.digest` | `#embed` path | the same layout as text: `P` part lines, `M` member lines |
 | `<ns>_embed.cppm` | `#embed` path (GCC 16.2, clang-p2996) | a module that `#embed`s the digest; `define_aggregate` builds every struct at compile time |
+| `<ns>_profiles.hpp` | codec (all three compilers), only with `--profiles DIR` | one type per partner profile `DIR/<name>.json`, and `profiles::all` (see below) |
+
+## Partner profiles (`--profiles DIR`, stage 3)
+
+Gateways and partners differ in what they accept, so write settings live in one JSON file per partner, named
+`<name>.json` (`<name>`: a lowercase letter, then lowercase letters, digits and single underscores, no trailing `_`; not a C++ keyword and not `all`, `name`, `timestamp_digits`, `std`, `glz` or `fix3`):
+
+```json
+{ "timestamp_digits": 3, "fields": { "TransactTime": { "timestamp_digits": 9 } } }
+```
+
+`timestamp_digits` (required, 0-9) is how many fraction-of-second digits a timestamp field is written with;
+values are always stored in nanoseconds and read leniently. `fields` overrides it per field, by Orchestra field
+name. The generator refuses an unknown field name, a field that is not a timestamp, digits outside 0-9 and any
+unknown key, naming the file, before anything is written.
+
+Each profile becomes a type, `<ns>::profiles::<name>`, whose settings are `constexpr` functions of the tag. A codec
+takes the profile as a template argument, so for each profile the settings are constants and the code that runs has
+no branch on them. `<ns>::profiles::all::with(name, f)` is the one runtime choice: it calls
+`f.template operator()<P>()` for the profile named `name` (for example at logon) and returns false when there is
+none. Each profile is one more codec instantiation; measure build time and code size before adding many.
 
 ## Name and width lock (`--lock FILE`, stage 2)
 
@@ -60,7 +81,7 @@ Put machine paths in `local.env` (git-ignored), or export them: `GCC`, `CLANG` (
 clang), `ORCH` (the orchestrations repo's `FIX Standard` folder), `BOOST_INC`. Then:
 
 ```sh
-./run.sh                 # gen lock guards targets headers visit annotations oracle negative
+./run.sh                 # gen lock guards targets golden headers visit profiles annotations oracle negative
 ./run.sh embed latest    # opt-in: the #embed module + layout diff (~45 s each, GCC up to 6.4 GB); FIX Latest
 ./run.sh oracle          # one step; ORACLE_MESSAGES="D 8" picks messages
 ./run.sh ci              # what the GitHub job runs: GCC only, no Boost
@@ -76,8 +97,10 @@ The codec contract for the output is in `CONTRACT.md`.
 | Test | Compilers | Checks |
 |---|---|---|
 | `tests/headers_test.cpp` | GCC 16.2, clang-p2996, LLVM 23.1.5 | generated header compiles; layout asserts; L4 tombstone sizes; L5 enum values and widths; a NewOrderSingle built and read |
+| `tests/profiles_test.cpp` | GCC 16.2, clang-p2996, LLVM 23.1.5 | `tests/profiles/*.json` as types: per-field overrides and defaults are compile-time constants; `profiles::all::with` picks one by name and refuses an unknown one; six bad profiles (unknown field, non-timestamp field, 12 digits, extra key, missing default, reserved file name `std`) are refused with nothing written |
+| `run.sh golden` | none (text) | the emitted text of `NewOrderSingle`, `ExecutionReport`, `Logon`, `NewOrderList` and its nested-group entry `ListOrdGrp` equals `tests/golden/<struct>.txt`; refresh a file only after reviewing its diff |
 | `tests/annotation_test.cpp` | GCC 16.2, clang-p2996 | tags read back from the generated annotations by reflection |
-| `tests/visit_test.cpp` | GCC 16.2, clang-p2996, LLVM 23.1.5 | the contract without reflection: `fix_visit` covers `fix_fields` in order, member indices are distinct, members set and read by tag (a bit-field through `bit_ref`), Reserved-range enums hold 4000, per-version constants |
+| `tests/visit_test.cpp` | GCC 16.2, clang-p2996, LLVM 23.1.5 | the contract without reflection: `fix_visit` covers `fix_fields` in order, member indices are distinct, every member of `NewOrderSingle`, `ExecutionReport`, `TradeCaptureReport`, `StandardHeader` and `Parties` written and read back through `fix_visit` alone, members set and read by tag (a bit-field through `bit_ref`), Reserved-range enums hold 4000, per-version constants |
 | `tests/diff_test.cpp` | GCC 16.2, clang-p2996 | layout only: every struct from the `#embed` module has the same members, types, offsets, bit widths, size and alignment as the header's (static members and clang annotations are not compared) |
 | `run.sh guards` | GCC 16.2 | an unknown attribute is refused; FIXReferenceData (non-base scenario) is refused; two runs are byte-identical |
 | `run.sh negative` | GCC 16.2 | a digest naming a missing enum is rejected at compile time |
@@ -99,8 +122,8 @@ Side removed, and checks that both are reported.
 
 - The rest of stage 2: one naming pass, `[[deprecated]]` from
   the `deprecated` attribute.
-- L3 per-field timestamp write format (s/ms/us/ns) is not emitted; the strict-vs-lenient question is open.
-- Unknown tags inside group entries (entries are not templated over the policy).
-- Codec integration: nothing reads or writes these structs yet.
+- Profiles hold timestamp digits only; other per-partner settings come with the codec.
+- Codec integration (stage 4): nothing reads or writes these structs yet. Measure build time and code size per
+  profile instantiation there.
 - CMake for the generated output and for modules (the tests are driven by `run.sh`).
-- `std::string_view` members take 16 bytes each, so the FIX 4.4 NewOrderSingle is 1,536 bytes (keep policy).
+- `std::string_view` members take 16 bytes each, so the FIX 4.4 NewOrderSingle is 1,520 bytes.

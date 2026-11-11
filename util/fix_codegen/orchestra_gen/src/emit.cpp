@@ -21,13 +21,8 @@ std::string char_lit(const std::string& v) {
 }
 
 void emit_part(std::string& s, const Part& p, target t) {
-  if (p.templated) s += "template <glz::fix3::unknown_policy U>\n";
   s += std::format("struct {} {{\n", p.name);
   for (const auto& m : p.layout) {
-    if (m.kind == member_kind::unknown) {
-      s += "  unknown_t<U> unknown;  // L1: keep_unknown = span of fields, count_unknown = uint16_t\n";
-      continue;
-    }
     const auto bits = m.type.bits ? std::format(" : {}", m.type.bits) : std::string{};
     if (t == target::clang23) s += std::format("  GLZ_FIX3_TAG({}) {} {}{};\n", m.tag, m.type.cpp, m.name, bits);
     else s += std::format("  [[=glz::fix3::tag{{{}}}]] {} {}{};\n", m.tag, m.type.cpp, m.name, bits);
@@ -37,20 +32,20 @@ void emit_part(std::string& s, const Part& p, target t) {
   s += std::format("  static constexpr std::string_view fix_name = \"{}\";\n", p.fix_name);
   s += std::format("  // Codec contract (CONTRACT.md): the tag table in dictionary (wire) order. member = the member's\n"
                    "  // position in declaration (layout) order, the same index fix_visit passes and reflection sees.\n"
-                   "  //   {{tag, member, name, fix_name, required, group, length_tag, max_entries, deprecated, open_enum}}\n"
+                   "  //   {{tag, member, name, fix_name, required, group, length_tag, max_entries, deprecated, open_enum, datatype}}\n"
                    "  static constexpr std::array<glz::fix3::field_info, {}> fix_fields{{{{\n",
                    p.wire_order.size());
   for (std::size_t i = 0; i < p.wire_order.size(); ++i) {
     const auto& m = p.wire_order[i];
-    s += std::format("      {{{}, {}, \"{}\", \"{}\", {}, {}, {}, {}, {}, {}}},\n", m.tag, p.member_index[i], m.name, m.fix_name,
-                     m.required, m.kind == member_kind::group, m.length_tag, m.max_entries, m.deprecated, m.open_enum);
+    s += std::format("      {{{}, {}, \"{}\", \"{}\", {}, {}, {}, {}, {}, {}, \"{}\"}},\n", m.tag, p.member_index[i], m.name, m.fix_name,
+                     m.required, m.kind == member_kind::group, m.length_tag, m.max_entries, m.deprecated, m.open_enum, m.datatype);
   }
   s += "  }};\n\n";
   // Reflection-free access (works on every compiler, LLVM 23 included): f(field_info, member) in wire order.
   // A bit-field has no address, so it is passed as a glz::fix3::bit_ref proxy with get() and set().
   s += "  // f(info, member) for every field and group in wire order; no reflection needed. Bit-fields come as\n"
        "  // glz::fix3::bit_ref (get/set; a const message gets read_only, so set() does not compile).\n"
-       "  // The unknown-tag member is not visited: use .unknown.\n"
+       "  // Unknown tags are not in the part: they are kept on the envelope, glz::fix3::message::unknown.\n"
        "  template <class Self, class F> constexpr void fix_visit(this Self&& self, F&& f) {\n";
   for (std::size_t i = 0; i < p.wire_order.size(); ++i) {
     const auto& m = p.wire_order[i];
@@ -64,13 +59,7 @@ void emit_part(std::string& s, const Part& p, target t) {
       s += std::format("    f(fix_fields[{}], self.{});\n", i, m.name);
   }
   s += "  }\n};\n";
-  if (p.templated) {
-    s += std::format("static_assert(sizeof({0}<glz::fix3::keep_unknown>) == {1} && alignof({0}<glz::fix3::keep_unknown>) == {2});\n",
-                     p.name, p.size_keep, p.align);
-    s += std::format("static_assert(sizeof({0}<glz::fix3::count_unknown>) == {1} && alignof({0}<glz::fix3::count_unknown>) == {2});\n", p.name, p.size_count, p.align_count);
-  } else {
-    s += std::format("static_assert(sizeof({0}) == {1} && alignof({0}) == {2});\n", p.name, p.size_keep, p.align);
-  }
+  s += std::format("static_assert(sizeof({0}) == {1} && alignof({0}) == {2});\n", p.name, p.size, p.align);
   s += "\n";
 }
 
@@ -140,7 +129,7 @@ std::string emit_structs(const Output& o, target t) {
       break;
   }
   s += std::format("#include \"glaze_fix3_support.hpp\"\n#include \"{}_enums.hpp\"\n\n", o.ns);
-  s += std::format("namespace {} {{\n\nusing glz::fix3::unknown_t;\nnamespace dec = boost::decimal;\n\n", o.ns);
+  s += std::format("namespace {} {{\n\nnamespace dec = boost::decimal;\n\n", o.ns);
   s += "// ---- per-version constants ----\n";
   s += std::format("inline constexpr std::string_view dictionary_version = \"{}\";  // {}\n", o.dictionary, o.version);
   s += std::format("inline constexpr std::string_view begin_string = \"{}\";  // tag 8 on the wire\n", o.begin_string);
@@ -160,7 +149,7 @@ std::string emit_structs(const Output& o, target t) {
   s += "// ---- messages ----\n";
   for (const auto& p : o.messages) {
     emit_part(s, p, t);
-    s += std::format("template <glz::fix3::unknown_policy U>\nusing {0}_message = glz::fix3::message<{1}<U>, {0}<U>, {2}<U>>;\n\n",
+    s += std::format("template <glz::fix3::unknown_policy U>\nusing {0}_message = glz::fix3::message<{1}, {0}, {2}, U>;\n\n",
                      p.name, o.header.name, o.trailer.name);
   }
   s += std::format("}}  // namespace {}\n", o.ns);
@@ -169,11 +158,11 @@ std::string emit_structs(const Output& o, target t) {
 
 std::string emit_digest(const Output& o) {
   // One line per record; parsed at compile time by glz::fix3::embed::define_all.
-  //   P <name> <templated 0|1> <size_keep> <size_count> <align_keep> <align_count>
+  //   P <name> <size> <align>
   //   M <name> <type> <tag> <bits>
-  std::string s = std::format("V 1 {}\n", o.ns);
+  std::string s = std::format("V 2 {}\n", o.ns);
   const auto part = [&](const Part& p) {
-    s += std::format("P {} {} {} {} {} {}\n", p.name, p.templated ? 1 : 0, p.size_keep, p.size_count, p.align, p.align_count);
+    s += std::format("P {} {} {}\n", p.name, p.size, p.align);
     for (const auto& m : p.layout)
       s += std::format("M {} {} {} {}\n", m.name, m.type.digest, m.tag, m.type.bits);
   };
@@ -192,7 +181,7 @@ std::string emit_module(const Output& o) {
   s += std::format("module;\n#include \"glaze_fix3_embed.hpp\"\n#include \"{}_enums.hpp\"\nexport module {}_embed;\n\n", o.ns, o.ns);
   s += std::format("export namespace {}_embed {{\n", o.ns);
   const auto decl = [&](const Part& p) {
-    s += p.templated ? std::format("template <class U> struct {};\n", p.name) : std::format("struct {};\n", p.name);
+    s += std::format("struct {};\n", p.name);
   };
   for (const auto& p : o.entries) decl(p);
   decl(o.header);
