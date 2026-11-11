@@ -63,7 +63,7 @@ The clang23 workflows each run 171 tests:
 |---|---|---|
 | clang23-debug | 171 | none |
 | clang23-release | 171 | none |
-| clang23-asan | 169 | `json_performance`, `json_perf_benchmark`: UBSan, test-data generator at `tests/json_performance/json_performance.cpp:667` divides by a random count that can be 0, then converts infinity to `int` |
+| clang23-asan | 169 | `json_performance`, `json_perf_benchmark`: UBSan in their test-data generators. At `tests/json_performance/json_performance.cpp:667` (`json_perf_benchmark.cpp:125`) they divide by a random count that can be 0, then convert infinity to `int`; at `json_performance.cpp:648` (`json_perf_benchmark.cpp:106`) they convert a random double too large for the type to `long long` and `unsigned long long`. Built with recoverable UBSan, both run to the end and pass, with no ASan report |
 | clang23-tsan | 169 | `asio_repe`: threads write `std::cout` at once; `http_client_test`: worker threads call `expect`, and the `ut` reporter's counters are not thread-safe |
 
 The gcc16 workflows each run 173 tests:
