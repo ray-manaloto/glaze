@@ -143,9 +143,13 @@ if(GLAZE_FIX_COMPILER STREQUAL "clang23" AND CMAKE_HOST_APPLE)
     message(FATAL_ERROR "clang23 on macOS links the libc++ inside Homebrew's llvm, but '${_glaze_fix_llvm}/lib/c++/libc++.dylib' does not exist (compiler '${CMAKE_CXX_COMPILER}', ${_glaze_fix_where}). If that is Apple clang or a wrapper, fix PATH or set GLAZE_FIX_CXX to Homebrew's clang++; if it is another LLVM install, set the environment variable GLAZE_FIX_LLVM_PREFIX to its prefix (brew --prefix llvm).")
   endif()
   list(APPEND _glaze_fix_cxx_only -D_LIBCPP_DISABLE_AVAILABILITY)
-  list(APPEND _glaze_fix_link
-       "-L${_glaze_fix_llvm}/lib/c++" "-L${_glaze_fix_llvm}/lib/unwind" -lunwind
-       "-Wl,-rpath,${_glaze_fix_llvm}/lib/c++")
+  list(APPEND _glaze_fix_link "-L${_glaze_fix_llvm}/lib/c++" "-Wl,-rpath,${_glaze_fix_llvm}/lib/c++")
+  # Not under AddressSanitizer: with the package's libunwind linked in, an exception unwinding through
+  # ASan-instrumented frames aborts in ASan's own check (unw_init_local's memcpy, asan_thread.cpp:370;
+  # glaze's threading_test). Without -lunwind those binaries use the macOS unwinder and pass.
+  if(NOT GLAZE_FIX_SANITIZER STREQUAL "asan")
+    list(APPEND _glaze_fix_link "-L${_glaze_fix_llvm}/lib/unwind" -lunwind)
+  endif()
   set(CMAKE_CXX_STDLIB_MODULES_JSON "${_glaze_fix_llvm}/lib/c++/libc++.modules.json")
 endif()
 
