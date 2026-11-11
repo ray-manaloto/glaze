@@ -14,7 +14,7 @@ set(VCPKG_CMAKE_SYSTEM_NAME Darwin)
 set(VCPKG_OSX_ARCHITECTURES arm64)
 set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/../cmake/toolchains/glaze-fix.cmake")
 set(VCPKG_CMAKE_CONFIGURE_OPTIONS -DGLAZE_FIX_COMPILER=clang23 -DGLAZE_FIX_SANITIZER=none -DGLAZE_FIX_HARDENING=none -DGLAZE_FIX_PORT_BUILD=ON)
-# Compilers chosen outside PATH (see the toolchain); passed through and part of the port hash.
-set(VCPKG_ENV_PASSTHROUGH GLAZE_FIX_CXX GLAZE_FIX_CC)
+# Compilers chosen outside PATH and the llvm prefix for libc++ (see the toolchain); passed through and part of the port hash.
+set(VCPKG_ENV_PASSTHROUGH GLAZE_FIX_CXX GLAZE_FIX_CC GLAZE_FIX_LLVM_PREFIX)
 # Rebuild every port when the toolchain file changes.
 set(VCPKG_HASH_ADDITIONAL_FILES "${CMAKE_CURRENT_LIST_DIR}/../cmake/toolchains/glaze-fix.cmake")
